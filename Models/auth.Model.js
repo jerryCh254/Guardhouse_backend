@@ -1,8 +1,14 @@
 const mongoose = require('mongoose');
 
 const User = new mongoose.Schema({
+    companyId:{
+        type:mongoose.Schema.ObjectId,
+        ref:"Company",
+        default:null
+    },
     role:{
         type:String,
+        enum:["SUPER_ADMIN","ADMIN","MANAGER","STAFF"]
     },
     email:{
         type:String,
@@ -11,6 +17,9 @@ const User = new mongoose.Schema({
         type:String,
     },
     name:{
+        type:String,
+    },
+    phone:{
         type:String,
     },
     resetToken:{
@@ -24,6 +33,12 @@ const User = new mongoose.Schema({
     },
     message:{
         type:String,
-    }
-});
+    },
+    createdBy:{
+        type:mongoose.Schema.ObjectId,
+        ref:"User"
+    },
+    
+},
+{timestamps:true,});
 module.exports = mongoose.model('User',User);

@@ -4,12 +4,13 @@ const bcrypt = require("bcrypt");
 const {JWT}= require('../config/env.js');
 const crypto = require("crypto")
 const transport = require('../config/email.js');
+const { timeStamp } = require('console');
 
 //Sign up
 exports.signup = async (req,res)=>{
     try {
-        const { name,email, password,role } = req.body;
-        if (!name||!email || !password||!role) {
+        const { name,email, password,role,phone,companyId,createdBy} = req.body;
+        if (!name||!email || !password||!role||!phone) {
             return res.status(400).json({ message: "Email and password are required" });
         }
 
@@ -17,20 +18,27 @@ exports.signup = async (req,res)=>{
         if (existingUser) {
             return res.status(409).json({ message: "User already exists" });
         }
-
         const hashPassword = await bcrypt.hash(password, 10);
-
         const newUser = await User.create({
             email,
-            password: hashPassword
+            password: hashPassword,
+            role,
+            companyId,
+            phone,
+            createdBy
         });
     
-        return res.status(201).json({
+       return res.status(201).json({
             message: "User created successfully",
+            user:{
             id: newUser._id,
+            name: newUser.name,
             email: newUser.email,
-            password:hashPassword,
-            role:role,
+            role: newUser.role,
+            phone: newUser.phone,
+            companyId: newUser.companyId,
+            createdBy: newUser.createdBy,
+          }
         });
     } catch (err) {
         return res.status(500).json({ message: "Server error", err });
@@ -56,10 +64,15 @@ exports.login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: user._id, email: user.email },
-      JWT,
-      { expiresIn: "1h" }
-    );
+    {
+        id: user._id,
+        email: user.email,
+        role: user.role.toUpperCase()
+    },
+    JWT,
+    { expiresIn: "1h" }
+);
+
 
     res.status(200).json({
       message: "Login successful ",
