@@ -103,8 +103,8 @@ exports.CompanyLogin = async(req,res)=>{
               message: "Login successful ",
               token,
               id: company._id,
-              email: company.companyEmail,
-              name: company.companyName,
+              companyEmail: company.companyEmail,
+              CompanyName: company.companyName,
               password:company.password
           
             });
@@ -160,10 +160,25 @@ catch(err){
 }
 exports.getAllCompanies = async (req, res) => {
     try {
-        const companies = await Company.find().select('-password'); // password hide karna
-        res.status(200).json({message:"sucessfully fetched all companies", companies });
+        const status = req.params.status;         
+
+        let filter = {};
+        if (status) {
+            filter.status = status.toUpperCase();  
+        }
+
+        const companies = await Company.find(filter).select('-password -__v');        
+
+        return res.status(200).json({
+            message: "Successfully fetched companies",
+            count: companies.length,
+            companies
+        });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Server Error" });
+        console.error("Get companies error:", error);
+        return res.status(500).json({
+            message: "Server error",
+            error: error.message
+        });
     }
 };

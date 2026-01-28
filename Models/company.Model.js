@@ -21,12 +21,21 @@ const companySchema = new mongoose.Schema({
     },
     status:{
         type:String,
-        enum:["PENDING","ACTIVE","SUSPENDED"],
+        enum:["PENDING","ACTIVE","REJECTED"],
         default:"PENDING"
     },
     plan:{
         type:String,
         enum:["BASIC","STANDARD","ENTERPRISE"],
+    },
+    passwordResetRequest:{
+        type:String,
+    },
+    passwordResetToken:{
+        type:String,
+    },
+    passwordResetTokenExpire:{
+        type:String,
     },
     createdAt:{
         type:String,

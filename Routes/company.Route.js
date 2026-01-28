@@ -5,8 +5,8 @@ const auth = require('../middlewares/auth.middleware');
 const IsSuperAdmin = require('../middlewares/SuperAdmin');
 
 router.post ('/register',auth,CompanyRegister);
-router.put('/update/:id/status',auth,IsSuperAdmin,UpdateStatus);
+router.put('/request/:id/status',auth,IsSuperAdmin,UpdateStatus);
 router.post('/login',CompanyLogin);
 router.post('/forgetpassword',CompanyForgetPassword);
-router.get('/get-all-companaies',auth,IsSuperAdmin,getAllCompanies);
+router.get('/get-all-companies{/:status}', auth, IsSuperAdmin, getAllCompanies);
 module.exports = router
