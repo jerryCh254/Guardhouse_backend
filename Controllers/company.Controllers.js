@@ -1,7 +1,11 @@
 const Company = require('../Models/company.Model');
 const CompanySchema = require('../dto/company.dto');
 const bcrypt = require("bcrypt");
-const transport = require('../config/email.js');
+const {notifyCompany,notifySuperAdmin} = require('../config/email.js');
+const jwt = require('jsonwebtoken')
+const {JWT}= require('../config/env.js');
+const crypto = require('crypto');
+
 
 exports.CompanyRegister = async(req,res)=>{
     try{
@@ -45,17 +49,17 @@ exports.UpdateStatus = async(req,res)=>{
             const plainPassword = Math.random().toString(36).slice(-8);
             const hashedPassword = await bcrypt.hash(plainPassword, 10);
             company.password = hashedPassword;
-
-            await transport.sendMail({
-                
-                to: company.companyEmail,
-                subject: "Guard House Account Approved",
-                text: `Your account has been approved.\nEmail: ${company.companyEmail}\nPassword: ${plainPassword}`
-            });
-        }
-
-        await company.save();
-    return res.status(200).json({message:"Email is sent sucessfully"});
+            }
+            const sendMail = await notifyCompany(company.companyEmail,plainPassword);
+            if(sendMail){
+                return res.status(200).json({message:"Email is sent sucessfully"});
+                 await company.save();
+            }
+            else{
+                return res.status(200).json({message:"Email  is not send"});
+            }
+       
+    
     }
 
     catch(err){
@@ -66,10 +70,100 @@ exports.UpdateStatus = async(req,res)=>{
 //Company login
 exports.CompanyLogin = async(req,res)=>{
     try{
+         const { companyEmail, password } = req.body;
         
+            if (!companyEmail || !password) {
+              return res.status(401).json({ message: "Email aur password is required." });
+            }
+        
+            const company = await Company.findOne({companyEmail}).select("+pasword");
+            if (!company) {
+              return res.status(401).json({ message: "Email not exist"});
+            }
+             if (company.status !== 'ACTIVE') {
+              return res.status(401).json({ message: "Company is not active" });
+            }
+            
+        
+            const isMatch = await bcrypt.compare(password, company.password);
+            if (!isMatch) {
+              return res.status(401).json({ message: "Invalid email or password." });
+            }
+            
+                const token = jwt.sign(
+                {
+                    id: Company._id,
+                    email: Company.email,
+                },
+                JWT,
+                { expiresIn: "1h" }
+            );
+        
+            return res.status(200).json({
+              message: "Login successful ",
+              token,
+              id: company._id,
+              email: company.companyEmail,
+              name: company.companyName,
+              password:company.password
+          
+            });
     }
     catch(err){
          console.error("Registrion error:", err);
     res.status(500).json({ message: "Server error ", error: err.message });
     }
 }
+//forget password
+exports.CompanyForgetPassword = async(req,res)=>{
+     try{
+    const {companyEmail} = req.body;
+    const company = await Company.findOne({companyEmail})
+    if(!company){
+      return res.status(404).json({message:"Email not found"});
+    }
+    const resetToken = await crypto.randomBytes(40).toString('hex');
+    company.resetToken = resetToken;
+    company.ResetTokenExpire = Date.now()+10*60*1000;
+    await company.save();
+
+    const sendMail = await notifySuperAdmin(company.companyEmail);
+            if(sendMail){
+                return res.status(200).json({message:"Email is sent sucessfully"});
+            }
+            else{
+                return res.status(200).json({message:"Email  is not send"});
+            }
+  }
+  catch (err) {
+    console.error("Actual error:", err);  
+    return res.status(500).json({ message: "Server errors", error: err.message || err });
+}
+}
+//REQUEST FORGET PASSWORD APPROVE OR REJECT
+exports.RequestPassword = async(req,res)=>{
+try{
+     const Id = req.params.id;
+        const company = await Company.findOne({ _id: Id });
+        if(!company){
+            return res.status(400).json({message:"Company not Found"});
+        }
+        if (company.status !== 'ACTIVE') {
+              return res.status(401).json({ message: "Company is not active" });
+            }
+
+}
+catch(err){  
+     console.error("Actual error:", err);  
+    return res.status(500).json({ message: "Server errors", error: err.message || err });
+}
+}
+exports.getAllCompanies = async (req, res) => {
+    try {
+        const companies = await Company.find().select('-password'); // password hide karna
+        res.status(200).json({message:"sucessfully fetched all companies", companies });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server Error" });
+    }
+};
