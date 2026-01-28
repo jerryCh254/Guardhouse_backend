@@ -32,7 +32,7 @@ ${resetLink}`,
 }
 //after super approves company 
 
-async function notifyCompany(email,plainPassword){
+async function notifyCompanyApproval(email,plainPassword){
   try{
     const mailerOption ={
       from: process.env.EMAIL_USER,
@@ -49,7 +49,25 @@ async function notifyCompany(email,plainPassword){
     return false;
   }
 }
-//requestof forget passoword
+//after companies got reject
+async function notifyCompanyRejection(email){
+  try{
+    const mailerOption ={
+      from: process.env.EMAIL_USER,
+       to: email,
+       subject: "Guard House Account Request - Rejected",    
+       text: `Your account has been rejected.\nEmail: ${email}`
+      }
+      const info = await transporter.sendMail(mailerOption);
+      console.log("Approved email is send",info.message);
+      return true;
+  }
+  catch(err){
+       console.error("Actual error:", err);  
+    return false;
+  }
+}
+//request of forget passoword
 async function notifySuperAdmin(companyEmail){
   try{
     const mailerOption ={
@@ -71,4 +89,4 @@ Approve/reject open super admin panel to accept or reject ${ResetLink} `
 }
 
 
-module.exports = {notifyCompany,notifySuperAdmin,sendResetPasswordEmail};
+module.exports = {notifyCompanyRejection,notifyCompanyApproval,notifySuperAdmin,sendResetPasswordEmail};

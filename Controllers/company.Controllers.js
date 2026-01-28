@@ -1,7 +1,7 @@
 const Company = require('../Models/company.Model');
 const CompanySchema = require('../dto/company.dto');
 const bcrypt = require("bcrypt");
-const {notifyCompany,notifySuperAdmin} = require('../config/email.js');
+const {notifyCompanyRejection,notifyCompanyApproval,notifySuperAdmin} = require('../config/email.js');
 const jwt = require('jsonwebtoken')
 const {JWT}= require('../config/env.js');
 const crypto = require('crypto');
@@ -33,40 +33,62 @@ exports.CompanyRegister = async(req,res)=>{
     }
 }
 //Update Status
-exports.UpdateStatus = async(req,res)=>{
-    try{
-        const {status} = req.body;
-         const Id = req.params.id;
-        if(!status){
-            return res.status(400).json({message:"Status should be given"});
-        }
-        const company = await Company.findOne({ _id: Id });
-        if(!company){
-            return res.status(400).json({message:"Company not Found"});
-        }
-        company.status = status;
-        if (status === "ACTIVE") {
-            const plainPassword = Math.random().toString(36).slice(-8);
-            const hashedPassword = await bcrypt.hash(plainPassword, 10);
-            company.password = hashedPassword;
-            }
-            const sendMail = await notifyCompany(company.companyEmail,plainPassword);
-            if(sendMail){
-                return res.status(200).json({message:"Email is sent sucessfully"});
-                 await company.save();
-            }
-            else{
-                return res.status(200).json({message:"Email  is not send"});
-            }
-       
-    
+exports.UpdateStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const Id = req.params.id;
+
+    if (!status) {
+      return res.status(400).json({ message: "Status should be given" });
     }
 
-    catch(err){
-         console.error("Registrion error:", err);
-    res.status(500).json({ message: "Server error ", error: err.message });
+    const company = await Company.findOne({ _id: Id });
+    if (!company) {
+      return res.status(400).json({ message: "Company not Found" });
     }
-}
+
+    company.status = status; // update status
+
+    // Scenario: Company Approved / ACTIVE
+    if (status === "ACTIVE") {
+      const plainPassword = Math.random().toString(36).slice(-8);
+      const hashedPassword = await bcrypt.hash(plainPassword, 10);
+      company.password = hashedPassword;
+
+      const emailSent = await notifyCompanyApproval(company.companyEmail, plainPassword);
+
+      await company.save();
+
+      if (emailSent) {
+        return res.status(200).json({ message: "Company approved & email sent successfully" });
+      } else {
+        return res.status(200).json({ message: "Company approved but email not sent" });
+      }
+    }
+
+    // Scenario: Company Rejected
+    if (status === "REJECTED") {
+      const emailSent = await notifyCompanyRejection(company.companyEmail, company.companyName);
+
+      await company.save();
+
+      if (emailSent) {
+        return res.status(200).json({ message: "Company rejected & email sent successfully" });
+      } else {
+        return res.status(200).json({ message: "Company rejected but email not sent" });
+      }
+    }
+
+    // If some other status
+    await company.save();
+    return res.status(200).json({ message: `Company status updated to ${status}` });
+
+  } catch (err) {
+    console.error("UpdateStatus error:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
 //Company login
 exports.CompanyLogin = async(req,res)=>{
     try{
