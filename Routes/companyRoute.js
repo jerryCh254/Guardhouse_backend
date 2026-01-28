@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { CompanyRegister, UpdateStatus, CompanyLogin, CompanyForgetPassword,getAllCompanies } = require('../Controllers/companyControllers');
+const { companyRegister, updateStatus, companyLogin, companyForgetPassword,getAllCompanies } = require('../Controllers/companyControllers');
 const auth = require('../middlewares/authmiddleware');
 const IsSuperAdmin = require('../middlewares/superAdmin');
 
-router.post ('/register',auth,CompanyRegister);
-router.put('/request/:id/status',auth,IsSuperAdmin,UpdateStatus);
-router.post('/login',CompanyLogin);
-router.post('/forgetpassword',CompanyForgetPassword);
-router.get('/get-all-companies{/:status}', auth, IsSuperAdmin, getAllCompanies);
+router.post ('/register',auth,companyRegister);
+router.put('/request/:id/status',auth,IsSuperAdmin,updateStatus);
+router.post('/login',companyLogin);
+router.post('/forgetpassword',companyForgetPassword);
+router.get('/getAllCompanies{/:status}', auth, IsSuperAdmin, getAllCompanies);
 module.exports = router

@@ -8,7 +8,7 @@ const transport = require('../config/email.js');
 const { timeStamp } = require('console');
 
 //Sign up
-exports.signup = async (req,res)=>{
+exports.Signup = async (req,res)=>{
     try {
         const { name,email, password,role,phone,companyId,createdBy} = req.body;
         if (!name||!email || !password||!role||!phone) {
@@ -46,7 +46,7 @@ exports.signup = async (req,res)=>{
     }
 };
 //Log in
-exports.login = async (req, res) => {
+exports.Login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -165,7 +165,7 @@ exports.logout = async(req,res)=>{
   }
 }
 //user lists
-exports.Getusers = async(req,res)=>{
+exports.getUsers = async(req,res)=>{
 try{
 const users = await User.find();
 return res.status(200).json({message:'Users are all fetched',users})

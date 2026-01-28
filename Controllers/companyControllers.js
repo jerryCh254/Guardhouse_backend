@@ -7,7 +7,7 @@ const {JWT}= require('../config/env.js');
 const crypto = require('crypto');
 
 
-exports.CompanyRegister = async(req,res)=>{
+exports.companyRegister = async(req,res)=>{
     try{
         const {error,value} = CompanySchema.validate(req.body);
         if(error){
@@ -33,7 +33,7 @@ exports.CompanyRegister = async(req,res)=>{
     }
 }
 //Update Status
-exports.UpdateStatus = async (req, res) => {
+exports.updateStatus = async (req, res) => {
   try {
     const { status } = req.body;
     const Id = req.params.id;
@@ -90,7 +90,7 @@ exports.UpdateStatus = async (req, res) => {
 };
 
 //Company login
-exports.CompanyLogin = async(req,res)=>{
+exports.companyLogin = async(req,res)=>{
     try{
          const { companyEmail, password } = req.body;
         
@@ -137,7 +137,7 @@ exports.CompanyLogin = async(req,res)=>{
     }
 }
 //forget password
-exports.CompanyForgetPassword = async(req,res)=>{
+exports.companyForgetPassword = async(req,res)=>{
      try{
     const {companyEmail} = req.body;
     const company = await Company.findOne({companyEmail})
@@ -163,7 +163,7 @@ exports.CompanyForgetPassword = async(req,res)=>{
 }
 }
 //REQUEST FORGET PASSWORD APPROVE OR REJECT
-exports.RequestPassword = async(req,res)=>{
+exports.requestPassword = async(req,res)=>{
 try{
      const Id = req.params.id;
         const company = await Company.findOne({ _id: Id });
