@@ -1,5 +1,6 @@
 const User = require('../Models/auth.Model.js');
 const jwt = require("jsonwebtoken");
+const {sendResetPasswordEmail} = require('../config/email.js');
 const bcrypt = require("bcrypt");
 const {JWT}= require('../config/env.js');
 const crypto = require("crypto")
@@ -89,35 +90,41 @@ exports.login = async (req, res) => {
   }
 };
 //forget password
-exports.forgetPassword = async(req,res)=>{
-  try{
-    const {email} = req.body;
-    const user = await User.findOne({email:email})
-    if(!user){
-      return res.status(404).json({message:"Email not found",err});
+exports.forgetPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
     }
-    const resetToken = await crypto.randomBytes(40).toString('hex');
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "Email not registered" });
+    }
+
+    const resetToken = crypto.randomBytes(40).toString("hex");
+
     user.resetToken = resetToken;
-    user.ResetTokenExpire = Date.now()+10*60*1000;
+    user.ResetTokenExpire = Date.now() + 10 * 60 * 1000;
     await user.save();
 
-    const ResetLink = `${process.env.FRONTURL}/resetpassword/token=${resetToken}`;
-    const message = `Click here to reset password ${ResetLink}`;
+    const emailSent = await sendResetPasswordEmail(user.email, resetToken);
 
-    await transport.sendMail({
-      from:process.env.EMAIL_USER,
-      to:user.email,
-      subject:'Reset Password Link',
-      text:message
-    })
-    return res.status(200).json({message:"Email is sent sucessfully"});
+    if (!emailSent) {
+      return res.status(500).json({ message: "Email could not be sent" });
+    }
+
+    return res.status(200).json({
+      message: "Password reset link sent to email",
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
   }
-  catch (err) {
-    console.error("Actual error:", err);  
-    return res.status(500).json({ message: "Server errors", error: err.message || err });
-}
+};
 
-}
 //resetpassword 
 exports.resetPassword = async(req,res)=>{
   try{
