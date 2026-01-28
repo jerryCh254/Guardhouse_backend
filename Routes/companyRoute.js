@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { CompanyRegister, UpdateStatus, CompanyLogin, CompanyForgetPassword,getAllCompanies } = require('../Controllers/company.Controllers');
-const auth = require('../middlewares/auth.middleware');
-const IsSuperAdmin = require('../middlewares/SuperAdmin');
+const { CompanyRegister, UpdateStatus, CompanyLogin, CompanyForgetPassword,getAllCompanies } = require('../Controllers/companyControllers');
+const auth = require('../middlewares/authmiddleware');
+const IsSuperAdmin = require('../middlewares/superAdmin');
 
 router.post ('/register',auth,CompanyRegister);
 router.put('/request/:id/status',auth,IsSuperAdmin,UpdateStatus);

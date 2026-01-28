@@ -1,5 +1,5 @@
-const Company = require('../Models/company.Model');
-const CompanySchema = require('../dto/company.dto');
+const Company = require('../Models/companyModel.js');
+const CompanySchema = require('../dto/company.dto.js');
 const bcrypt = require("bcrypt");
 const {notifyCompanyRejection,notifyCompanyApproval,notifySuperAdmin} = require('../config/email.js');
 const jwt = require('jsonwebtoken')
