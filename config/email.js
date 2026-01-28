@@ -1,13 +1,6 @@
 const nodemailer = require("nodemailer");
 const ResetLink = `${process.env.FRONTURL}/admin/password-reset-requests`;
 
-console.log('Email Configuration:');
-console.log('EMAIL_HOST:', process.env.EMAIL_HOST);
-console.log('EMAIL_PORT:', process.env.EMAIL_PORT);
-console.log('EMAIL_USER:', process.env.EMAIL_USER);
-console.log('EMAIL_PASS:', process.env.EMAIL_PASS ? 'SET' : 'NOT SET');
-console.log('FRONTURL:', process.env.FRONTURL);
-
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
   port: process.env.EMAIL_PORT,
