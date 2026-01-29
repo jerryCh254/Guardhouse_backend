@@ -5,7 +5,7 @@ const auth = require('../middlewares/authmiddleware');
 const allowRoles = require('../middlewares/allowRoles');
 router.post('/createCustomer',
     auth,
-    allowRoles("SUPER_ADMIN","ADMIN","MANAGER"),
+    // allowRoles("SUPER_ADMIN","ADMIN","MANAGER"),
     createCustomer);
 router.get('/getAllCustomers/{:status}',auth,
     // ,allowRoles("SUPER_ADMIN","ADMIN","MANAGER"),
