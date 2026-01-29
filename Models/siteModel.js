@@ -1,0 +1,62 @@
+const mongoose = require('mongoose');
+
+const siteSchema = new mongoose.Schema({
+    siteName:{
+        type:String,
+    },
+    id:{
+        type:String,
+    },
+    customer:{
+        type:String,
+    },
+    siteReferenceNumber:{
+        type:String,
+    },
+    referenceId:{
+    type:String,
+    },
+    address:{
+        type:String,
+    },
+    state:{
+        type:String,
+    },
+    zipCode:{
+        type:String,
+    },
+    country:{
+        type:String,
+    },
+    latitude:{
+        type:String,
+    },
+    longitude:{
+        type:String,
+    },
+    mobileNumber:{
+        type:String,
+    },
+    welfarecheckInterval:{
+        type:String,
+    },
+    holidayCalender:{
+        type:String,
+    },
+    mobileClockTime:{
+        type:String,
+    },
+    welfareChecks:[{
+        day:{
+            type:String,
+            enum:["monday","tuesday","wednesday","thrusday","friday","saturday","sunday"],
+        },
+        startHours:{
+            type:string,
+        },
+        toHours:{
+            type:String,
+        },
+    }]
+})
+module.exports = mongoose.model("Sites",siteSchema);
