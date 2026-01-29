@@ -98,7 +98,7 @@ exports.companyLogin = async(req,res)=>{
               return res.status(401).json({ message: "Email aur password is required." });
             }
         
-            const company = await Company.findOne({companyEmail}).select("+pasword");
+            const company = await Company.findOne({ companyEmail }).select('+password');
             if (!company) {
               return res.status(401).json({ message: "Email not exist"});
             }
@@ -114,8 +114,8 @@ exports.companyLogin = async(req,res)=>{
             
                 const token = jwt.sign(
                 {
-                    id: Company._id,
-                    email: Company.email,
+                    id: company._id,
+                    email: company.companyEmail,
                 },
                 JWT,
                 { expiresIn: "1h" }
@@ -126,9 +126,7 @@ exports.companyLogin = async(req,res)=>{
               token,
               id: company._id,
               companyEmail: company.companyEmail,
-              CompanyName: company.companyName,
-              password:company.password
-          
+              companyName: company.companyName,
             });
     }
     catch(err){
