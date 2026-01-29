@@ -57,6 +57,9 @@ const siteSchema = new mongoose.Schema({
         toHours:{
             type:String,
         },
-    }]
+    }],
+    createdAt:{
+        type:String,
+    }
 })
 module.exports = mongoose.model("Sites",siteSchema);
