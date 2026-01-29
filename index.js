@@ -1,9 +1,9 @@
 require('dotenv').config();
 const express = require('express');
 const ConnectDB = require('./config/db');
-const authRoutes = require('./Routes/authRoute.js');
-const companyRoutes = require('./Routes/companyRoute.js')
-const customerRoutes = require('./Routes/customerRoutes.js');
+const authRoutes = require('./Routes/auth/authRoute.js');
+const companyRoutes = require('./Routes/company/companyRoute.js');
+const customerRoutes = require('./Routes/customer/customerRoute.js');
 const { PORT }= require('./config/env');
 const app = express();
 app.use(express.json());

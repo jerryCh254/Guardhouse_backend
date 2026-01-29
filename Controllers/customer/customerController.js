@@ -1,5 +1,5 @@
-const Customer = require('../Models/customerModel');
-const customerSchema = require('../dto/customer.dto')
+const Customer = require('../../Models/customer/customerModel');
+const customerSchema = require('../../dto/customer/customer.dto')
 
 exports.createCustomer = async(req,res)=>{
       try{
@@ -29,7 +29,7 @@ exports.createCustomer = async(req,res)=>{
 //Get all Customer 
 exports.getAllCustomers = async (req, res) => {
     try {
-        const status = req.params.status;         
+        const status = req.params.status || req.query.status;         
 
         let filter = {};
         if (status) {

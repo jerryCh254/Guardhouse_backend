@@ -1,9 +1,9 @@
-const Company = require('../Models/companyModel.js');
-const CompanySchema = require('../dto/company.dto.js');
+const Company = require('../../Models/company/companyModel.js');
+const CompanySchema = require('../../dto/company/company.dto.js');
 const bcrypt = require("bcrypt");
-const {notifyCompanyRejection,notifyCompanyApproval,notifySuperAdmin} = require('../config/email.js');
+const {notifyCompanyRejection,notifyCompanyApproval,notifySuperAdmin} = require('../../config/email.js');
 const jwt = require('jsonwebtoken')
-const {JWT}= require('../config/env.js');
+const {JWT}= require('../../config/env.js');
 const crypto = require('crypto');
 
 
@@ -182,7 +182,7 @@ catch(err){
 }
 exports.getAllCompanies = async (req, res) => {
     try {
-        const status = req.params.status;         
+        const status = req.params.status || req.query.status;         
 
         let filter = {};
         if (status) {

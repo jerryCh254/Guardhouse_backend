@@ -52,7 +52,7 @@ const siteSchema = new mongoose.Schema({
             enum:["monday","tuesday","wednesday","thrusday","friday","saturday","sunday"],
         },
         startHours:{
-            type:string,
+            type:String,
         },
         toHours:{
             type:String,

@@ -7,3 +7,4 @@ const siteSchema = Joi.object({
     siteReferenceNumber:Joi.string(),
     referenceId:Joi.string()
 })
+module.exports = siteSchema;

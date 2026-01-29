@@ -1,10 +1,10 @@
-const User = require('../Models/authModel.js');
+const User = require('../../Models/auth/authModel.js');
 const jwt = require("jsonwebtoken");
-const {sendResetPasswordEmail} = require('../config/email.js');
+const {sendResetPasswordEmail} = require('../../config/email.js');
 const bcrypt = require("bcrypt");
-const {JWT}= require('../config/env.js');
+const {JWT}= require('../../config/env.js');
 const crypto = require("crypto")
-const transport = require('../config/email.js');
+const transport = require('../../config/email.js');
 const { timeStamp } = require('console');
 
 //Sign up
