@@ -64,7 +64,7 @@ const siteSchema = new mongoose.Schema({
     },
     status:{
         type:String,
-        enum:["Active","Incative"],
+        enum:["Active","Inactive"],
         default:"Active"
     },
 })
