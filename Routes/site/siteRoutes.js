@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { createSite } = require('../../Controllers/customer/siteControllers');
+const SiteController = require('../../Controllers/sites/siteControllers');
 
-router.post('/createSite',createSite);
+router.post('/createSite', SiteController.createSite);
 module.exports = router;

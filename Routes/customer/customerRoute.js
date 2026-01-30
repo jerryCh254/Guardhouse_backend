@@ -1,14 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const { createCustomer, getAllCustomers, updateCustomer, deleteCustomers, updateCustomerStatus } = require('../../Controllers/customer/customerController');
+const CustomerController = require('../../Controllers/customer/customerController');
 const auth = require('../../middlewares/authmiddleware');
-const allowRoles = require('../../middlewares/allowRoles');
 
-router.post('/createCustomer', auth, createCustomer);
-router.get('/getAllCustomers', auth, getAllCustomers);
-router.get('/getAllCustomers/:status', auth, getAllCustomers);
-router.put('/updateCustomer/:id', auth, updateCustomer);
-router.delete('/deleteCustomer/:id', auth, deleteCustomers);
-router.patch('/updateCustomerStatus/:id', auth, updateCustomerStatus);
+router.post('/createCustomer', auth, CustomerController.createCustomer);
+router.get('/getAllCustomers', auth, CustomerController.getAllCustomers);
+router.get('/getAllCustomers/:status', auth, CustomerController.getAllCustomers);
+router.put('/updateCustomer/:id', auth, CustomerController.updateCustomer);
+router.delete('/deleteCustomer/:id', auth, CustomerController.deleteCustomers);
+router.patch('/updateCustomerStatus/:id', auth, CustomerController.updateCustomerStatus);
 
 module.exports = router;

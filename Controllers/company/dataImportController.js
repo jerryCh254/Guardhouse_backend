@@ -13,34 +13,7 @@ const IMPORT_TYPES = [
   { id: 'holidays', name: 'Holidays' },
 ];
 
-exports.getImportTypes = (req, res) => {
-  return res.status(200).json({ message: 'Success', data: IMPORT_TYPES });
-};
-
-exports.getDataImports = async (req, res) => {
-  try {
-    const companyId = getCompanyId(req);
-    const jobs = await DataImportJob.find({ companyId }).sort({ createdAt: -1 });
-    return res.status(200).json({ message: 'Success', count: jobs.length, data: jobs });
-  } catch (err) {
-    console.error('getDataImports error:', err);
-    return res.status(500).json({ message: 'Server error', error: err.message });
-  }
-};
-
-exports.getDataImportStatus = async (req, res) => {
-  try {
-    const companyId = getCompanyId(req);
-    const job = await DataImportJob.findOne({ _id: req.params.jobId, companyId });
-    if (!job) return res.status(404).json({ message: 'Import job not found' });
-    return res.status(200).json({ message: 'Success', data: job });
-  } catch (err) {
-    console.error('getDataImportStatus error:', err);
-    return res.status(500).json({ message: 'Server error', error: err.message });
-  }
-};
-
-const processImportJob = async (jobId) => {
+async function processImportJob(jobId) {
   try {
     const job = await DataImportJob.findById(jobId);
     if (!job || job.status !== 'PENDING') return;
@@ -67,28 +40,59 @@ const processImportJob = async (jobId) => {
       await job.save();
     }
   }
-};
+}
 
-exports.createDataImport = async (req, res) => {
-  try {
-    const companyId = getCompanyId(req);
-    const body = { importType: req.body?.importType || req.body?.import_type };
-    const { error, value } = createDataImportSchema.validate(body);
-    if (error) return res.status(400).json({ message: 'Validation failed', error: error.details });
-    let filePath = null;
-    if (req.file) {
-      filePath = path.join(req.file.destination || '', req.file.filename || '');
-    }
-    const job = await DataImportJob.create({
-      companyId,
-      importType: value.importType,
-      filePath,
-      status: 'PENDING',
-    });
-    processImportJob(job._id).catch(() => {});
-    return res.status(201).json({ message: 'Import started', data: job });
-  } catch (err) {
-    console.error('createDataImport error:', err);
-    return res.status(500).json({ message: 'Server error', error: err.message });
+class DataImportController {
+  static getImportTypes(req, res) {
+    return res.status(200).json({ message: 'Success', data: IMPORT_TYPES });
   }
-};
+
+  static async getDataImports(req, res) {
+    try {
+      const companyId = getCompanyId(req);
+      const jobs = await DataImportJob.find({ companyId }).sort({ createdAt: -1 });
+      return res.status(200).json({ message: 'Success', count: jobs.length, data: jobs });
+    } catch (err) {
+      console.error('getDataImports error:', err);
+      return res.status(500).json({ message: 'Server error', error: err.message });
+    }
+  }
+
+  static async getDataImportStatus(req, res) {
+    try {
+      const companyId = getCompanyId(req);
+      const job = await DataImportJob.findOne({ _id: req.params.jobId, companyId });
+      if (!job) return res.status(404).json({ message: 'Import job not found' });
+      return res.status(200).json({ message: 'Success', data: job });
+    } catch (err) {
+      console.error('getDataImportStatus error:', err);
+      return res.status(500).json({ message: 'Server error', error: err.message });
+    }
+  }
+
+  static async createDataImport(req, res) {
+    try {
+      const companyId = getCompanyId(req);
+      const body = { importType: req.body?.importType || req.body?.import_type };
+      const { error, value } = createDataImportSchema.validate(body);
+      if (error) return res.status(400).json({ message: 'Validation failed', error: error.details });
+      let filePath = null;
+      if (req.file) {
+        filePath = path.join(req.file.destination || '', req.file.filename || '');
+      }
+      const job = await DataImportJob.create({
+        companyId,
+        importType: value.importType,
+        filePath,
+        status: 'PENDING',
+      });
+      processImportJob(job._id).catch(() => {});
+      return res.status(201).json({ message: 'Import started', data: job });
+    } catch (err) {
+      console.error('createDataImport error:', err);
+      return res.status(500).json({ message: 'Server error', error: err.message });
+    }
+  }
+}
+
+module.exports = DataImportController;
