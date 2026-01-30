@@ -1,13 +1,14 @@
 const mongoose = require('mongoose');
 
 const siteSchema = new mongoose.Schema({
+    customer: [{
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "Customer"
+}],
     siteName:{
         type:String,
     },
     id:{
-        type:String,
-    },
-    customer:{
         type:String,
     },
     siteReferenceNumber:{
@@ -60,6 +61,11 @@ const siteSchema = new mongoose.Schema({
     }],
     createdAt:{
         type:String,
-    }
+    },
+    status:{
+        type:String,
+        enum:["Active","Incative"],
+        default:"Active"
+    },
 })
 module.exports = mongoose.model("Sites",siteSchema);
