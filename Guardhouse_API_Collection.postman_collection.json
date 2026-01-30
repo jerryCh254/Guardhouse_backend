@@ -1,0 +1,297 @@
+{
+	"info": {
+		"_postman_id": "guardhouse-api-collection",
+		"name": "Guardhouse Backend - Complete API Collection",
+		"description": "Complete API collection for Guardhouse Backend - Auth, Company, Customer, Site & all sub-modules (Holidays, Skills, Compliance, Role Templates, Documents, Data Import, Site Positions).",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5000"
+		},
+		{
+			"key": "token",
+			"value": ""
+		}
+	],
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {"mode": "raw", "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"name\": \"User Name\"\n}"},
+						"url": "{{baseUrl}}/api/auth/signup"
+					}
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {"mode": "raw", "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"},
+						"url": "{{baseUrl}}/api/auth/login"
+					}
+				},
+				{
+					"name": "Forget Password",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {"mode": "raw", "raw": "{\n  \"email\": \"user@example.com\"\n}"},
+						"url": "{{baseUrl}}/api/auth/forgetpassword"
+					}
+				},
+				{
+					"name": "Reset Password",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {"mode": "raw", "raw": "{\n  \"token\": \"reset_token_from_email\",\n  \"password\": \"newPassword123\"\n}"},
+						"url": "{{baseUrl}}/api/auth/resetpassword"
+					}
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"},
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"url": "{{baseUrl}}/api/auth/logout"
+					}
+				},
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": "{{baseUrl}}/api/auth/getAllUsers"
+					}
+				}
+			]
+		},
+		{
+			"name": "Company",
+			"item": [
+				{
+					"name": "Company Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"},
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"body": {"mode": "raw", "raw": "{\n  \"companyName\": \"Company Name\",\n  \"email\": \"company@example.com\",\n  \"password\": \"password123\"\n}"},
+						"url": "{{baseUrl}}/api/company/register"
+					}
+				},
+				{
+					"name": "Company Login",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {"mode": "raw", "raw": "{\n  \"email\": \"company@example.com\",\n  \"password\": \"password123\"\n}"},
+						"url": "{{baseUrl}}/api/company/login"
+					}
+				},
+				{
+					"name": "Company Forget Password",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {"mode": "raw", "raw": "{\n  \"email\": \"company@example.com\"\n}"},
+						"url": "{{baseUrl}}/api/company/forgetpassword"
+					}
+				},
+				{
+					"name": "Update Company Request Status (SuperAdmin)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"},
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"body": {"mode": "raw", "raw": "{\n  \"status\": \"approved\"\n}"},
+						"url": "{{baseUrl}}/api/company/request/:id/status"
+					}
+				},
+				{
+					"name": "Get All Companies (SuperAdmin)",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": "{{baseUrl}}/api/company/getAllCompanies"
+					}
+				},
+				{
+					"name": "Get All Companies by Status (SuperAdmin)",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": "{{baseUrl}}/api/company/getAllCompanies/:status"
+					}
+				},
+				{
+					"name": "Holidays",
+					"item": [
+						{"name": "Get Holidays", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/holidays"}},
+						{"name": "Get Holiday Meta Countries", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/holidays/meta/countries"}},
+						{"name": "Get Holiday Meta States", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/holidays/meta/states"}},
+						{"name": "Get Holiday Meta Years", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/holidays/meta/years"}},
+						{"name": "Get Holiday by ID", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/holidays/:id"}},
+						{"name": "Create Holiday", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{}"}, "url": "{{baseUrl}}/api/company/holidays"}},
+						{"name": "Update Holiday", "request": {"method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{}"}, "url": "{{baseUrl}}/api/company/holidays/:id"}},
+						{"name": "Delete Holiday", "request": {"method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/holidays/:id"}}
+					]
+				},
+				{
+					"name": "Skills",
+					"item": [
+						{"name": "Get Skills", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/skills"}},
+						{"name": "Get Skill by ID", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/skills/:id"}},
+						{"name": "Create Skill", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\"name\": \"Skill Name\"}"}, "url": "{{baseUrl}}/api/company/skills"}},
+						{"name": "Update Skill", "request": {"method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{}"}, "url": "{{baseUrl}}/api/company/skills/:id"}},
+						{"name": "Delete Skill", "request": {"method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/skills/:id"}}
+					]
+				},
+				{
+					"name": "Compliance Items",
+					"item": [
+						{"name": "Get Compliance Items", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/compliance-items"}},
+						{"name": "Get Compliance Item by ID", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/compliance-items/:id"}},
+						{"name": "Get Compliance Renewals", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/compliance-items/:id/renewals"}},
+						{"name": "Create Compliance Item", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{}"}, "url": "{{baseUrl}}/api/company/compliance-items"}},
+						{"name": "Add Renewal", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{}"}, "url": "{{baseUrl}}/api/company/compliance-items/:id/renewals"}},
+						{"name": "Update Compliance Item", "request": {"method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{}"}, "url": "{{baseUrl}}/api/company/compliance-items/:id"}},
+						{"name": "Delete Compliance Item", "request": {"method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/compliance-items/:id"}}
+					]
+				},
+				{
+					"name": "Role Templates",
+					"item": [
+						{"name": "Get Role Templates", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/role-templates"}},
+						{"name": "Get Role Template by ID", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/role-templates/:id"}},
+						{"name": "Create Role Template", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{}"}, "url": "{{baseUrl}}/api/company/role-templates"}},
+						{"name": "Update Role Template", "request": {"method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{}"}, "url": "{{baseUrl}}/api/company/role-templates/:id"}},
+						{"name": "Delete Role Template", "request": {"method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/role-templates/:id"}}
+					]
+				},
+				{
+					"name": "Documents",
+					"item": [
+						{"name": "Get Documents", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/documents"}},
+						{"name": "Get Document by ID", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/documents/:id"}},
+						{"name": "Download Document", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/documents/:id/download"}},
+						{"name": "Create Document (multipart)", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "body": {"mode": "formdata", "formdata": [{"key": "file", "type": "file", "src": ""}]}, "url": "{{baseUrl}}/api/company/documents"}},
+						{"name": "Update Document", "request": {"method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{}"}, "url": "{{baseUrl}}/api/company/documents/:id"}},
+						{"name": "Delete Document", "request": {"method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/documents/:id"}}
+					]
+				},
+				{
+					"name": "Data Import",
+					"item": [
+						{"name": "Get Import Types", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/data-import/types"}},
+						{"name": "Get Data Imports", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/data-import"}},
+						{"name": "Get Data Import Status", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/data-import/:jobId/status"}},
+						{"name": "Create Data Import (multipart)", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "body": {"mode": "formdata", "formdata": [{"key": "file", "type": "file", "src": ""}]}, "url": "{{baseUrl}}/api/company/data-import"}}
+					]
+				},
+				{
+					"name": "Site Positions",
+					"item": [
+						{"name": "Get Site Positions", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/site-positions"}},
+						{"name": "Get Site Position by ID", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/site-positions/:id"}},
+						{"name": "Create Site Position", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{}"}, "url": "{{baseUrl}}/api/company/site-positions"}},
+						{"name": "Update Site Position", "request": {"method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{}"}, "url": "{{baseUrl}}/api/company/site-positions/:id"}},
+						{"name": "Delete Site Position", "request": {"method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/site-positions/:id"}}
+					]
+				}
+			]
+		},
+		{
+			"name": "Customer",
+			"item": [
+				{
+					"name": "Create Customer",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"},
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"body": {"mode": "raw", "raw": "{\n  \"name\": \"Customer Name\",\n  \"email\": \"customer@example.com\"\n}"},
+						"url": "{{baseUrl}}/api/customer/createCustomer"
+					}
+				},
+				{
+					"name": "Get All Customers",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": "{{baseUrl}}/api/customer/getAllCustomers"
+					}
+				},
+				{
+					"name": "Get All Customers by Status",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": "{{baseUrl}}/api/customer/getAllCustomers/:status"
+					}
+				},
+				{
+					"name": "Update Customer",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"},
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"body": {"mode": "raw", "raw": "{}"},
+						"url": "{{baseUrl}}/api/customer/updateCustomer/:id"
+					}
+				},
+				{
+					"name": "Delete Customer",
+					"request": {
+						"method": "DELETE",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": "{{baseUrl}}/api/customer/deleteCustomer/:id"
+					}
+				},
+				{
+					"name": "Update Customer Status",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"},
+							{"key": "Authorization", "value": "Bearer {{token}}"}
+						],
+						"body": {"mode": "raw", "raw": "{\n  \"status\": \"active\"\n}"},
+						"url": "{{baseUrl}}/api/customer/updateCustomerStatus/:id"
+					}
+				}
+			]
+		},
+		{
+			"name": "Site",
+			"item": [
+				{
+					"name": "Create Site",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {"mode": "raw", "raw": "{\n  \"name\": \"Site Name\",\n  \"address\": \"Site Address\"\n}"},
+						"url": "{{baseUrl}}/api/site/createSite"
+					}
+				}
+			]
+		}
+	]
+}
