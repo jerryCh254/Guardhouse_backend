@@ -67,5 +67,11 @@ const siteSchema = new mongoose.Schema({
         enum:["Active","Inactive"],
         default:"Active"
     },
+      contacts: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Contact"
+    }
+  ],
 })
 module.exports = mongoose.model("Sites",siteSchema);
