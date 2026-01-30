@@ -1,16 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const complianceController = require('../../Controllers/company/complianceController');
+const ComplianceController = require('../../Controllers/company/complianceController');
 const auth = require('../../middlewares/authmiddleware');
 
 router.use(auth);
 
-router.get('/', complianceController.getComplianceItems);
-router.get('/:id/renewals', complianceController.getRenewals);
-router.get('/:id', complianceController.getComplianceItemById);
-router.post('/', complianceController.createComplianceItem);
-router.post('/:id/renewals', complianceController.addRenewal);
-router.put('/:id', complianceController.updateComplianceItem);
-router.delete('/:id', complianceController.deleteComplianceItem);
+router.get('/', ComplianceController.getComplianceItems);
+router.get('/:id/renewals', ComplianceController.getRenewals);
+router.get('/:id', ComplianceController.getComplianceItemById);
+router.post('/', ComplianceController.createComplianceItem);
+router.post('/:id/renewals', ComplianceController.addRenewal);
+router.put('/:id', ComplianceController.updateComplianceItem);
+router.delete('/:id', ComplianceController.deleteComplianceItem);
 
 module.exports = router;

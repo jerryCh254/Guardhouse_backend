@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const roleTemplateController = require('../../Controllers/company/roleTemplateController');
+const RoleTemplateController = require('../../Controllers/company/roleTemplateController');
 const auth = require('../../middlewares/authmiddleware');
 
 router.use(auth);
 
-router.get('/', roleTemplateController.getRoleTemplates);
-router.get('/:id', roleTemplateController.getRoleTemplateById);
-router.post('/', roleTemplateController.createRoleTemplate);
-router.put('/:id', roleTemplateController.updateRoleTemplate);
-router.delete('/:id', roleTemplateController.deleteRoleTemplate);
+router.get('/', RoleTemplateController.getRoleTemplates);
+router.get('/:id', RoleTemplateController.getRoleTemplateById);
+router.post('/', RoleTemplateController.createRoleTemplate);
+router.put('/:id', RoleTemplateController.updateRoleTemplate);
+router.delete('/:id', RoleTemplateController.deleteRoleTemplate);
 
 module.exports = router;
