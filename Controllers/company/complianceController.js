@@ -1,4 +1,4 @@
-const ComplianceItem = require('../../Models/company/complianceItemModel');
+const ComplianceItem = require('../../models/company/complianceItemModel');
 const {
   createComplianceItemSchema,
   updateComplianceItemSchema,

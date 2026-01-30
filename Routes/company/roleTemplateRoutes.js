@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const RoleTemplateController = require('../../Controllers/company/roleTemplateController');
+const RoleTemplateController = require('../../controllers/company/roleTemplateController');
 const auth = require('../../middlewares/authmiddleware');
 
 router.use(auth);

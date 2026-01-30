@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const HolidayController = require('../../Controllers/company/holidayController');
+const HolidayController = require('../../controllers/company/holidayController');
 const auth = require('../../middlewares/authmiddleware');
 
 router.use(auth);

@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const CompanyController = require('../../Controllers/company/companyController');
+const CompanyController = require('../../controllers/company/companyController');
 const auth = require('../../middlewares/authmiddleware');
-const IsSuperAdmin = require('../../middlewares/superAdmin');
+const IsSuperAdmin = require('../../middlewares/SuperAdmin');
 
 const holidayRoutes = require('./holidayRoutes');
 const skillRoutes = require('./skillRoutes');

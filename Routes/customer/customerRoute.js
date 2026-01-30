@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const CustomerController = require('../../Controllers/customer/customerController');
+const CustomerController = require('../../controllers/customer/customerController');
 const auth = require('../../middlewares/authmiddleware');
 
 router.post('/createCustomer', auth, CustomerController.createCustomer);

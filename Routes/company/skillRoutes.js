@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const SkillController = require('../../Controllers/company/skillController');
+const SkillController = require('../../controllers/company/skillController');
 const auth = require('../../middlewares/authmiddleware');
 
 router.use(auth);

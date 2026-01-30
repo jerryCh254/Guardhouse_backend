@@ -1,4 +1,4 @@
-const RoleTemplate = require('../../Models/company/roleTemplateModel');
+const RoleTemplate = require('../../models/company/roleTemplateModel');
 const {
   createRoleTemplateSchema,
   updateRoleTemplateSchema,

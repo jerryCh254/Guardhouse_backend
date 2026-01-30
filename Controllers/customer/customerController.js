@@ -1,4 +1,4 @@
-const Customer = require('../../Models/customer/customerModel');
+const Customer = require('../../models/customer/customerModel');
 const customerSchema = require('../../dto/customer/customer.dto');
 
 class CustomerController {

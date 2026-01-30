@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-const DataImportJob = require('../../Models/company/dataImportJobModel');
+const DataImportJob = require('../../models/company/dataImportJobModel');
 const { createDataImportSchema } = require('../../dto/company/dataImport.dto');
 
 const getCompanyId = (req) => req.user?.id || req.params.companyId;

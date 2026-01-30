@@ -1,4 +1,4 @@
-const Skill = require('../../Models/company/skillModel');
+const Skill = require('../../models/company/skillModel');
 const {
   createSkillSchema,
   updateSkillSchema,

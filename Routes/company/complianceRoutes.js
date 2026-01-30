@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const ComplianceController = require('../../Controllers/company/complianceController');
+const ComplianceController = require('../../controllers/company/complianceController');
 const auth = require('../../middlewares/authmiddleware');
 
 router.use(auth);

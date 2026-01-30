@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-const CompanyDocument = require('../../Models/company/companyDocumentModel');
+const CompanyDocument = require('../../models/company/companyDocumentModel');
 const {
   createDocumentSchema,
   updateDocumentSchema,

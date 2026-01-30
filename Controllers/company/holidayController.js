@@ -1,4 +1,4 @@
-const Holiday = require('../../Models/company/holidayModel');
+const Holiday = require('../../models/company/holidayModel');
 const {
   createHolidaySchema,
   updateHolidaySchema,

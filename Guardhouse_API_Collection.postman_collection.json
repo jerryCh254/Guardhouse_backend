@@ -609,6 +609,236 @@
 					}
 				}
 			]
+		},
+		{
+			"name": "Mobile Patrol",
+			"description": "Regions, Patrol Sites (Site Details, Portal Schedule, Alarm Contact, Documents, Codes, Checkpoints, Incident Report), Runsheets. Base: {{baseUrl}}/api/mobile-patrol. Auth: Bearer {{token}}.",
+			"item": [
+				{
+					"name": "Regions",
+					"item": [
+						{
+							"name": "Get Regions",
+							"request": {
+								"method": "GET",
+								"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+								"url": "{{baseUrl}}/api/mobile-patrol/regions",
+								"description": "**Response 200:** { message, count, data } — list of regions for company."
+							}
+						},
+						{
+							"name": "Get Region by ID",
+							"request": {
+								"method": "GET",
+								"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+								"url": "{{baseUrl}}/api/mobile-patrol/regions/:id",
+								"description": "**Params:** id = region _id. **Response 200:** { message, data }."
+							}
+						},
+						{
+							"name": "Create Region",
+							"request": {
+								"method": "POST",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {"mode": "raw", "raw": "{\n  \"name\": \"MARYLAND\",\n  \"geoJson\": null\n}"},
+								"url": "{{baseUrl}}/api/mobile-patrol/regions",
+								"description": "**Body (required):** name. Optional: geoJson (map drawing). **Response 201:** { message, data }."
+							}
+						},
+						{
+							"name": "Update Region",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {"mode": "raw", "raw": "{\n  \"name\": \"MARYLAND Updated\",\n  \"geoJson\": null,\n  \"isActive\": true\n}"},
+								"url": "{{baseUrl}}/api/mobile-patrol/regions/:id",
+								"description": "**Params:** id. **Body:** name, geoJson, isActive (optional). **Response 200:** { message, data }."
+							}
+						},
+						{
+							"name": "Delete Region",
+							"request": {
+								"method": "DELETE",
+								"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+								"url": "{{baseUrl}}/api/mobile-patrol/regions/:id",
+								"description": "**Params:** id. **Response 200:** { message }."
+							}
+						}
+					]
+				},
+				{
+					"name": "Patrol Sites",
+					"item": [
+						{
+							"name": "Get Patrol Sites",
+							"request": {
+								"method": "GET",
+								"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+								"url": "{{baseUrl}}/api/mobile-patrol/patrol-sites",
+								"description": "**Query:** customerId, regionId, status (optional). **Response 200:** { message, count, data }."
+							}
+						},
+						{
+							"name": "Get Patrol Site by ID",
+							"request": {
+								"method": "GET",
+								"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+								"url": "{{baseUrl}}/api/mobile-patrol/patrol-sites/:id",
+								"description": "**Params:** id. **Response 200:** { message, data } — includes siteDetails, portalSchedule, alarmContacts, siteDocuments, siteCodesAndInstructions, locationCheckpoints, incidentReportConfig."
+							}
+						},
+						{
+							"name": "Create Patrol Site",
+							"request": {
+								"method": "POST",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {"mode": "raw", "raw": "{\n  \"customerId\": \"CUSTOMER_OBJECT_ID\",\n  \"regionId\": \"REGION_OBJECT_ID\",\n  \"name\": \"Patrol Site Assign To Ark Globe Academy\",\n  \"siteDetails\": {\n    \"siteName\": \"Ark Globe Academy\",\n    \"address\": \"123 School Rd\",\n    \"city\": \"Baltimore\",\n    \"state\": \"MD\",\n    \"zipCode\": \"21201\",\n    \"country\": \"US\",\n    \"siteReferenceNumber1\": \"REF1\",\n    \"siteReferenceNumber2\": \"REF2\",\n    \"latitude\": \"39.29\",\n    \"longitude\": \"-76.61\"\n  },\n  \"portalSchedule\": [\n    { \"day\": \"MON\", \"timeFrom\": \"09:00\", \"timeTo\": \"17:00\", \"visits\": 2 },\n    { \"day\": \"TUE\", \"timeFrom\": \"09:00\", \"timeTo\": \"17:00\", \"visits\": 2 }\n  ],\n  \"alarmContacts\": {\n    \"alarmCompany\": [{ \"name\": \"Alarm Co\", \"phone\": \"+1\", \"email\": \"a@b.com\" }],\n    \"monitoringCompany\": [],\n    \"calloutContact\": []\n  },\n  \"siteDocuments\": [],\n  \"siteCodesAndInstructions\": \"Type here\",\n  \"locationCheckpoints\": [{ \"name\": \"Gate 1\", \"qrNfc\": \"\", \"geofence\": \"\", \"distanceThreshold\": \"\", \"codeSerialId\": \"\" }],\n  \"incidentReportConfig\": [{ \"name\": \"Employee Survey 2025\", \"enable\": true }],\n  \"status\": \"Active\"\n}"},
+								"url": "{{baseUrl}}/api/mobile-patrol/patrol-sites",
+								"description": "**Body (required):** customerId, regionId, name. Optional: siteDetails, portalSchedule, alarmContacts, siteDocuments, siteCodesAndInstructions, locationCheckpoints, incidentReportConfig, status. **Response 201:** { message, data }."
+							}
+						},
+						{
+							"name": "Update Patrol Site",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {"mode": "raw", "raw": "{\n  \"name\": \"Patrol Site Updated\",\n  \"siteDetails\": {\n    \"siteName\": \"Ark Globe Academy\",\n    \"address\": \"456 New Rd\",\n    \"city\": \"Baltimore\",\n    \"state\": \"MD\",\n    \"zipCode\": \"21202\"\n  },\n  \"portalSchedule\": [{ \"day\": \"MON\", \"timeFrom\": \"08:00\", \"timeTo\": \"18:00\", \"visits\": 3 }],\n  \"siteCodesAndInstructions\": \"Updated instructions\",\n  \"status\": \"Active\"\n}"},
+								"url": "{{baseUrl}}/api/mobile-patrol/patrol-sites/:id",
+								"description": "**Params:** id. **Body:** any patrol site fields to update. **Response 200:** { message, data }."
+							}
+						},
+						{
+							"name": "Delete Patrol Site",
+							"request": {
+								"method": "DELETE",
+								"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+								"url": "{{baseUrl}}/api/mobile-patrol/patrol-sites/:id",
+								"description": "**Params:** id. **Response 200:** { message }."
+							}
+						}
+					]
+				},
+				{
+					"name": "Runsheets",
+					"item": [
+						{
+							"name": "Get Runsheets",
+							"request": {
+								"method": "GET",
+								"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+								"url": "{{baseUrl}}/api/mobile-patrol/runsheets",
+								"description": "**Query:** regionId (optional). **Response 200:** { message, count, data }."
+							}
+						},
+						{
+							"name": "Get Runsheet by ID",
+							"request": {
+								"method": "GET",
+								"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+								"url": "{{baseUrl}}/api/mobile-patrol/runsheets/:id",
+								"description": "**Params:** id. **Response 200:** { message, data } — includes patrolSites with populated patrolSiteId."
+							}
+						},
+						{
+							"name": "Create Runsheet",
+							"request": {
+								"method": "POST",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {"mode": "raw", "raw": "{\n  \"regionId\": \"REGION_OBJECT_ID\",\n  \"name\": \"Morning Patrol\",\n  \"defaultRun\": \"Default\",\n  \"runsheetStart\": \"06:00\",\n  \"runsheetEnd\": \"10:00\",\n  \"days\": [\"MON\", \"TUE\", \"WED\", \"THU\", \"FRI\"],\n  \"patrolSites\": [\n    {\n      \"patrolSiteId\": \"PATROL_SITE_OBJECT_ID\",\n      \"days\": [\"MON\", \"TUE\"],\n      \"timeFrom\": \"07:00\",\n      \"timeTo\": \"08:00\",\n      \"visitsCount\": 2,\n      \"expectedTimeMinutes\": 30\n    }\n  ],\n  \"runsheetLength\": \"4h\",\n  \"totalExpectedTime\": \"2h\"\n}"},
+								"url": "{{baseUrl}}/api/mobile-patrol/runsheets",
+								"description": "**Body (required):** name. Optional: regionId, defaultRun, runsheetStart, runsheetEnd, days (MON–SUN), patrolSites (patrolSiteId, days, timeFrom, timeTo, visitsCount, expectedTimeMinutes), runsheetLength, totalExpectedTime. **Response 201:** { message, data }."
+							}
+						},
+						{
+							"name": "Update Runsheet",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {"mode": "raw", "raw": "{\n  \"name\": \"Morning Patrol Updated\",\n  \"runsheetStart\": \"05:30\",\n  \"runsheetEnd\": \"10:30\",\n  \"days\": [\"MON\", \"TUE\", \"WED\", \"THU\", \"FRI\", \"SAT\"],\n  \"runsheetLength\": \"5h\",\n  \"totalExpectedTime\": \"2.5h\",\n  \"isActive\": true\n}"},
+								"url": "{{baseUrl}}/api/mobile-patrol/runsheets/:id",
+								"description": "**Params:** id. **Body:** any runsheet fields to update (name, patrolSites, days, times, isActive, etc.). **Response 200:** { message, data }."
+							}
+						},
+						{
+							"name": "Delete Runsheet",
+							"request": {
+								"method": "DELETE",
+								"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+								"url": "{{baseUrl}}/api/mobile-patrol/runsheets/:id",
+								"description": "**Params:** id. **Response 200:** { message }."
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Staff (Employee, HR, Manager, Submitted Compliance)",
+			"description": "Employee Details, HR Notes, Request Compliance, Manager Site Assignment, Submitted Compliance. Base: {{baseUrl}}/api/staff. Auth: Bearer {{token}}.",
+			"item": [
+				{
+					"name": "Employees",
+					"item": [
+						{"name": "Get Employees", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/staff/employees", "description": "Query: customerId, status, accessPrivilege. Response: { message, count, data }."}},
+						{"name": "Get Employee by ID", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/staff/employees/:id"}},
+						{"name": "Create Employee", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"firstName\": \"Leticia\",\n  \"lastName\": \"Octavio\",\n  \"email\": \"leticia@example.com\",\n  \"employeeId\": \"EMP001\",\n  \"employeePin\": \"1234\",\n  \"employeeRefNumber\": \"REF001\",\n  \"mobileNumber\": \"+1234567890\",\n  \"accessPrivilege\": \"Manager\",\n  \"employmentType\": \"Full-time\",\n  \"startDate\": \"2024-01-01\",\n  \"status\": \"Active\"\n}"}, "url": "{{baseUrl}}/api/staff/employees"}},
+						{"name": "Update Employee", "request": {"method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"firstName\": \"Leticia\",\n  \"lastName\": \"Octavio\",\n  \"accessPrivilege\": \"Admin\",\n  \"status\": \"Active\"\n}"}, "url": "{{baseUrl}}/api/staff/employees/:id"}},
+						{"name": "Update Employee Status (De-activate)", "request": {"method": "PATCH", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"status\": \"Deactive\"\n}"}, "url": "{{baseUrl}}/api/staff/employees/:id/status"}},
+						{"name": "Delete Employee", "request": {"method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/staff/employees/:id"}}
+					]
+				},
+				{
+					"name": "HR Notes (by Employee)",
+					"item": [
+						{"name": "Get HR Notes by Employee", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/staff/employees/:id/notes"}},
+						{"name": "Add New HR Note", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"note\": \"HR note text here\"\n}"}, "url": "{{baseUrl}}/api/staff/employees/:id/notes"}},
+						{"name": "Delete HR Note", "request": {"method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/staff/employees/:id/notes/:noteId"}}
+					]
+				},
+				{
+					"name": "Request Compliance (by Employee)",
+					"item": [
+						{"name": "Get Compliance Requests by Employee", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/staff/employees/:id/compliance-requests"}},
+						{"name": "Request Compliance", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"complianceItemIds\": [\"COMPLIANCE_ITEM_ID_1\", \"COMPLIANCE_ITEM_ID_2\"]\n}"}, "url": "{{baseUrl}}/api/staff/employees/:id/compliance-requests", "description": "Select compliance items (from company compliance) to request for this employee."}}
+					]
+				},
+				{
+					"name": "Manager Site Assignment",
+					"item": [
+						{"name": "Get Sites for Manager", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/staff/employees/:id/manager-sites", "description": "Params: id = manager (employee) id. Returns sites assigned to this manager."}},
+						{"name": "Update Manager Sites (Save)", "request": {"method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"siteIds\": [\"SITE_ID_1\", \"SITE_ID_2\", \"SITE_ID_3\"]\n}"}, "url": "{{baseUrl}}/api/staff/employees/:id/manager-sites", "description": "Select the sites that this manager can manage. Pass array of site _ids."}}
+					]
+				},
+				{
+					"name": "Submitted Compliance",
+					"item": [
+						{"name": "Get Submitted Compliance List", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/staff/submitted-compliance", "description": "Query: employeeId, status, complianceType. Response: list with Staff Name, Compliance Name, License#, Expiry, Type, Attachment, Approved."}},
+						{"name": "Get Submitted Compliance by ID", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/staff/submitted-compliance/:id"}},
+						{"name": "Create (Submit) Compliance", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"employeeId\": \"EMPLOYEE_OBJECT_ID\",\n  \"complianceName\": \"Door Supervision\",\n  \"complianceType\": \"Security License\",\n  \"licenseRef\": \"1013673188606782\",\n  \"expiryDate\": \"2025-12-09\",\n  \"attachmentPath\": \"\"\n}"}, "url": "{{baseUrl}}/api/staff/submitted-compliance"}},
+						{"name": "Approve Submitted Compliance", "request": {"method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/staff/submitted-compliance/:id/approve"}},
+						{"name": "Reject Submitted Compliance", "request": {"method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/staff/submitted-compliance/:id/reject"}},
+						{"name": "Cancel Request (Submitted Compliance)", "request": {"method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/staff/submitted-compliance/:id/cancel"}}
+					]
+				}
+			]
 		}
 	]
 }

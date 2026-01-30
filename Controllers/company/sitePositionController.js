@@ -1,4 +1,4 @@
-const SitePosition = require('../../Models/company/sitePositionModel');
+const SitePosition = require('../../models/company/sitePositionModel');
 const {
   createSitePositionSchema,
   updateSitePositionSchema,

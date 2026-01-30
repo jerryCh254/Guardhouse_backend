@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const DataImportController = require('../../Controllers/company/dataImportController');
+const DataImportController = require('../../controllers/company/dataImportController');
 const auth = require('../../middlewares/authmiddleware');
 const { uploadDataImport } = require('../../middlewares/uploadMiddleware');
 

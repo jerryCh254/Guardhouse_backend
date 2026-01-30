@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const SitePositionController = require('../../Controllers/company/sitePositionController');
+const SitePositionController = require('../../controllers/company/sitePositionController');
 const auth = require('../../middlewares/authmiddleware');
 
 router.use(auth);

@@ -1,4 +1,4 @@
-const Company = require('../../Models/company/companyModel.js');
+const Company = require('../../models/company/companyModel.js');
 const CompanySchema = require('../../dto/company/company.dto.js');
 const bcrypt = require('bcrypt');
 const {
