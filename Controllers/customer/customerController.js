@@ -16,10 +16,12 @@ class CustomerController {
       }
       const newCustomer = await Customer.create(value);
 
+      const customerWithSites = await Customer.findById(newCustomer._id).populate("sites");
+
       return res.status(201).json({
         message: 'Customer is created sucessfully',
-        data: newCustomer,
-        status: newCustomer.req,
+        data: customerWithSites,
+        status: customerWithSites.req,
       });
     } catch (err) {
       console.error('Server error:', err);
@@ -36,7 +38,7 @@ class CustomerController {
         filter.status = status;
       }
 
-      const customers = await Customer.find(filter);
+      const customers = await Customer.find(filter).populate("sites");
 
       return res.status(200).json({
         message: 'Successfully fetched companies',
@@ -58,7 +60,7 @@ class CustomerController {
         req.params.id,
         req.body,
         { new: true }
-      );
+      ).populate("sites");
       res.json(updateCustomers);
     } catch (err) {
       res.status(500).json({ message: err.message });
@@ -67,7 +69,7 @@ class CustomerController {
 
   static async deleteCustomers(req, res) {
     try {
-      const deleteCustomers = await Customer.findByIdAndDelete(req.params.id);
+      const deleteCustomers = await Customer.findByIdAndDelete(req.params.id).populate("sites");
       res.json({
         message: 'Customer  is deleted sucessfully',
         deleteCustomers,
@@ -86,7 +88,7 @@ class CustomerController {
         return res.status(400).json({ message: 'Status should be given' });
       }
 
-      const customer = await Customer.findById(Id);
+      const customer = await Customer.findById(Id).populate("sites");
       if (!customer) {
         return res.status(404).json({ message: 'Customer not found' });
       }

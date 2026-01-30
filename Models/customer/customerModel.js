@@ -53,6 +53,10 @@ const customerSchema = new mongoose.Schema({
     createdAt:{
         type:String,
     },
+    sites: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Sites"
+  }]
     
 })
 module.exports = mongoose.model("Customer",customerSchema)
