@@ -1,883 +1,1251 @@
 {
-	"info": {
-		"_postman_id": "guardhouse-api-collection",
-		"name": "Guardhouse Backend - Complete API Collection",
-		"description": "Complete API collection with request bodies and response examples for all Guardhouse Backend APIs. Base URL: http://localhost:8080 (or set in env). Use Login/Auth to get token, then set collection variable `token`.",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-	},
-	"variable": [
-		{"key": "baseUrl", "value": "http://localhost:8080"},
-		{"key": "token", "value": ""}
-	],
-	"item": [
-		{
-			"name": "Auth",
-			"description": "User auth: signup, login, forget/reset password, logout, get users.",
-			"item": [
-				{
-					"name": "Signup",
-					"request": {
-						"method": "POST",
-						"header": [{"key": "Content-Type", "value": "application/json"}],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"admin\",\n  \"phone\": \"+1234567890\",\n  \"companyId\": \"\",\n  \"createdBy\": \"\"\n}"
-						},
-						"url": "{{baseUrl}}/api/auth/signup",
-						"description": "**Body (required):** name, email, password, role. Optional: phone, companyId, createdBy.\n\n**Response 201:**\n```json\n{\n  \"message\": \"User registered successfully\",\n  \"user\": { \"_id\", \"name\", \"email\", \"role\", \"phone\", \"companyId\" }\n}\n```"
-					}
-				},
-				{
-					"name": "Login",
-					"request": {
-						"method": "POST",
-						"header": [{"key": "Content-Type", "value": "application/json"}],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
-						},
-						"url": "{{baseUrl}}/api/auth/login",
-						"description": "**Body:** email, password. Save the returned `token` into collection variable `token` for other requests.\n\n**Response 200:**\n```json\n{\n  \"message\": \"Login successful\",\n  \"token\": \"eyJhbGc...\",\n  \"id\": \"...\",\n  \"email\": \"user@example.com\",\n  \"name\": \"John Doe\"\n}\n```"
-					}
-				},
-				{
-					"name": "Forget Password",
-					"request": {
-						"method": "POST",
-						"header": [{"key": "Content-Type", "value": "application/json"}],
-						"body": {"mode": "raw", "raw": "{\n  \"email\": \"user@example.com\"\n}"},
-						"url": "{{baseUrl}}/api/auth/forgetpassword",
-						"description": "**Body:** email.\n\n**Response 200:** { \"message\": \"Reset link sent to email\" }"
-					}
-				},
-				{
-					"name": "Reset Password",
-					"request": {
-						"method": "POST",
-						"header": [{"key": "Content-Type", "value": "application/json"}],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"token\": \"reset_token_from_email_link\",\n  \"password\": \"newPassword123\"\n}"
-						},
-						"url": "{{baseUrl}}/api/auth/resetpassword",
-						"description": "**Body:** token (from email link), password (new).\n\n**Response 200:** { \"message\": \"Password reset successfully\" }"
-					}
-				},
-				{
-					"name": "Logout",
-					"request": {
-						"method": "POST",
-						"header": [
-							{"key": "Content-Type", "value": "application/json"},
-							{"key": "Authorization", "value": "Bearer {{token}}"}
-						],
-						"url": "{{baseUrl}}/api/auth/logout",
-						"description": "**Response 200:** { \"message\": \"Logged out successfully\" }"
-					}
-				},
-				{
-					"name": "Get All Users",
-					"request": {
-						"method": "GET",
-						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
-						"url": "{{baseUrl}}/api/auth/getAllUsers",
-						"description": "**Response 200:** { \"message\": \"...\", \"users\": [...] }"
-					}
-				}
-			]
-		},
-		{
-			"name": "Company",
-			"description": "Company register/login, SuperAdmin company status, Holidays, Skills, Compliance, Role Templates, Documents, Data Import, Site Positions.",
-			"item": [
-				{
-					"name": "Company Register",
-					"request": {
-						"method": "POST",
-						"header": [
-							{"key": "Content-Type", "value": "application/json"},
-							{"key": "Authorization", "value": "Bearer {{token}}"}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"companyName\": \"Acme Ltd\",\n  \"companyEmail\": \"company@example.com\",\n  \"ContactInfo\": \"+1234567890\",\n  \"address\": \"123 Business St\",\n  \"registrationNumber\": \"REG123\",\n  \"plan\": \"premium\"\n}"
-						},
-						"url": "{{baseUrl}}/api/company/register",
-						"description": "**Body (required):** companyName, companyEmail, ContactInfo, address, registrationNumber, plan.\n\n**Response 201:** { \"message\", \"data\", \"status\" }"
-					}
-				},
-				{
-					"name": "Company Login",
-					"request": {
-						"method": "POST",
-						"header": [{"key": "Content-Type", "value": "application/json"}],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"companyEmail\": \"company@example.com\",\n  \"password\": \"password123\"\n}"
-						},
-						"url": "{{baseUrl}}/api/company/login",
-						"description": "**Body:** companyEmail, password.\n\n**Response 200:** { \"message\", \"token\", \"id\", \"companyEmail\", \"companyName\" }"
-					}
-				},
-				{
-					"name": "Company Forget Password",
-					"request": {
-						"method": "POST",
-						"header": [{"key": "Content-Type", "value": "application/json"}],
-						"body": {"mode": "raw", "raw": "{\n  \"companyEmail\": \"company@example.com\"\n}"},
-						"url": "{{baseUrl}}/api/company/forgetpassword",
-						"description": "**Response 200:** { \"message\": \"Reset link sent\" }"
-					}
-				},
-				{
-					"name": "Update Company Request Status (SuperAdmin)",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{"key": "Content-Type", "value": "application/json"},
-							{"key": "Authorization", "value": "Bearer {{token}}"}
-						],
-						"body": {"mode": "raw", "raw": "{\n  \"status\": \"ACTIVE\"\n}"},
-						"url": "{{baseUrl}}/api/company/request/:id/status",
-						"description": "**Params:** id = company _id. **Body:** status = \"ACTIVE\" or \"REJECTED\". **Response 200:** { \"message\", \"data\" }"
-					}
-				},
-				{
-					"name": "Get All Companies (SuperAdmin)",
-					"request": {
-						"method": "GET",
-						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
-						"url": "{{baseUrl}}/api/company/getAllCompanies",
-						"description": "**Response 200:** { \"message\", \"companies\" or \"data\" }"
-					}
-				},
-				{
-					"name": "Get All Companies by Status (SuperAdmin)",
-					"request": {
-						"method": "GET",
-						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
-						"url": "{{baseUrl}}/api/company/getAllCompanies/:status",
-						"description": "**Params:** status = ACTIVE | REJECTED | PENDING. **Response 200:** { \"message\", \"companies\" }"
-					}
-				},
-				{
-					"name": "Holidays",
-					"item": [
-						{
-							"name": "Get Holidays",
-							"request": {
-								"method": "GET",
-								"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
-								"url": "{{baseUrl}}/api/company/holidays",
-								"description": "**Query:** country, state, year (optional). **Response 200:** { \"message\", \"count\", \"data\" }"
-							}
-						},
-						{
-							"name": "Get Holiday Meta Countries",
-							"request": {
-								"method": "GET",
-								"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
-								"url": "{{baseUrl}}/api/company/holidays/meta/countries",
-								"description": "**Response 200:** { \"message\", \"data\": [\"UK\", \"US\", ...] }"
-							}
-						},
-						{
-							"name": "Get Holiday Meta States",
-							"request": {
-								"method": "GET",
-								"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
-								"url": "{{baseUrl}}/api/company/holidays/meta/states?country=UK",
-								"description": "**Query:** country. **Response 200:** { \"message\", \"data\" }"
-							}
-						},
-						{
-							"name": "Get Holiday Meta Years",
-							"request": {
-								"method": "GET",
-								"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
-								"url": "{{baseUrl}}/api/company/holidays/meta/years",
-								"description": "**Response 200:** { \"message\", \"data\" }"
-							}
-						},
-						{
-							"name": "Get Holiday by ID",
-							"request": {
-								"method": "GET",
-								"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
-								"url": "{{baseUrl}}/api/company/holidays/:id",
-								"description": "**Response 200:** { \"message\", \"data\" }"
-							}
-						},
-						{
-							"name": "Create Holiday",
-							"request": {
-								"method": "POST",
-								"header": [
-									{"key": "Authorization", "value": "Bearer {{token}}"},
-									{"key": "Content-Type", "value": "application/json"}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"description\": \"Christmas Day\",\n  \"date\": \"2025-12-25\",\n  \"startTime\": \"00:00\",\n  \"endTime\": \"23:59\",\n  \"country\": \"UK\",\n  \"state\": \"EW\",\n  \"year\": 2025\n}"
-								},
-								"url": "{{baseUrl}}/api/company/holidays",
-								"description": "**Required:** description, date (ISO). Optional: startTime/endTime (HH:mm), country, state, year. **Response 201:** { \"message\", \"data\" }"
-							}
-						},
-						{
-							"name": "Update Holiday",
-							"request": {
-								"method": "PUT",
-								"header": [
-									{"key": "Authorization", "value": "Bearer {{token}}"},
-									{"key": "Content-Type", "value": "application/json"}
-								],
-								"body": {"mode": "raw", "raw": "{\n  \"description\": \"Boxing Day\",\n  \"date\": \"2025-12-26\",\n  \"startTime\": \"00:00\",\n  \"endTime\": \"23:59\"\n}"},
-								"url": "{{baseUrl}}/api/company/holidays/:id",
-								"description": "**Response 200:** { \"message\", \"data\" }"
-							}
-						},
-						{
-							"name": "Delete Holiday",
-							"request": {
-								"method": "DELETE",
-								"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
-								"url": "{{baseUrl}}/api/company/holidays/:id",
-								"description": "**Response 200:** { \"message\" }"
-							}
-						}
-					]
-				},
-				{
-					"name": "Skills",
-					"item": [
-						{
-							"name": "Get Skills",
-							"request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/skills", "description": "**Response 200:** { \"message\", \"count\", \"data\" }"}
-						},
-						{
-							"name": "Get Skill by ID",
-							"request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/skills/:id", "description": "**Response 200:** { \"message\", \"data\" }"}
-						},
-						{
-							"name": "Create Skill",
-							"request": {
-								"method": "POST",
-								"header": [
-									{"key": "Authorization", "value": "Bearer {{token}}"},
-									{"key": "Content-Type", "value": "application/json"}
-								],
-								"body": {"mode": "raw", "raw": "{\n  \"name\": \"First Aid\",\n  \"description\": \"First aid certified\",\n  \"isActive\": true\n}"},
-								"url": "{{baseUrl}}/api/company/skills",
-								"description": "**Required:** name. Optional: description, isActive. **Response 201:** { \"message\", \"data\" }"
-							}
-						},
-						{
-							"name": "Update Skill",
-							"request": {
-								"method": "PUT",
-								"header": [
-									{"key": "Authorization", "value": "Bearer {{token}}"},
-									{"key": "Content-Type", "value": "application/json"}
-								],
-								"body": {"mode": "raw", "raw": "{\n  \"name\": \"First Aid Level 2\",\n  \"description\": \"Updated\",\n  \"isActive\": true\n}"},
-								"url": "{{baseUrl}}/api/company/skills/:id",
-								"description": "**Response 200:** { \"message\", \"data\" }"
-							}
-						},
-						{"name": "Delete Skill", "request": {"method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/skills/:id", "description": "**Response 200:** { \"message\" }"}
-					]
-				},
-				{
-					"name": "Compliance Items",
-					"item": [
-						{
-							"name": "Get Compliance Items",
-							"request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/compliance-items", "description": "**Response 200:** { \"message\", \"count\", \"data\" }"}
-						},
-						{
-							"name": "Get Compliance Item by ID",
-							"request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/compliance-items/:id", "description": "**Response 200:** { \"message\", \"data\" }"}
-						},
-						{
-							"name": "Get Compliance Renewals",
-							"request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/compliance-items/:id/renewals", "description": "**Response 200:** { \"message\", \"data\" } (renewals array)"}
-						},
-						{
-							"name": "Create Compliance Item",
-							"request": {
-								"method": "POST",
-								"header": [
-									{"key": "Authorization", "value": "Bearer {{token}}"},
-									{"key": "Content-Type", "value": "application/json"}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"name\": \"SIA Licence\",\n  \"description\": \"Security licence\",\n  \"reminder\": \"30 days before expiry\",\n  \"critical\": true,\n  \"showToCustomer\": true,\n  \"isActive\": true\n}"
-								},
-								"url": "{{baseUrl}}/api/company/compliance-items",
-								"description": "**Required:** name. Optional: description, reminder, critical, showToCustomer, isActive. **Response 201:** { \"message\", \"data\" }"
-							}
-						},
-						{
-							"name": "Add Renewal",
-							"request": {
-								"method": "POST",
-								"header": [
-									{"key": "Authorization", "value": "Bearer {{token}}"},
-									{"key": "Content-Type", "value": "application/json"}
-								],
-								"body": {"mode": "raw", "raw": "{\n  \"renewedAt\": \"2025-01-01\",\n  \"expiryDate\": \"2026-01-01\",\n  \"notes\": \"Renewed online\"\n}"},
-								"url": "{{baseUrl}}/api/company/compliance-items/:id/renewals",
-								"description": "**Params:** id = compliance item _id. **Response 201:** { \"message\", \"data\" }"
-							}
-						},
-						{
-							"name": "Update Compliance Item",
-							"request": {
-								"method": "PUT",
-								"header": [
-									{"key": "Authorization", "value": "Bearer {{token}}"},
-									{"key": "Content-Type", "value": "application/json"}
-								],
-								"body": {"mode": "raw", "raw": "{\n  \"name\": \"SIA Licence Updated\",\n  \"critical\": true,\n  \"isActive\": true\n}"},
-								"url": "{{baseUrl}}/api/company/compliance-items/:id",
-								"description": "**Response 200:** { \"message\", \"data\" }"
-							}
-						},
-						{"name": "Delete Compliance Item", "request": {"method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/compliance-items/:id", "description": "**Response 200:** { \"message\" }"}
-					]
-				},
-				{
-					"name": "Role Templates",
-					"item": [
-						{
-							"name": "Get Role Templates",
-							"request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/role-templates", "description": "**Response 200:** { \"message\", \"count\", \"data\" }"}
-						},
-						{
-							"name": "Get Role Template by ID",
-							"request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/role-templates/:id", "description": "**Response 200:** { \"message\", \"data\" }"}
-						},
-						{
-							"name": "Create Role Template",
-							"request": {
-								"method": "POST",
-								"header": [
-									{"key": "Authorization", "value": "Bearer {{token}}"},
-									{"key": "Content-Type", "value": "application/json"}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"name\": \"Security Guard\",\n  \"securityLicenceRequirements\": \"SIA required\",\n  \"critical\": true,\n  \"showToCustomer\": true,\n  \"isActive\": true\n}"
-								},
-								"url": "{{baseUrl}}/api/company/role-templates",
-								"description": "**Required:** name. Optional: securityLicenceRequirements, critical, showToCustomer, isActive. **Response 201:** { \"message\", \"data\" }"
-							}
-						},
-						{
-							"name": "Update Role Template",
-							"request": {
-								"method": "PUT",
-								"header": [
-									{"key": "Authorization", "value": "Bearer {{token}}"},
-									{"key": "Content-Type", "value": "application/json"}
-								],
-								"body": {"mode": "raw", "raw": "{\n  \"name\": \"Senior Security Guard\",\n  \"securityLicenceRequirements\": \"SIA Level 2\",\n  \"isActive\": true\n}"},
-								"url": "{{baseUrl}}/api/company/role-templates/:id",
-								"description": "**Response 200:** { \"message\", \"data\" }"
-							}
-						},
-						{"name": "Delete Role Template", "request": {"method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/role-templates/:id", "description": "**Response 200:** { \"message\" }"}
-					]
-				},
-				{
-					"name": "Documents",
-					"item": [
-						{
-							"name": "Get Documents",
-							"request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/documents", "description": "**Response 200:** { \"message\", \"count\", \"data\" }"}
-						},
-						{
-							"name": "Get Document by ID",
-							"request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/documents/:id", "description": "**Response 200:** { \"message\", \"data\" }"}
-						},
-						{
-							"name": "Download Document",
-							"request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/documents/:id/download", "description": "**Response:** file stream."}
-						},
-						{
-							"name": "Create Document (multipart)",
-							"request": {
-								"method": "POST",
-								"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{"key": "file", "type": "file", "src": "", "description": "PDF/document file"},
-										{"key": "name", "value": "Health & Safety Policy", "type": "text", "description": "Required"},
-										{"key": "allowAllStaffToView", "value": "true", "type": "text"},
-										{"key": "requiresAcknowledgementBeforeShift", "value": "true", "type": "text"},
-										{"key": "expireOnOrBefore", "value": "2026-12-31", "type": "text"},
-										{"key": "expirePeriod", "value": "1 year", "type": "text"}
-									]
-								},
-								"url": "{{baseUrl}}/api/company/documents",
-								"description": "**Form-data:** file (required), name (required). Optional: allowAllStaffToView, requiresAcknowledgementBeforeShift, expireOnOrBefore, expirePeriod. **Response 201:** { \"message\", \"data\" }"
-							}
-						},
-						{
-							"name": "Update Document",
-							"request": {
-								"method": "PUT",
-								"header": [
-									{"key": "Authorization", "value": "Bearer {{token}}"},
-									{"key": "Content-Type", "value": "application/json"}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"name\": \"Updated Document Name\",\n  \"allowAllStaffToView\": true,\n  \"requiresAcknowledgementBeforeShift\": false,\n  \"expireOnOrBefore\": \"2026-06-30\",\n  \"expirePeriod\": \"6 months\"\n}"
-								},
-								"url": "{{baseUrl}}/api/company/documents/:id",
-								"description": "**Response 200:** { \"message\", \"data\" }"
-							}
-						},
-						{"name": "Delete Document", "request": {"method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/documents/:id", "description": "**Response 200:** { \"message\" }"}
-					]
-				},
-				{
-					"name": "Data Import",
-					"item": [
-						{
-							"name": "Get Import Types",
-							"request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/data-import/types", "description": "**Response 200:** { \"message\", \"data\": [\"employees\", \"skills\", \"sites\", \"site-positions\", \"holidays\"] }"}
-						},
-						{
-							"name": "Get Data Imports",
-							"request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/data-import", "description": "**Response 200:** { \"message\", \"data\" } (list of import jobs)"}
-						},
-						{
-							"name": "Get Data Import Status",
-							"request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/data-import/:jobId/status", "description": "**Params:** jobId. **Response 200:** { \"message\", \"data\": { status, progress, ... } }"}
-						},
-						{
-							"name": "Create Data Import (multipart)",
-							"request": {
-								"method": "POST",
-								"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{"key": "file", "type": "file", "src": "", "description": "CSV/Excel file"},
-										{"key": "importType", "value": "employees", "type": "text", "description": "One of: employees, skills, sites, site-positions, holidays"}
-									]
-								},
-								"url": "{{baseUrl}}/api/company/data-import",
-								"description": "**Form-data:** file (required), importType (required). **Response 201:** { \"message\", \"data\": { jobId, status } }"
-							}
-						}
-					]
-				},
-				{
-					"name": "Site Positions",
-					"item": [
-						{
-							"name": "Get Site Positions",
-							"request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/site-positions", "description": "**Response 200:** { \"message\", \"count\", \"data\" }"}
-						},
-						{
-							"name": "Get Site Position by ID",
-							"request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/site-positions/:id", "description": "**Response 200:** { \"message\", \"data\" }"}
-						},
-						{
-							"name": "Create Site Position",
-							"request": {
-								"method": "POST",
-								"header": [
-									{"key": "Authorization", "value": "Bearer {{token}}"},
-									{"key": "Content-Type", "value": "application/json"}
-								],
-								"body": {"mode": "raw", "raw": "{\n  \"name\": \"Gate 1\",\n  \"description\": \"Main entrance\",\n  \"isActive\": true\n}"},
-								"url": "{{baseUrl}}/api/company/site-positions",
-								"description": "**Required:** name. Optional: description, isActive. **Response 201:** { \"message\", \"data\" }"
-							}
-						},
-						{
-							"name": "Update Site Position",
-							"request": {
-								"method": "PUT",
-								"header": [
-									{"key": "Authorization", "value": "Bearer {{token}}"},
-									{"key": "Content-Type", "value": "application/json"}
-								],
-								"body": {"mode": "raw", "raw": "{\n  \"name\": \"Gate 1 - Updated\",\n  \"description\": \"Main entrance 24/7\",\n  \"isActive\": true\n}"},
-								"url": "{{baseUrl}}/api/company/site-positions/:id",
-								"description": "**Response 200:** { \"message\", \"data\" }"
-							}
-						},
-						{"name": "Delete Site Position", "request": {"method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/company/site-positions/:id", "description": "**Response 200:** { \"message\" }"}
-					]
-				}
-			]
-		},
-		{
-			"name": "Customer",
-			"description": "Customer CRUD and status. Base: /api/customer. Auth: Bearer {{token}}.",
-			"item": [
-				{
-					"name": "Create Customer",
-					"request": {
-						"method": "POST",
-						"header": [
-							{"key": "Content-Type", "value": "application/json"},
-							{"key": "Authorization", "value": "Bearer {{token}}"}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"customerName\": \"ABC Corp\",\n  \"customerReferenceNumber\": \"REF001\",\n  \"ReferenceId\": \"ID001\",\n  \"Address\": \"123 Client Street\",\n  \"city\": \"London\",\n  \"zipCode\": \"SW1A 1AA\",\n  \"country\": \"UK\",\n  \"invoiceRemainder\": \"Net 30\",\n  \"Contact\": [\n    {\n      \"firstName\": \"John\",\n      \"lastName\": \"Smith\",\n      \"email\": \"john@abccorp.com\",\n      \"mobileNumber\": \"+447700900000\",\n      \"position\": \"Manager\",\n      \"note\": \"Primary contact\"\n    }\n  ]\n}"
-						},
-						"url": "{{baseUrl}}/api/customer/createCustomer",
-						"description": "**Required:** customerName. Optional: customerReferenceNumber, ReferenceId, Address, city, zipCode, country, invoiceRemainder, Contact[]. **Response 201:** { \"message\", \"data\", \"status\" }"
-					}
-				},
-				{
-					"name": "Get All Customers",
-					"request": {
-						"method": "GET",
-						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
-						"url": "{{baseUrl}}/api/customer/getAllCustomers",
-						"description": "**Response 200:** { \"message\", \"count\", \"customers\" }"
-					}
-				},
-				{
-					"name": "Get All Customers by Status",
-					"request": {
-						"method": "GET",
-						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
-						"url": "{{baseUrl}}/api/customer/getAllCustomers/:status",
-						"description": "**Params:** status (e.g. active, inactive). **Response 200:** { \"message\", \"count\", \"customers\" }"
-					}
-				},
-				{
-					"name": "Update Customer",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{"key": "Content-Type", "value": "application/json"},
-							{"key": "Authorization", "value": "Bearer {{token}}"}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"customerName\": \"ABC Corp Ltd\",\n  \"Address\": \"456 New Street\",\n  \"city\": \"Manchester\",\n  \"zipCode\": \"M1 1AA\",\n  \"country\": \"UK\"\n}"
-						},
-						"url": "{{baseUrl}}/api/customer/updateCustomer/:id",
-						"description": "**Params:** id = customer _id. **Response 200:** { \"message\", \"data\" }"
-					}
-				},
-				{
-					"name": "Delete Customer",
-					"request": {
-						"method": "DELETE",
-						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
-						"url": "{{baseUrl}}/api/customer/deleteCustomer/:id",
-						"description": "**Response 200:** { \"message\" }"
-					}
-				},
-				{
-					"name": "Update Customer Status",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{"key": "Content-Type", "value": "application/json"},
-							{"key": "Authorization", "value": "Bearer {{token}}"}
-						],
-						"body": {"mode": "raw", "raw": "{\n  \"status\": \"active\"\n}"},
-						"url": "{{baseUrl}}/api/customer/updateCustomerStatus/:id",
-						"description": "**Params:** id. **Body:** status (e.g. active, inactive). **Response 200:** { \"message\", \"customer\" }"
-					}
-				}
-			]
-		},
-		{
-			"name": "Site",
-			"description": "Sites under a customer. Base: /api/site. Path params: customerId, id.",
-			"item": [
-				{
-					"name": "Add Site",
-					"request": {
-						"method": "POST",
-						"header": [{"key": "Content-Type", "value": "application/json"}],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"siteName\": \"Warehouse A\",\n  \"customer\": \"customerId_or_name\",\n  \"siteReferenceNumber\": \"SITE001\",\n  \"referenceId\": \"REF001\",\n  \"address\": \"100 Industrial Rd\",\n  \"state\": \"California\",\n  \"zipCode\": \"90001\",\n  \"country\": \"US\",\n  \"mobileNumber\": \"+1234567890\",\n  \"welfarecheckInterval\": \"60\",\n  \"holidayCalender\": \"UK\",\n  \"mobileClockTime\": \"enabled\",\n  \"welfareChecks\": [\n    { \"day\": \"monday\", \"startHours\": \"09:00\", \"toHours\": \"17:00\" },\n    { \"day\": \"tuesday\", \"startHours\": \"09:00\", \"toHours\": \"17:00\" }\n  ]\n}"
-						},
-						"url": "{{baseUrl}}/api/site/addSite/:customerId",
-						"description": "**Params:** customerId = customer _id. **Body:** siteName, customer, siteReferenceNumber, referenceId, address, state, zipCode, country, mobileNumber, welfarecheckInterval, holidayCalender, mobileClockTime, welfareChecks[] (day: monday..sunday, startHours, toHours). **Response 201:** { \"message\", \"data\" }"
-					}
-				},
-				{
-					"name": "Get Sites",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{baseUrl}}/api/site/getSites",
-						"description": "**Response 200:** { \"message\", \"data\" or \"sites\" } — list of all sites."
-					}
-				},
-				{
-					"name": "Update Site",
-					"request": {
-						"method": "PUT",
-						"header": [{"key": "Content-Type", "value": "application/json"}],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"siteName\": \"Warehouse A Updated\",\n  \"address\": \"200 Industrial Rd\",\n  \"state\": \"California\",\n  \"zipCode\": \"90002\",\n  \"welfareChecks\": [\n    { \"day\": \"monday\", \"startHours\": \"08:00\", \"toHours\": \"18:00\" }\n  ]\n}"
-						},
-						"url": "{{baseUrl}}/api/site/updateSite/:id",
-						"description": "**Params:** id = site _id. **Body:** any site fields. **Response 200:** { \"message\", \"data\" }"
-					}
-				},
-				{
-					"name": "Delete Site",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": "{{baseUrl}}/api/site/deleteSite/:id",
-						"description": "**Params:** id = site _id. **Response 200:** { \"message\" }"
-					}
-				},
-				{
-					"name": "Update Site Status",
-					"request": {
-						"method": "PATCH",
-						"header": [{"key": "Content-Type", "value": "application/json"}],
-						"body": {"mode": "raw", "raw": "{\n  \"status\": \"active\"\n}"},
-						"url": "{{baseUrl}}/api/site/updateSiteStatus/:id",
-						"description": "**Params:** id. **Body:** status. **Response 200:** { \"message\", \"data\" }"
-					}
-				}
-			]
-		},
-		{
-			"name": "Mobile Patrol",
-			"description": "Regions, Patrol Sites, Runsheets. Base: {{baseUrl}}/api/mobile-patrol. Auth: Bearer {{token}}.",
-			"item": [
-				{
-					"name": "Regions",
-					"item": [
-						{
-							"name": "Get Regions",
-							"request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/mobile-patrol/regions", "description": "**Response 200:** { \"message\", \"count\", \"data\" }"}
-						},
-						{
-							"name": "Get Region by ID",
-							"request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/mobile-patrol/regions/:id", "description": "**Response 200:** { \"message\", \"data\" }"}
-						},
-						{
-							"name": "Create Region",
-							"request": {
-								"method": "POST",
-								"header": [
-									{"key": "Authorization", "value": "Bearer {{token}}"},
-									{"key": "Content-Type", "value": "application/json"}
-								],
-								"body": {"mode": "raw", "raw": "{\n  \"name\": \"MARYLAND\",\n  \"geoJson\": null\n}"},
-								"url": "{{baseUrl}}/api/mobile-patrol/regions",
-								"description": "**Required:** name. Optional: geoJson. **Response 201:** { \"message\", \"data\" }"
-							}
-						},
-						{
-							"name": "Update Region",
-							"request": {
-								"method": "PUT",
-								"header": [
-									{"key": "Authorization", "value": "Bearer {{token}}"},
-									{"key": "Content-Type", "value": "application/json"}
-								],
-								"body": {"mode": "raw", "raw": "{\n  \"name\": \"MARYLAND Updated\",\n  \"geoJson\": null,\n  \"isActive\": true\n}"},
-								"url": "{{baseUrl}}/api/mobile-patrol/regions/:id",
-								"description": "**Response 200:** { \"message\", \"data\" }"
-							}
-						},
-						{
-							"name": "Delete Region",
-							"request": {"method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/mobile-patrol/regions/:id", "description": "**Response 200:** { \"message\" }"}
-						}
-					]
-				},
-				{
-					"name": "Patrol Sites",
-					"item": [
-						{
-							"name": "Get Patrol Sites",
-							"request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/mobile-patrol/patrol-sites", "description": "**Query:** customerId, regionId, status. **Response 200:** { \"message\", \"count\", \"data\" }"}
-						},
-						{
-							"name": "Get Patrol Site by ID",
-							"request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/mobile-patrol/patrol-sites/:id", "description": "**Response 200:** { \"message\", \"data\" }"}
-						},
-						{
-							"name": "Create Patrol Site",
-							"request": {
-								"method": "POST",
-								"header": [
-									{"key": "Authorization", "value": "Bearer {{token}}"},
-									{"key": "Content-Type", "value": "application/json"}
-								],
-								"body": {"mode": "raw", "raw": "{\n  \"customerId\": \"CUSTOMER_OBJECT_ID\",\n  \"regionId\": \"REGION_OBJECT_ID\",\n  \"name\": \"Patrol Site Assign To Ark Globe Academy\",\n  \"siteDetails\": {\n    \"siteName\": \"Ark Globe Academy\",\n    \"address\": \"123 School Rd\",\n    \"city\": \"Baltimore\",\n    \"state\": \"MD\",\n    \"zipCode\": \"21201\",\n    \"country\": \"US\",\n    \"siteReferenceNumber1\": \"REF1\",\n    \"siteReferenceNumber2\": \"REF2\",\n    \"latitude\": \"39.29\",\n    \"longitude\": \"-76.61\"\n  },\n  \"portalSchedule\": [\n    { \"day\": \"MON\", \"timeFrom\": \"09:00\", \"timeTo\": \"17:00\", \"visits\": 2 },\n    { \"day\": \"TUE\", \"timeFrom\": \"09:00\", \"timeTo\": \"17:00\", \"visits\": 2 }\n  ],\n  \"alarmContacts\": {\n    \"alarmCompany\": [{ \"name\": \"Alarm Co\", \"phone\": \"+1\", \"email\": \"a@b.com\" }],\n    \"monitoringCompany\": [],\n    \"calloutContact\": []\n  },\n  \"siteDocuments\": [],\n  \"siteCodesAndInstructions\": \"Type here\",\n  \"locationCheckpoints\": [{ \"name\": \"Gate 1\", \"qrNfc\": \"\", \"geofence\": \"\", \"distanceThreshold\": \"\", \"codeSerialId\": \"\" }],\n  \"incidentReportConfig\": [{ \"name\": \"Employee Survey 2025\", \"enable\": true }],\n  \"status\": \"Active\"\n}"},
-								"url": "{{baseUrl}}/api/mobile-patrol/patrol-sites",
-								"description": "**Required:** customerId, regionId, name. Optional: siteDetails, portalSchedule, alarmContacts, siteDocuments, siteCodesAndInstructions, locationCheckpoints, incidentReportConfig, status. **Response 201:** { \"message\", \"data\" }"
-							}
-						},
-						{
-							"name": "Update Patrol Site",
-							"request": {
-								"method": "PUT",
-								"header": [
-									{"key": "Authorization", "value": "Bearer {{token}}"},
-									{"key": "Content-Type", "value": "application/json"}
-								],
-								"body": {"mode": "raw", "raw": "{\n  \"name\": \"Patrol Site Updated\",\n  \"siteDetails\": { \"siteName\": \"Ark Globe Academy\", \"address\": \"456 New Rd\", \"city\": \"Baltimore\", \"state\": \"MD\", \"zipCode\": \"21202\" },\n  \"portalSchedule\": [{ \"day\": \"MON\", \"timeFrom\": \"08:00\", \"timeTo\": \"18:00\", \"visits\": 3 }],\n  \"siteCodesAndInstructions\": \"Updated instructions\",\n  \"status\": \"Active\"\n}"},
-								"url": "{{baseUrl}}/api/mobile-patrol/patrol-sites/:id",
-								"description": "**Response 200:** { \"message\", \"data\" }"
-							}
-						},
-						{
-							"name": "Delete Patrol Site",
-							"request": {"method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/mobile-patrol/patrol-sites/:id", "description": "**Response 200:** { \"message\" }"}
-						}
-					]
-				},
-				{
-					"name": "Runsheets",
-					"item": [
-						{
-							"name": "Get Runsheets",
-							"request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/mobile-patrol/runsheets", "description": "**Query:** regionId. **Response 200:** { \"message\", \"count\", \"data\" }"}
-						},
-						{
-							"name": "Get Runsheet by ID",
-							"request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/mobile-patrol/runsheets/:id", "description": "**Response 200:** { \"message\", \"data\" }"}
-						},
-						{
-							"name": "Create Runsheet",
-							"request": {
-								"method": "POST",
-								"header": [
-									{"key": "Authorization", "value": "Bearer {{token}}"},
-									{"key": "Content-Type", "value": "application/json"}
-								],
-								"body": {"mode": "raw", "raw": "{\n  \"regionId\": \"REGION_OBJECT_ID\",\n  \"name\": \"Morning Patrol\",\n  \"defaultRun\": \"Default\",\n  \"runsheetStart\": \"06:00\",\n  \"runsheetEnd\": \"10:00\",\n  \"days\": [\"MON\", \"TUE\", \"WED\", \"THU\", \"FRI\"],\n  \"patrolSites\": [\n    { \"patrolSiteId\": \"PATROL_SITE_OBJECT_ID\", \"days\": [\"MON\", \"TUE\"], \"timeFrom\": \"07:00\", \"timeTo\": \"08:00\", \"visitsCount\": 2, \"expectedTimeMinutes\": 30 }\n  ],\n  \"runsheetLength\": \"4h\",\n  \"totalExpectedTime\": \"2h\"\n}"},
-								"url": "{{baseUrl}}/api/mobile-patrol/runsheets",
-								"description": "**Required:** name. Optional: regionId, defaultRun, runsheetStart, runsheetEnd, days (MON–SUN), patrolSites[]. **Response 201:** { \"message\", \"data\" }"
-							}
-						},
-						{
-							"name": "Update Runsheet",
-							"request": {
-								"method": "PUT",
-								"header": [
-									{"key": "Authorization", "value": "Bearer {{token}}"},
-									{"key": "Content-Type", "value": "application/json"}
-								],
-								"body": {"mode": "raw", "raw": "{\n  \"name\": \"Morning Patrol Updated\",\n  \"runsheetStart\": \"05:30\",\n  \"runsheetEnd\": \"10:30\",\n  \"days\": [\"MON\", \"TUE\", \"WED\", \"THU\", \"FRI\", \"SAT\"],\n  \"runsheetLength\": \"5h\",\n  \"totalExpectedTime\": \"2.5h\",\n  \"isActive\": true\n}"},
-								"url": "{{baseUrl}}/api/mobile-patrol/runsheets/:id",
-								"description": "**Response 200:** { \"message\", \"data\" }"
-							}
-						},
-						{
-							"name": "Delete Runsheet",
-							"request": {"method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/mobile-patrol/runsheets/:id", "description": "**Response 200:** { \"message\" }"}
-						}
-					]
-				}
-			]
-		},
-		{
-			"name": "Staff",
-			"description": "Employees, HR Notes, Compliance Requests, Manager Site Assignment, Submitted Compliance. Base: {{baseUrl}}/api/staff. Auth: Bearer {{token}}.",
-			"item": [
-				{
-					"name": "Employees",
-					"item": [
-						{"name": "Get Employees", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/staff/employees", "description": "**Query:** customerId, status, accessPrivilege. **Response 200:** { \"message\", \"count\", \"data\" }"}},
-						{"name": "Get Employee by ID", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/staff/employees/:id", "description": "**Response 200:** { \"message\", \"data\" }"}},
-						{
-							"name": "Create Employee",
-							"request": {
-								"method": "POST",
-								"header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}],
-								"body": {"mode": "raw", "raw": "{\n  \"firstName\": \"Leticia\",\n  \"lastName\": \"Octavio\",\n  \"email\": \"leticia@example.com\",\n  \"employeeId\": \"EMP001\",\n  \"employeePin\": \"1234\",\n  \"employeeRefNumber\": \"REF001\",\n  \"mobileNumber\": \"+1234567890\",\n  \"accessPrivilege\": \"Manager\",\n  \"employmentType\": \"Full-time\",\n  \"startDate\": \"2024-01-01\",\n  \"status\": \"Active\"\n}"},
-								"url": "{{baseUrl}}/api/staff/employees",
-								"description": "**Required:** firstName, lastName, email. Optional: customerId, middleName, knownAsFirstName, knownAsLastName, employeeId, employeePin, employeeRefNumber, mobileNumber, accessPrivilege (Super Admin|Admin|Manager|Employee), employmentType (Full-time|Part-time|Contractor|Intern), startDate, endDate, dob, title, status (Active|Deactive). **Response 201:** { \"message\", \"data\" }"
-							}
-						},
-						{
-							"name": "Update Employee",
-							"request": {
-								"method": "PUT",
-								"header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}],
-								"body": {"mode": "raw", "raw": "{\n  \"firstName\": \"Leticia\",\n  \"lastName\": \"Octavio\",\n  \"accessPrivilege\": \"Admin\",\n  \"status\": \"Active\"\n}"},
-								"url": "{{baseUrl}}/api/staff/employees/:id",
-								"description": "**Response 200:** { \"message\", \"data\" }"
-							}
-						},
-						{
-							"name": "Update Employee Status",
-							"request": {
-								"method": "PATCH",
-								"header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}],
-								"body": {"mode": "raw", "raw": "{\n  \"status\": \"Deactive\"\n}"},
-								"url": "{{baseUrl}}/api/staff/employees/:id/status",
-								"description": "**Body:** status (Active|Deactive). **Response 200:** { \"message\", \"data\" }"
-							}
-						},
-						{"name": "Delete Employee", "request": {"method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/staff/employees/:id", "description": "**Response 200:** { \"message\" }"}
-					]
-				},
-				{
-					"name": "HR Notes (by Employee)",
-					"item": [
-						{"name": "Get HR Notes by Employee", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/staff/employees/:id/notes", "description": "**Params:** id = employee _id. **Response 200:** { \"message\", \"data\" }"}},
-						{"name": "Add New HR Note", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"note\": \"HR note text here\"\n}"}, "url": "{{baseUrl}}/api/staff/employees/:id/notes", "description": "**Required:** note. **Response 201:** { \"message\", \"data\" }"}},
-						{"name": "Delete HR Note", "request": {"method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/staff/employees/:id/notes/:noteId", "description": "**Params:** id = employee _id, noteId = note _id. **Response 200:** { \"message\" }"}}
-					]
-				},
-				{
-					"name": "Compliance Requests (by Employee)",
-					"item": [
-						{"name": "Get Compliance Requests by Employee", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/staff/employees/:id/compliance-requests", "description": "**Response 200:** { \"message\", \"data\" }"}},
-						{"name": "Request Compliance", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"complianceItemIds\": [\"COMPLIANCE_ITEM_ID_1\", \"COMPLIANCE_ITEM_ID_2\"]\n}"}, "url": "{{baseUrl}}/api/staff/employees/:id/compliance-requests", "description": "**Required:** complianceItemIds (array of company compliance item _ids). **Response 201:** { \"message\", \"data\" }"}}
-					]
-				},
-				{
-					"name": "Manager Site Assignment",
-					"item": [
-						{"name": "Get Sites for Manager", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/staff/employees/:id/manager-sites", "description": "**Params:** id = manager (employee) _id. **Response 200:** { \"message\", \"data\" } — sites assigned to this manager."}},
-						{"name": "Update Manager Sites", "request": {"method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"siteIds\": [\"SITE_ID_1\", \"SITE_ID_2\", \"SITE_ID_3\"]\n}"}, "url": "{{baseUrl}}/api/staff/employees/:id/manager-sites", "description": "**Required:** siteIds (array of site _ids). **Response 200:** { \"message\", \"data\" }"}}
-					]
-				},
-				{
-					"name": "Submitted Compliance",
-					"item": [
-						{"name": "Get Submitted Compliance List", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/staff/submitted-compliance", "description": "**Query:** employeeId, status, complianceType. **Response 200:** { \"message\", \"count\", \"data\" }"}},
-						{"name": "Get Submitted Compliance by ID", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/staff/submitted-compliance/:id", "description": "**Response 200:** { \"message\", \"data\" }"}},
-						{
-							"name": "Create (Submit) Compliance",
-							"request": {
-								"method": "POST",
-								"header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}],
-								"body": {"mode": "raw", "raw": "{\n  \"employeeId\": \"EMPLOYEE_OBJECT_ID\",\n  \"complianceName\": \"Door Supervision\",\n  \"complianceType\": \"Security License\",\n  \"licenseRef\": \"1013673188606782\",\n  \"expiryDate\": \"2025-12-09\",\n  \"attachmentPath\": \"\"\n}"},
-								"url": "{{baseUrl}}/api/staff/submitted-compliance",
-								"description": "**Required:** employeeId, complianceName. Optional: complianceType (Security License|Renewal), licenseRef, expiryDate, attachmentPath. **Response 201:** { \"message\", \"data\" }"
-							}
-						},
-						{"name": "Approve Submitted Compliance", "request": {"method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/staff/submitted-compliance/:id/approve", "description": "**Response 200:** { \"message\", \"data\" }"}},
-						{"name": "Reject Submitted Compliance", "request": {"method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/staff/submitted-compliance/:id/reject", "description": "**Response 200:** { \"message\", \"data\" }"}},
-						{"name": "Cancel Submitted Compliance", "request": {"method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": "{{baseUrl}}/api/staff/submitted-compliance/:id/cancel", "description": "**Response 200:** { \"message\", \"data\" }"}}
-					]
-				}
-			]
-		}
-	]
+  "info": {
+    "_postman_id": "guardhouse-api-collection",
+    "name": "Guardhouse Backend API",
+    "description": "Complete API collection for Guardhouse Backend.\n\n**Setup:**\n1. Set `baseUrl` (default: http://localhost:8080)\n2. Call **Auth > Login** and copy the `token` from response\n3. Set collection variable `token` (or use Tests tab to auto-save)\n\n**Auth:** Use header `Authorization: Bearer {{token}}` for protected routes.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "description": "User authentication: signup, login, forget/reset password, logout, get users.",
+      "item": [
+        {
+          "name": "Signup",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"admin\",\n  \"phone\": \"+1234567890\",\n  \"companyId\": \"\",\n  \"createdBy\": \"\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/signup",
+            "description": "**Request:** name, email, password, role (required). Optional: phone, companyId, createdBy.\n\n**Response 201:** `{ message, user: { _id, name, email, role, phone, companyId } }`"
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/login",
+            "description": "**Request:** email, password.\n\n**Response 200:** `{ message, token, id, email, name }` — Save `token` in collection variable for other requests."
+          }
+        },
+        {
+          "name": "Forget Password",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"user@example.com\"\n}" },
+            "url": "{{baseUrl}}/api/auth/forgetpassword",
+            "description": "**Request:** email.\n\n**Response 200:** `{ message }`"
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"reset_token_from_email\",\n  \"password\": \"newPassword123\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/resetpassword",
+            "description": "**Request:** token (from email link), password (new).\n\n**Response 200:** `{ message }`"
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{baseUrl}}/api/auth/logout",
+            "description": "**Response 200:** `{ message }`"
+          }
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/auth/getAllUsers",
+            "description": "**Response 200:** `{ message, users }`"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Company",
+      "description": "Company register/login, SuperAdmin actions, Holidays, Skills, Compliance, Role Templates, Documents, Data Import, Site Positions.",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"companyName\": \"Acme Ltd\",\n  \"companyEmail\": \"company@example.com\",\n  \"ContactInfo\": \"+1234567890\",\n  \"address\": \"123 Business St\",\n  \"registrationNumber\": \"REG123\",\n  \"plan\": \"premium\"\n}"
+            },
+            "url": "{{baseUrl}}/api/company/register",
+            "description": "**Request:** companyName, companyEmail, ContactInfo, address, registrationNumber, plan.\n\n**Response 201:** `{ message, data, status }`"
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"companyEmail\": \"company@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": "{{baseUrl}}/api/company/login",
+            "description": "**Request:** companyEmail, password.\n\n**Response 200:** `{ message, token, id, companyEmail, companyName }`"
+          }
+        },
+        {
+          "name": "Forget Password",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"companyEmail\": \"company@example.com\"\n}" },
+            "url": "{{baseUrl}}/api/company/forgetpassword",
+            "description": "**Response 200:** `{ message }`"
+          }
+        },
+        {
+          "name": "Update Request Status (SuperAdmin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"ACTIVE\"\n}" },
+            "url": "{{baseUrl}}/api/company/request/:id/status",
+            "description": "**Path:** id = company _id.\n**Request:** status = `ACTIVE` or `REJECTED`.\n\n**Response 200:** `{ message, data }`"
+          }
+        },
+        {
+          "name": "Get All Companies (SuperAdmin)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/company/getAllCompanies",
+            "description": "**Response 200:** `{ message, companies }`"
+          }
+        },
+        {
+          "name": "Get All Companies by Status (SuperAdmin)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/company/getAllCompanies/:status",
+            "description": "**Path:** status = ACTIVE | REJECTED | PENDING.\n\n**Response 200:** `{ message, companies }`"
+          }
+        },
+        {
+          "name": "Holidays",
+          "item": [
+            {
+              "name": "Get Holidays",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/company/holidays",
+                "description": "**Query:** country, state, year (optional).\n\n**Response 200:** `{ message, count, data }`"
+              }
+            },
+            {
+              "name": "Get Meta Countries",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/company/holidays/meta/countries",
+                "description": "**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Get Meta States",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/company/holidays/meta/states?country=UK",
+                "description": "**Query:** country.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Get Meta Years",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/company/holidays/meta/years",
+                "description": "**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Get Holiday by ID",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/company/holidays/:id",
+                "description": "**Path:** id = holiday _id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Create Holiday",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"description\": \"Christmas Day\",\n  \"date\": \"2025-12-25\",\n  \"startTime\": \"00:00\",\n  \"endTime\": \"23:59\",\n  \"country\": \"UK\",\n  \"state\": \"EW\",\n  \"year\": 2025\n}"
+                },
+                "url": "{{baseUrl}}/api/company/holidays",
+                "description": "**Request:** description, date (ISO, required). Optional: startTime, endTime (HH:mm), country, state, year.\n\n**Response 201:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Holiday",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"description\": \"Boxing Day\",\n  \"date\": \"2025-12-26\",\n  \"startTime\": \"00:00\",\n  \"endTime\": \"23:59\"\n}"
+                },
+                "url": "{{baseUrl}}/api/company/holidays/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Delete Holiday",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/company/holidays/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message }`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Skills",
+          "item": [
+            {
+              "name": "Get Skills",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/company/skills",
+                "description": "**Response 200:** `{ message, count, data }`"
+              }
+            },
+            {
+              "name": "Get Skill by ID",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/company/skills/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Create Skill",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"First Aid\",\n  \"description\": \"First aid certified\",\n  \"isActive\": true\n}"
+                },
+                "url": "{{baseUrl}}/api/company/skills",
+                "description": "**Request:** name (required). Optional: description, isActive.\n\n**Response 201:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Skill",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"First Aid Level 2\",\n  \"description\": \"Updated\",\n  \"isActive\": true\n}"
+                },
+                "url": "{{baseUrl}}/api/company/skills/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Delete Skill",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/company/skills/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message }`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Compliance Items",
+          "item": [
+            {
+              "name": "Get Compliance Items",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/company/compliance-items",
+                "description": "**Response 200:** `{ message, count, data }`"
+              }
+            },
+            {
+              "name": "Get Compliance Item by ID",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/company/compliance-items/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Get Compliance Renewals",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/company/compliance-items/:id/renewals",
+                "description": "**Path:** id = compliance item _id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Create Compliance Item",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"SIA Licence\",\n  \"description\": \"Security licence\",\n  \"reminder\": \"30 days before expiry\",\n  \"critical\": true,\n  \"showToCustomer\": true,\n  \"isActive\": true\n}"
+                },
+                "url": "{{baseUrl}}/api/company/compliance-items",
+                "description": "**Request:** name (required). Optional: description, reminder, critical, showToCustomer, isActive.\n\n**Response 201:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Add Renewal",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"renewedAt\": \"2025-01-01\",\n  \"expiryDate\": \"2026-01-01\",\n  \"notes\": \"Renewed online\"\n}"
+                },
+                "url": "{{baseUrl}}/api/company/compliance-items/:id/renewals",
+                "description": "**Path:** id = compliance item _id.\n\n**Response 201:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Compliance Item",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"SIA Licence Updated\",\n  \"critical\": true,\n  \"isActive\": true\n}"
+                },
+                "url": "{{baseUrl}}/api/company/compliance-items/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Delete Compliance Item",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/company/compliance-items/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message }`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Role Templates",
+          "item": [
+            {
+              "name": "Get Role Templates",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/company/role-templates",
+                "description": "**Response 200:** `{ message, count, data }`"
+              }
+            },
+            {
+              "name": "Get Role Template by ID",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/company/role-templates/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Create Role Template",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Security Guard\",\n  \"securityLicenceRequirements\": \"SIA required\",\n  \"critical\": true,\n  \"showToCustomer\": true,\n  \"isActive\": true\n}"
+                },
+                "url": "{{baseUrl}}/api/company/role-templates",
+                "description": "**Request:** name (required). Optional: securityLicenceRequirements, critical, showToCustomer, isActive.\n\n**Response 201:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Role Template",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Senior Security Guard\",\n  \"securityLicenceRequirements\": \"SIA Level 2\",\n  \"isActive\": true\n}"
+                },
+                "url": "{{baseUrl}}/api/company/role-templates/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Delete Role Template",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/company/role-templates/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message }`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Documents",
+          "item": [
+            {
+              "name": "Get Documents",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/company/documents",
+                "description": "**Response 200:** `{ message, count, data }`"
+              }
+            },
+            {
+              "name": "Get Document by ID",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/company/documents/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Download Document",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/company/documents/:id/download",
+                "description": "**Path:** id.\n\n**Response:** file stream."
+              }
+            },
+            {
+              "name": "Create Document (multipart)",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "file", "type": "file", "src": "", "description": "PDF/document file" },
+                    { "key": "name", "value": "Health & Safety Policy", "type": "text", "description": "Required" },
+                    { "key": "allowAllStaffToView", "value": "true", "type": "text" },
+                    { "key": "requiresAcknowledgementBeforeShift", "value": "true", "type": "text" },
+                    { "key": "expireOnOrBefore", "value": "2026-12-31", "type": "text" },
+                    { "key": "expirePeriod", "value": "1 year", "type": "text" }
+                  ]
+                },
+                "url": "{{baseUrl}}/api/company/documents",
+                "description": "**Form-data:** file (required), name (required). Optional: allowAllStaffToView, requiresAcknowledgementBeforeShift, expireOnOrBefore, expirePeriod.\n\n**Response 201:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Document",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Updated Document Name\",\n  \"allowAllStaffToView\": true,\n  \"requiresAcknowledgementBeforeShift\": false,\n  \"expireOnOrBefore\": \"2026-06-30\",\n  \"expirePeriod\": \"6 months\"\n}"
+                },
+                "url": "{{baseUrl}}/api/company/documents/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Delete Document",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/company/documents/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message }`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Data Import",
+          "item": [
+            {
+              "name": "Get Import Types",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/company/data-import/types",
+                "description": "**Response 200:** `{ message, data }` (e.g. employees, skills, sites, site-positions, holidays)"
+              }
+            },
+            {
+              "name": "Get Data Imports",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/company/data-import",
+                "description": "**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Get Data Import Status",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/company/data-import/:jobId/status",
+                "description": "**Path:** jobId = import job _id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Create Data Import (multipart)",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "file", "type": "file", "src": "", "description": "CSV/Excel file" },
+                    { "key": "importType", "value": "employees", "type": "text", "description": "employees | skills | sites | site-positions | holidays" }
+                  ]
+                },
+                "url": "{{baseUrl}}/api/company/data-import",
+                "description": "**Form-data:** file (required), importType (required).\n\n**Response 201:** `{ message, data }`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Site Positions",
+          "item": [
+            {
+              "name": "Get Site Positions",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/company/site-positions",
+                "description": "**Response 200:** `{ message, count, data }`"
+              }
+            },
+            {
+              "name": "Get Site Position by ID",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/company/site-positions/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Create Site Position",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Gate 1\",\n  \"description\": \"Main entrance\",\n  \"isActive\": true\n}"
+                },
+                "url": "{{baseUrl}}/api/company/site-positions",
+                "description": "**Request:** name (required). Optional: description, isActive.\n\n**Response 201:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Site Position",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Gate 1 - Updated\",\n  \"description\": \"Main entrance 24/7\",\n  \"isActive\": true\n}"
+                },
+                "url": "{{baseUrl}}/api/company/site-positions/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Delete Site Position",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/company/site-positions/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message }`"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Customer",
+      "description": "Customer CRUD and status. All routes require Authorization: Bearer {{token}}.",
+      "item": [
+        {
+          "name": "Create Customer",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerName\": \"ABC Corp\",\n  \"customerReferenceNumber\": \"REF001\",\n  \"ReferenceId\": \"ID001\",\n  \"Address\": \"123 Client Street\",\n  \"city\": \"London\",\n  \"zipCode\": \"SW1A 1AA\",\n  \"country\": \"UK\",\n  \"invoiceRemainder\": \"Net 30\",\n  \"Contact\": [\n    {\n      \"firstName\": \"John\",\n      \"lastName\": \"Smith\",\n      \"email\": \"john@abccorp.com\",\n      \"mobileNumber\": \"+447700900000\",\n      \"position\": \"Manager\",\n      \"note\": \"Primary contact\"\n    }\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/api/customer/createCustomer",
+            "description": "**Request:** customerName (required). Optional: customerReferenceNumber, ReferenceId, Address, city, zipCode, country, invoiceRemainder, Contact[].\n\n**Response 201:** `{ message, data, status }`"
+          }
+        },
+        {
+          "name": "Get All Customers",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/customer/getAllCustomers",
+            "description": "**Response 200:** `{ message, count, customers }`"
+          }
+        },
+        {
+          "name": "Get All Customers by Status",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/customer/getAllCustomers/:status",
+            "description": "**Path:** status = active | inactive.\n\n**Response 200:** `{ message, count, customers }`"
+          }
+        },
+        {
+          "name": "Update Customer",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerName\": \"ABC Corp Ltd\",\n  \"Address\": \"456 New Street\",\n  \"city\": \"Manchester\",\n  \"zipCode\": \"M1 1AA\",\n  \"country\": \"UK\"\n}"
+            },
+            "url": "{{baseUrl}}/api/customer/updateCustomer/:id",
+            "description": "**Path:** id = customer _id.\n\n**Response 200:** `{ message, data }`"
+          }
+        },
+        {
+          "name": "Delete Customer",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/customer/deleteCustomer/:id",
+            "description": "**Path:** id.\n\n**Response 200:** `{ message }`"
+          }
+        },
+        {
+          "name": "Update Customer Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"active\"\n}" },
+            "url": "{{baseUrl}}/api/customer/updateCustomerStatus/:id",
+            "description": "**Path:** id.\n**Request:** status = active | inactive.\n\n**Response 200:** `{ message, customer }`"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Site",
+      "description": "Sites and site contacts. Base path: /api/site.",
+      "item": [
+        {
+          "name": "Add Site",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"siteName\": \"Warehouse A\",\n  \"customer\": \"customerId_or_name\",\n  \"siteReferenceNumber\": \"SITE001\",\n  \"referenceId\": \"REF001\",\n  \"address\": \"100 Industrial Rd\",\n  \"state\": \"California\",\n  \"zipCode\": \"90001\",\n  \"country\": \"US\",\n  \"mobileNumber\": \"+1234567890\",\n  \"welfarecheckInterval\": \"60\",\n  \"holidayCalender\": \"UK\",\n  \"mobileClockTime\": \"enabled\",\n  \"welfareChecks\": [\n    { \"day\": \"monday\", \"startHours\": \"09:00\", \"toHours\": \"17:00\" },\n    { \"day\": \"tuesday\", \"startHours\": \"09:00\", \"toHours\": \"17:00\" }\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/api/site/addSite/:customerId",
+            "description": "**Path:** customerId = customer _id.\n**Request:** siteName, customer, siteReferenceNumber, referenceId, address, state, zipCode, country, mobileNumber, welfarecheckInterval, holidayCalender, mobileClockTime, welfareChecks[] (day: monday..sunday, startHours, toHours).\n\n**Response 201:** `{ message, data }`"
+          }
+        },
+        {
+          "name": "Get Sites",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/site/getSites",
+            "description": "**Response 200:** `{ message, data }`"
+          }
+        },
+        {
+          "name": "Update Site",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"siteName\": \"Warehouse A Updated\",\n  \"address\": \"200 Industrial Rd\",\n  \"state\": \"California\",\n  \"zipCode\": \"90002\",\n  \"welfareChecks\": [\n    { \"day\": \"monday\", \"startHours\": \"08:00\", \"toHours\": \"18:00\" }\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/api/site/updateSite/:id",
+            "description": "**Path:** id = site _id.\n\n**Response 200:** `{ message, data }`"
+          }
+        },
+        {
+          "name": "Delete Site",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/site/deleteSite/:id",
+            "description": "**Path:** id.\n\n**Response 200:** `{ message }`"
+          }
+        },
+        {
+          "name": "Update Site Status",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"active\"\n}" },
+            "url": "{{baseUrl}}/api/site/updateSiteStatus/:id",
+            "description": "**Path:** id.\n**Request:** status.\n\n**Response 200:** `{ message, data }`"
+          }
+        },
+        {
+          "name": "Add Contact (to Site)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Doe\",\n  \"emailAddress\": \"jane@example.com\",\n  \"mobileNumber\": \"+1234567890\",\n  \"contactType\": \"primary\",\n  \"notes\": \"Site contact\"\n}"
+            },
+            "url": "{{baseUrl}}/api/site/contact/addContact/:siteId",
+            "description": "**Path:** siteId = site _id.\n**Request:** firstName, lastName, emailAddress, mobileNumber, contactType, notes.\n\n**Response 201:** `{ message, data }`"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mobile Patrol",
+      "description": "Regions, Patrol Sites, Runsheets. Base: /api/mobile-patrol. Auth: Bearer {{token}}.",
+      "item": [
+        {
+          "name": "Regions",
+          "item": [
+            {
+              "name": "Get Regions",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/mobile-patrol/regions",
+                "description": "**Response 200:** `{ message, count, data }`"
+              }
+            },
+            {
+              "name": "Get Region by ID",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/mobile-patrol/regions/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Create Region",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": { "mode": "raw", "raw": "{\n  \"name\": \"MARYLAND\",\n  \"geoJson\": null\n}" },
+                "url": "{{baseUrl}}/api/mobile-patrol/regions",
+                "description": "**Request:** name (required). Optional: geoJson.\n\n**Response 201:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Region",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": { "mode": "raw", "raw": "{\n  \"name\": \"MARYLAND Updated\",\n  \"geoJson\": null,\n  \"isActive\": true\n}" },
+                "url": "{{baseUrl}}/api/mobile-patrol/regions/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Delete Region",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/mobile-patrol/regions/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message }`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Patrol Sites",
+          "item": [
+            {
+              "name": "Get Patrol Sites",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/mobile-patrol/patrol-sites",
+                "description": "**Query:** customerId, regionId, status (optional).\n\n**Response 200:** `{ message, count, data }`"
+              }
+            },
+            {
+              "name": "Get Patrol Site by ID",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/mobile-patrol/patrol-sites/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Create Patrol Site",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customerId\": \"CUSTOMER_OBJECT_ID\",\n  \"regionId\": \"REGION_OBJECT_ID\",\n  \"name\": \"Patrol Site Name\",\n  \"siteDetails\": {\n    \"siteName\": \"Site Name\",\n    \"address\": \"123 Rd\",\n    \"city\": \"Baltimore\",\n    \"state\": \"MD\",\n    \"zipCode\": \"21201\",\n    \"country\": \"US\"\n  },\n  \"portalSchedule\": [\n    { \"day\": \"MON\", \"timeFrom\": \"09:00\", \"timeTo\": \"17:00\", \"visits\": 2 }\n  ],\n  \"alarmContacts\": {\n    \"alarmCompany\": [{ \"name\": \"Alarm Co\", \"phone\": \"+1\", \"email\": \"a@b.com\" }],\n    \"monitoringCompany\": [],\n    \"calloutContact\": []\n  },\n  \"siteCodesAndInstructions\": \"Instructions\",\n  \"status\": \"Active\"\n}"
+                },
+                "url": "{{baseUrl}}/api/mobile-patrol/patrol-sites",
+                "description": "**Request:** customerId, regionId, name (required). Optional: siteDetails, portalSchedule, alarmContacts, siteDocuments, siteCodesAndInstructions, locationCheckpoints, incidentReportConfig, status.\n\n**Response 201:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Patrol Site",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Patrol Site Updated\",\n  \"siteDetails\": { \"siteName\": \"Site\", \"address\": \"456 Rd\", \"city\": \"Baltimore\", \"state\": \"MD\", \"zipCode\": \"21202\" },\n  \"siteCodesAndInstructions\": \"Updated\",\n  \"status\": \"Active\"\n}"
+                },
+                "url": "{{baseUrl}}/api/mobile-patrol/patrol-sites/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Delete Patrol Site",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/mobile-patrol/patrol-sites/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message }`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Runsheets",
+          "item": [
+            {
+              "name": "Get Runsheets",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/mobile-patrol/runsheets",
+                "description": "**Query:** regionId (optional).\n\n**Response 200:** `{ message, count, data }`"
+              }
+            },
+            {
+              "name": "Get Runsheet by ID",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/mobile-patrol/runsheets/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Create Runsheet",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"regionId\": \"REGION_OBJECT_ID\",\n  \"name\": \"Morning Patrol\",\n  \"defaultRun\": \"Default\",\n  \"runsheetStart\": \"06:00\",\n  \"runsheetEnd\": \"10:00\",\n  \"days\": [\"MON\", \"TUE\", \"WED\", \"THU\", \"FRI\"],\n  \"patrolSites\": [\n    { \"patrolSiteId\": \"PATROL_SITE_OBJECT_ID\", \"days\": [\"MON\", \"TUE\"], \"timeFrom\": \"07:00\", \"timeTo\": \"08:00\", \"visitsCount\": 2, \"expectedTimeMinutes\": 30 }\n  ],\n  \"runsheetLength\": \"4h\",\n  \"totalExpectedTime\": \"2h\"\n}"
+                },
+                "url": "{{baseUrl}}/api/mobile-patrol/runsheets",
+                "description": "**Request:** name (required). Optional: regionId, defaultRun, runsheetStart, runsheetEnd, days (MON–SUN), patrolSites[].\n\n**Response 201:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Runsheet",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Morning Patrol Updated\",\n  \"runsheetStart\": \"05:30\",\n  \"runsheetEnd\": \"10:30\",\n  \"days\": [\"MON\", \"TUE\", \"WED\", \"THU\", \"FRI\", \"SAT\"],\n  \"runsheetLength\": \"5h\",\n  \"totalExpectedTime\": \"2.5h\",\n  \"isActive\": true\n}"
+                },
+                "url": "{{baseUrl}}/api/mobile-patrol/runsheets/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Delete Runsheet",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/mobile-patrol/runsheets/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message }`"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Staff",
+      "description": "Employees, HR Notes, Compliance Requests, Manager Site Assignment, Submitted Compliance. Base: /api/staff. Auth: Bearer {{token}}.",
+      "item": [
+        {
+          "name": "Employees",
+          "item": [
+            {
+              "name": "Get Employees",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/staff/employees",
+                "description": "**Query:** customerId, status, accessPrivilege (optional).\n\n**Response 200:** `{ message, count, data }`"
+              }
+            },
+            {
+              "name": "Get Employee by ID",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/staff/employees/:id",
+                "description": "**Path:** id = employee _id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Create Employee",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"firstName\": \"Leticia\",\n  \"lastName\": \"Octavio\",\n  \"email\": \"leticia@example.com\",\n  \"employeeId\": \"EMP001\",\n  \"employeePin\": \"1234\",\n  \"employeeRefNumber\": \"REF001\",\n  \"mobileNumber\": \"+1234567890\",\n  \"accessPrivilege\": \"Manager\",\n  \"employmentType\": \"Full-time\",\n  \"startDate\": \"2024-01-01\",\n  \"status\": \"Active\"\n}"
+                },
+                "url": "{{baseUrl}}/api/staff/employees",
+                "description": "**Request:** firstName, lastName, email (required). Optional: customerId, middleName, knownAsFirstName, knownAsLastName, employeeId, employeePin, employeeRefNumber, mobileNumber, accessPrivilege (Super Admin|Admin|Manager|Employee), employmentType (Full-time|Part-time|Contractor|Intern), startDate, endDate, dob, title, status (Active|Deactive).\n\n**Response 201:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Employee",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"firstName\": \"Leticia\",\n  \"lastName\": \"Octavio\",\n  \"accessPrivilege\": \"Admin\",\n  \"status\": \"Active\"\n}"
+                },
+                "url": "{{baseUrl}}/api/staff/employees/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Employee Status",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": { "mode": "raw", "raw": "{\n  \"status\": \"Deactive\"\n}" },
+                "url": "{{baseUrl}}/api/staff/employees/:id/status",
+                "description": "**Path:** id.\n**Request:** status = Active | Deactive.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Delete Employee",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/staff/employees/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message }`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "HR Notes (by Employee)",
+          "item": [
+            {
+              "name": "Get HR Notes by Employee",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/staff/employees/:id/notes",
+                "description": "**Path:** id = employee _id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Add HR Note",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": { "mode": "raw", "raw": "{\n  \"note\": \"HR note text here\"\n}" },
+                "url": "{{baseUrl}}/api/staff/employees/:id/notes",
+                "description": "**Path:** id = employee _id.\n**Request:** note (required).\n\n**Response 201:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Delete HR Note",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/staff/employees/:id/notes/:noteId",
+                "description": "**Path:** id = employee _id, noteId = note _id.\n\n**Response 200:** `{ message }`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Compliance Requests (by Employee)",
+          "item": [
+            {
+              "name": "Get Compliance Requests by Employee",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/staff/employees/:id/compliance-requests",
+                "description": "**Path:** id = employee _id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Request Compliance",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"complianceItemIds\": [\"COMPLIANCE_ITEM_ID_1\", \"COMPLIANCE_ITEM_ID_2\"]\n}"
+                },
+                "url": "{{baseUrl}}/api/staff/employees/:id/compliance-requests",
+                "description": "**Path:** id = employee _id.\n**Request:** complianceItemIds (array of company compliance item _ids).\n\n**Response 201:** `{ message, data }`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Manager Site Assignment",
+          "item": [
+            {
+              "name": "Get Sites for Manager",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/staff/employees/:id/manager-sites",
+                "description": "**Path:** id = manager (employee) _id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Manager Sites",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"siteIds\": [\"SITE_ID_1\", \"SITE_ID_2\", \"SITE_ID_3\"]\n}"
+                },
+                "url": "{{baseUrl}}/api/staff/employees/:id/manager-sites",
+                "description": "**Path:** id = manager _id.\n**Request:** siteIds (array of site _ids).\n\n**Response 200:** `{ message, data }`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Submitted Compliance",
+          "item": [
+            {
+              "name": "Get Submitted Compliance List",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/staff/submitted-compliance",
+                "description": "**Query:** employeeId, status, complianceType (optional).\n\n**Response 200:** `{ message, count, data }`"
+              }
+            },
+            {
+              "name": "Get Submitted Compliance by ID",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/staff/submitted-compliance/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Create (Submit) Compliance",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"employeeId\": \"EMPLOYEE_OBJECT_ID\",\n  \"complianceName\": \"Door Supervision\",\n  \"complianceType\": \"Security License\",\n  \"licenseRef\": \"1013673188606782\",\n  \"expiryDate\": \"2025-12-09\",\n  \"attachmentPath\": \"\"\n}"
+                },
+                "url": "{{baseUrl}}/api/staff/submitted-compliance",
+                "description": "**Request:** employeeId, complianceName (required). Optional: complianceType (Security License|Renewal), licenseRef, expiryDate, attachmentPath.\n\n**Response 201:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Approve",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/staff/submitted-compliance/:id/approve",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Reject",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/staff/submitted-compliance/:id/reject",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Cancel",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/staff/submitted-compliance/:id/cancel",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message, data }`"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
