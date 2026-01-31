@@ -1,5 +1,5 @@
-const Site = require('../../Models/site/siteModel');
-const Customer = require('../../Models/customer/customerModel');
+const Site = require('../../models/site/siteModel');
+const Customer = require('../../models/customer/customerModel');
 const siteSchema = require('../../dto/site/site.dto');
 const getLatLongFromAddress = require('../../utils/geocode');
 const { nanoid } = require('nanoid');

@@ -1,4 +1,4 @@
-const Site = require('../../Models/site/siteModel');
+const Site = require('../../models/site/siteModel');
 const siteSchema = require('../../dto/site/site.dto');
 const getLatLongFromAddress = require('../../utils/geocode');
 const { nanoid } = require('nanoid'); 
