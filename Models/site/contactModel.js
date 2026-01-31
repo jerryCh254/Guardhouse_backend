@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const contactSchema = new mongoose.Schema({
+       site: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "site"
+    }],
     contact:[{
         firstName:{
             type:String,

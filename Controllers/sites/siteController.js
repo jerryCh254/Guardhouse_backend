@@ -61,7 +61,7 @@ class SiteController {
 //get sites
 static async getSites(req, res){
   try {
-    const sites = await Site.find().populate("customer");
+    const sites = await Site.find().populate("customer").populate("contacts");
 
     res.status(200).json({
       success: true,

@@ -23,8 +23,8 @@ static async createContact(req, res) {
       }
 
       const contact = await Contact.create({
-        ...contactData,
-        site: siteId
+        site: [siteId],
+        contact: [contactData]
       });
 
       site.contacts.push(contact._id);
@@ -41,5 +41,37 @@ static async createContact(req, res) {
       });
     }
   }
+  //get contact datd
+  static async getContact(req, res){
+    try {
+      const contact = await Contact.find().populate("site");
+  
+      res.status(200).json({
+        success: true,
+        message: "Contact fetched successfully",
+        data: contact
+      });
+  
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: error.message
+      });
+    }
+  }
+  //update contact data
+  static async updateContact(req, res) {
+      try {
+        // const {customerId} = req.params;
+        const updateContact = await Contact.findByIdAndUpdate(
+          req.params.id,
+          req.body,
+          { new: true }
+        )
+        res.json(updateContact);
+      } catch (err) {
+        res.status(500).json({ message: err.message });
+      }
+    }
 }
 module.exports = ContactController
