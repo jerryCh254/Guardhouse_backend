@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const SiteController = require('../../controllers/sites/siteControllers');
+const contactRoutes = require('./contactRoutes');
+
+router.use('/contact',contactRoutes);
 
 router.post('/addSite/:customerId', SiteController.createSite);
 router.get('/getSites',SiteController.getSites);
