@@ -73,5 +73,17 @@ static async createContact(req, res) {
         res.status(500).json({ message: err.message });
       }
     }
+    //delete contact
+      static async deleteContact(req, res) {
+          try {
+            const deleteContact = await Site.findByIdAndDelete(req.params.id).populate("site");
+            res.json({
+              message: 'contact  is deleted sucessfully',
+              deleteContact,
+            });
+          } catch (err) {
+            res.status(400).json({ message: err.message });
+          }
+        }
 }
 module.exports = ContactController
