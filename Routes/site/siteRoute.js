@@ -2,8 +2,10 @@ const express = require('express');
 const router = express.Router();
 const SiteController = require('../../controllers/sites/siteController');
 const contactRoutes = require('./contactRoute');
+const preferredStaffRoutes = require('./perferredStaffRoute');
 
 router.use('/contact',contactRoutes);
+router.use('/preferred-staff',preferredStaffRoutes);
 
 router.post('/addSite/:customerId', SiteController.createSite);
 router.get('/getSites',SiteController.getSites);

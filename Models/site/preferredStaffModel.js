@@ -16,6 +16,10 @@ const preferredStaffSchema = new mongoose.Schema({
     isPreferred:{
         type:Boolean,
         default:false
+    },
+    isBlocked:{
+        type:Boolean,
+        default:false
     }
 })
 module.exports = mongoose.model("preferredStaff",preferredStaffSchema);
