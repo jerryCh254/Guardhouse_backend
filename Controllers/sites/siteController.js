@@ -59,9 +59,16 @@ class SiteController {
 }
 
 //get sites
-static async getSites(req, res){
+static async getSites(req, res) {
   try {
-    const sites = await Site.find().populate("customer").populate("contacts").populate("notes");
+    const sites = await Site.find()
+      .populate("customer")
+      .populate("contacts")
+      .populate("notes")
+      .populate({
+        path: "sitePosition",
+        model: "siteSitePositions"
+      });
 
     res.status(200).json({
       success: true,
@@ -76,6 +83,40 @@ static async getSites(req, res){
     });
   }
 }
+
+//get site by id
+static async getSiteById(req, res) {
+  try {
+    const site = await Site.findById(req.params.id)
+      .populate("customer")
+      .populate("contacts")
+      .populate("notes")
+      .populate({
+        path: "sitePosition",
+        model: "siteSitePositions"
+      });
+
+    if (!site) {
+      return res.status(404).json({
+        success: false,
+        message: "Site not found"
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Site fetched successfully",
+      data: site
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+}
+
 //Update site data
   static async updateSites(req, res) {
     try {

@@ -77,5 +77,9 @@ const siteSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Notes"
   }],
+sitePosition: [{
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "siteSitePositions"
+}]
 })
 module.exports = mongoose.model("Sites",siteSchema);
