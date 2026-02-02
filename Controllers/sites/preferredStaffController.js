@@ -3,6 +3,7 @@ const Site = require('../../models/site/siteModel');
 const PreferredStaff = require('../../models/site/preferredStaffModel');
 
 class PreferredStaffController {
+  //add perferred staff
   static async addOrCheckPreferredStaff(req, res) {
     try {
       const { employeeId } = req.params;
@@ -32,7 +33,6 @@ class PreferredStaffController {
           await newEntry.save();
           
           return res.status(201).json({
-            success: true,
             message: `Employee ${action}ed successfully`,
             data: newEntry
           });
@@ -43,15 +43,10 @@ class PreferredStaffController {
           } else if (action === 'block') {
             existingEntry.isPreferred = false;
             existingEntry.isBlocked = true;
-          } else if (action === 'remove') {
-            existingEntry.isPreferred = false;
-            existingEntry.isBlocked = false;
           }
-          
           await existingEntry.save();
           
           return res.status(200).json({
-            success: true,
             message: `Employee ${action}d successfully`,
             data: existingEntry
           });
@@ -69,14 +64,12 @@ class PreferredStaffController {
 
       if (!preferredEntries || preferredEntries.length === 0) {
         return res.status(200).json({
-          success: true,
           message: 'Employee is not preferred or is blocked',
           staff: []
         });
       }
 
       res.status(200).json({
-        success: true,
         staff: preferredEntries
       });
 
@@ -84,7 +77,7 @@ class PreferredStaffController {
       res.status(500).json({ success: false, message: error.message });
     }
   }
-
+//get bloakced employee
   static async getBlockedEmployees(req, res) {
     try {
       const { employeeId } = req.params;
@@ -108,7 +101,6 @@ class PreferredStaffController {
         .populate('customerId', 'customerName');
 
       res.status(200).json({
-        success: true,
         blockedStaff: blockedEntries
       });
 
@@ -116,7 +108,7 @@ class PreferredStaffController {
       res.status(500).json({ success: false, message: error.message });
     }
   }
-
+//get perferred staff
   static async getPreferredEmployees(req, res) {
     try {
       const { siteId, customerId } = req.query;
@@ -136,7 +128,6 @@ class PreferredStaffController {
         .populate('customerId', 'customerName');
 
       res.status(200).json({
-        success: true,
         preferredStaff: preferredEntries
       });
 
@@ -144,7 +135,7 @@ class PreferredStaffController {
       res.status(500).json({ success: false, message: error.message });
     }
   }
-
+//update perferred staff
   static async updatePreferredStaff(req, res) {
     try {
       const { employeeId } = req.params;
@@ -174,7 +165,6 @@ class PreferredStaffController {
       await existingEntry.save();
 
       res.status(200).json({
-        success: true,
         message: 'Preference updated successfully',
         data: existingEntry
       });

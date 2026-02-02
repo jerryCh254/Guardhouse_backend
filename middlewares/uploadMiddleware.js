@@ -4,8 +4,8 @@ const multer = require('multer');
 
 const companyDocsDir = path.join(process.cwd(), 'uploads', 'company-documents');
 const dataImportDir = path.join(process.cwd(), 'uploads', 'data-import');
-
-[companyDocsDir, dataImportDir].forEach((dir) => {
+const siteNoteDir = path.join(process.cwd(), 'uploads', 'note-site');
+[companyDocsDir, dataImportDir,siteNoteDir].forEach((dir) => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 });
 
@@ -24,6 +24,13 @@ const storageDataImport = multer.diskStorage({
     cb(null, `${Date.now()}${ext}`);
   },
 });
+const siteNoteDoc = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, siteNoteDir),
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname) || '';
+    cb(null, `${Date.now()}_${(file.originalname || 'file').slice(0, 50)}${ext}`);
+  },
+});
 
 const uploadCompanyDocument = multer({
   storage: storageCompanyDoc,
@@ -34,5 +41,8 @@ const uploadDataImport = multer({
   storage: storageDataImport,
   limits: { fileSize: 15 * 1024 * 1024 },
 }).single('file');
-
-module.exports = { uploadCompanyDocument, uploadDataImport };
+const uploadSiteDocument = multer({
+  storage: siteNoteDoc,
+  limits: { fileSize: 10 * 1024 * 1024 },
+}).single('attchFile');
+module.exports = { uploadCompanyDocument, uploadDataImport ,uploadSiteDocument};

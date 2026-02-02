@@ -41,7 +41,7 @@ static async createContact(req, res) {
       });
     }
   }
-  //get contact datd
+  //get contact data
   static async getContact(req, res){
     try {
       const contact = await Contact.find().populate("site");

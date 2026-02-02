@@ -73,5 +73,9 @@ const siteSchema = new mongoose.Schema({
       ref: "Contact"
     }
   ],
+  notes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Notes"
+  }],
 })
 module.exports = mongoose.model("Sites",siteSchema);
