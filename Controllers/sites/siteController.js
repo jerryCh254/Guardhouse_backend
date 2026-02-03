@@ -3,6 +3,7 @@ const Customer = require('../../models/customer/customerModel');
 const siteSchema = require('../../dto/site/site.dto');
 const getLatLongFromAddress = require('../../utils/geocode');
 const { nanoid } = require('nanoid');
+const siteRoleTemplate = require('../../models/site/roleTemplateModel');
 
 class SiteController {
   static async createSite(req, res) {
@@ -69,7 +70,11 @@ static async getSites(req, res) {
         path: "sitePosition",
         model: "siteSitePositions"
       })
-      .populate("incidentReportTemplates");
+      .populate("incidentReportTemplates")
+      .populate({
+        path: "roleTemplates",
+        model: "siteRoleTemplate"
+      });
 
     res.status(200).json({
       success: true,
@@ -96,7 +101,11 @@ static async getSiteById(req, res) {
         path: "sitePosition",
         model: "siteSitePositions"
       })
-      .populate("incidentReportTemplates");
+      .populate("incidentReportTemplates")
+      .populate({
+        path: "roleTemplates",
+        model: "siteRoleTemplate"
+      });
 
     if (!site) {
       return res.status(404).json({
