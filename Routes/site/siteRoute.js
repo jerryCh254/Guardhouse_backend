@@ -5,11 +5,13 @@ const contactRoutes = require('./contactRoute');
 const preferredStaffRoutes = require('./perferredStaffRoute');
 const siteNoteRoutes = require('./siteNoteRoute');
 const sitePositionRoutes = require('./sitePositionRoute');
+const incidentReportTemplateRoutes = require('./incidentReportTemplateRoute');
 const checkPointRoute = require('./checkPointRoute')
 router.use('/contact',contactRoutes);
 router.use('/preferred-staff',preferredStaffRoutes);
 router.use('/note', siteNoteRoutes);
 router.use('/sitePosition',sitePositionRoutes);
+router.use('/incidentReportTemplate', incidentReportTemplateRoutes);
 router.use('/checkPoint',checkPointRoute);
 
 

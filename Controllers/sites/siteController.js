@@ -68,7 +68,8 @@ static async getSites(req, res) {
       .populate({
         path: "sitePosition",
         model: "siteSitePositions"
-      });
+      })
+      .populate("incidentReportTemplates");
 
     res.status(200).json({
       success: true,
@@ -94,7 +95,8 @@ static async getSiteById(req, res) {
       .populate({
         path: "sitePosition",
         model: "siteSitePositions"
-      });
+      })
+      .populate("incidentReportTemplates");
 
     if (!site) {
       return res.status(404).json({

@@ -80,6 +80,10 @@ const siteSchema = new mongoose.Schema({
 sitePosition: [{
   type: mongoose.Schema.Types.ObjectId,
   ref: "siteSitePositions"
+}],
+incidentReportTemplates: [{
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "IncidentReportTemplate"
 }]
 })
 module.exports = mongoose.model("Sites",siteSchema);
