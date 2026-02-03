@@ -74,7 +74,8 @@ static async getSites(req, res) {
       .populate({
         path: "roleTemplates",
         model: "siteRoleTemplate"
-      });
+      })
+      .populate("siteDocuments");
 
     res.status(200).json({
       success: true,
@@ -105,7 +106,8 @@ static async getSiteById(req, res) {
       .populate({
         path: "roleTemplates",
         model: "siteRoleTemplate"
-      });
+      })
+      .populate("siteDocuments");
 
     if (!site) {
       return res.status(404).json({

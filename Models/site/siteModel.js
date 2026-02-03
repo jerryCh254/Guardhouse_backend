@@ -88,6 +88,10 @@ incidentReportTemplates: [{
 roleTemplates: [{
   type: mongoose.Schema.Types.ObjectId,
   ref: "siteRoleTemplate"
+}],
+siteDocuments: [{
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "SiteDocument"
 }]
 })
 module.exports = mongoose.model("Sites",siteSchema);
