@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const CustomerController = require('../../controllers/customer/customerController');
 const auth = require('../../middlewares/authmiddleware');
+const customerPortal = require('./customerPortalRoute');
+
+router.use('/customerPortal',customerPortal);
 
 router.post('/createCustomer', auth, CustomerController.createCustomer);
 router.get('/getAllCustomers', auth, CustomerController.getAllCustomers);

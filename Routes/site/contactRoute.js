@@ -1,5 +1,5 @@
 const express = require('express');
-const ContactController = require('../../controllers/sites/contactController');
+const ContactController = require('../../controllers/sites/siteContactController');
 const router = express.Router();
 
 router.post('/addContact/:siteId', ContactController.createContact);

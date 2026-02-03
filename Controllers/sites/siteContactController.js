@@ -1,6 +1,6 @@
-const Contact = require('../../models/site/contactModel');
-const contactSchema = require('../../dto/site/contact.dto');
-const Site = require('../../models/site/siteModel');
+const Contact = require('../../models/site/siteContactModel.js');
+const contactSchema = require('../../dto/site/contact.dto.js');
+const Site = require('../../models/site/siteModel.js');
 
 class ContactController {
 static async createContact(req, res) {

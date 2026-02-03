@@ -20,7 +20,7 @@ const customerSchema = new mongoose.Schema({
         type:String
     },
     country:{
-        tyep:String,
+        type:String,
     },
     invoiceRemainder:{
         type:String,
@@ -54,9 +54,9 @@ const customerSchema = new mongoose.Schema({
         type:String,
     },
     sites: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Sites"
-  }]
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Sites"
+    }]
     
 })
 module.exports = mongoose.model("Customer",customerSchema)

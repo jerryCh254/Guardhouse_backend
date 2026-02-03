@@ -94,4 +94,5 @@ siteDocuments: [{
   ref: "SiteDocument"
 }]
 })
-module.exports = mongoose.model("Sites",siteSchema);
+
+module.exports = mongoose.model("Sites", siteSchema);
