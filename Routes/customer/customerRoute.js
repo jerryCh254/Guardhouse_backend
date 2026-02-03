@@ -3,8 +3,10 @@ const router = express.Router();
 const CustomerController = require('../../controllers/customer/customerController');
 const auth = require('../../middlewares/authmiddleware');
 const customerPortal = require('./customerPortalRoute');
+const customerSite = require('./customerSiteRoute');
 
 router.use('/customerPortal',customerPortal);
+router.use('/site', customerSite);
 
 router.post('/createCustomer', auth, CustomerController.createCustomer);
 router.get('/getAllCustomers', auth, CustomerController.getAllCustomers);
