@@ -21,10 +21,10 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"admin\",\n  \"phone\": \"+1234567890\",\n  \"companyId\": \"\",\n  \"createdBy\": \"\"\n}"
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"ADMIN\",\n  \"phone\": \"+1234567890\",\n  \"companyId\": null,\n  \"createdBy\": null\n}"
             },
             "url": "{{baseUrl}}/api/auth/signup",
-            "description": "**Request:** name, email, password, role (required). Optional: phone, companyId, createdBy.\n\n**Response 201:** `{ message, user: { _id, name, email, role, phone, companyId } }`"
+            "description": "**Request:** name, email, password, role, phone (required). Optional: companyId, createdBy. Role must be: SUPER_ADMIN | ADMIN | MANAGER | STAFF.\n\n**Response 201:** `{ message, user: { id, name, email, role, phone, companyId, createdBy } }`"
           }
         },
         {
@@ -100,10 +100,10 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"companyName\": \"Acme Ltd\",\n  \"companyEmail\": \"company@example.com\",\n  \"ContactInfo\": \"+1234567890\",\n  \"address\": \"123 Business St\",\n  \"registrationNumber\": \"REG123\",\n  \"plan\": \"premium\"\n}"
+              "raw": "{\n  \"companyName\": \"Acme Ltd\",\n  \"companyEmail\": \"company@example.com\",\n  \"ContactInfo\": \"+1234567890\",\n  \"address\": \"123 Business St\",\n  \"registrationNumber\": \"REG123\",\n  \"plan\": \"BASIC\"\n}"
             },
             "url": "{{baseUrl}}/api/company/register",
-            "description": "**Request:** companyName, companyEmail, ContactInfo, address, registrationNumber, plan.\n\n**Response 201:** `{ message, data, status }`"
+            "description": "**Request:** companyName, companyEmail, ContactInfo, address, registrationNumber, plan (all required). Plan must be: BASIC | STANDARD | ENTERPRISE.\n\n**Response 201:** `{ message, data, status }`"
           }
         },
         {
@@ -139,7 +139,7 @@
             ],
             "body": { "mode": "raw", "raw": "{\n  \"status\": \"ACTIVE\"\n}" },
             "url": "{{baseUrl}}/api/company/request/:id/status",
-            "description": "**Path:** id = company _id.\n**Request:** status = `ACTIVE` or `REJECTED`.\n\n**Response 200:** `{ message, data }`"
+            "description": "**Path:** id = company _id.\n**Request:** status = PENDING | ACTIVE | REJECTED.\n\n**Response 200:** `{ message, data }`"
           }
         },
         {
@@ -730,10 +730,100 @@
               { "key": "Content-Type", "value": "application/json" },
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
-            "body": { "mode": "raw", "raw": "{\n  \"status\": \"active\"\n}" },
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"Active\"\n}" },
             "url": "{{baseUrl}}/api/customer/updateCustomerStatus/:id",
-            "description": "**Path:** id.\n**Request:** status = active | inactive.\n\n**Response 200:** `{ message, customer }`"
+            "description": "**Path:** id.\n**Request:** status = Active | Deactive.\n\n**Response 200:** `{ message, customer }`"
           }
+        },
+        {
+          "name": "Customer Portal",
+          "description": "Customer portal management. Base path: /api/customer/customerPortal.",
+          "item": [
+            {
+              "name": "Create Customer Portal",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"staticSites\": [\"SITE_ID_1\", \"SITE_ID_2\"],\n  \"patrolSites\": [\"PATROL_SITE_ID_1\", \"PATROL_SITE_ID_2\"],\n  \"defaultReports\": [\"Daily Report\", \"Weekly Summary\"],\n  \"specificIncidentReports\": [\"Security Incident\", \"Safety Issue\"],\n  \"frequency\": \"Daily\"\n}"
+                },
+                "url": "{{baseUrl}}/api/customer/customerPortal/createCustomerPortal/:id",
+                "description": "**Path:** id = customer _id.\n**Request:** firstName, lastName, email (required). Optional: staticSites[], patrolSites[], defaultReports[], specificIncidentReports[], frequency.\n\n**Response 201:** `{ message, data, status }`"
+              }
+            },
+            {
+              "name": "Get All Customer Portals",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/api/customer/customerPortal/getAllCustomerPortal",
+                "description": "**Query:** status (optional).\n\n**Response 200:** `{ message, count, customersPortal }`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Customer Site",
+          "description": "Customer site data retrieval. Base path: /api/customer/site. All routes require Authorization: Bearer {{token}}.",
+          "item": [
+            {
+              "name": "Get Customer Website Data",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/customer/site/getCustomerWebsiteData/:customerName",
+                "description": "**Path:** customerName.\n\n**Response 200:** `{ message, data: { customer, staticSites, patrolSites, reports } }`"
+              }
+            },
+            {
+              "name": "Get Customer Static Sites",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/customer/site/getCustomerStaticSites/:customerName",
+                "description": "**Path:** customerName.\n\n**Response 200:** `{ message, data: { customerName, title, sites[], totalCount, activeCount } }`"
+              }
+            },
+            {
+              "name": "Get Customer Patrol Sites",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/customer/site/getCustomerPatrolSites/:customerName",
+                "description": "**Path:** customerName.\n\n**Response 200:** `{ message, data: { customerName, title, sites[], totalCount, activeCount } }`"
+              }
+            },
+            {
+              "name": "Get All Customer Portals (Site)",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/customer/site/getAllCustomerPortals",
+                "description": "**Query:** status (optional).\n\n**Response 200:** `{ message, count, data }`"
+              }
+            },
+            {
+              "name": "Get All Customer Portals by Status (Site)",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/customer/site/getAllCustomerPortals/:status",
+                "description": "**Path:** status.\n\n**Response 200:** `{ message, count, data }`"
+              }
+            },
+            {
+              "name": "Get Customer Portal Info",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/customer/site/getCustomerPortalInfo/:customerName",
+                "description": "**Path:** customerName.\n\n**Response 200:** `{ message, data: { customerName, firstName, lastName, email, portalId, staticSitesCount, patrolSitesCount, totalSites, frequency, defaultReports, specificIncidentReports } }`"
+              }
+            }
+          ]
         }
       ]
     },
@@ -748,10 +838,10 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"siteName\": \"Warehouse A\",\n  \"customer\": \"customerId_or_name\",\n  \"siteReferenceNumber\": \"SITE001\",\n  \"referenceId\": \"REF001\",\n  \"address\": \"100 Industrial Rd\",\n  \"state\": \"California\",\n  \"zipCode\": \"90001\",\n  \"country\": \"US\",\n  \"mobileNumber\": \"+1234567890\",\n  \"welfarecheckInterval\": \"60\",\n  \"holidayCalender\": \"UK\",\n  \"mobileClockTime\": \"enabled\",\n  \"welfareChecks\": [\n    { \"day\": \"monday\", \"startHours\": \"09:00\", \"toHours\": \"17:00\" },\n    { \"day\": \"tuesday\", \"startHours\": \"09:00\", \"toHours\": \"17:00\" }\n  ]\n}"
+              "raw": "{\n  \"siteName\": \"Warehouse A\",\n  \"siteReferenceNumber\": \"SITE001\",\n  \"referenceId\": \"REF001\",\n  \"address\": \"100 Industrial Rd\",\n  \"state\": \"California\",\n  \"zipCode\": \"90001\",\n  \"country\": \"US\",\n  \"mobileNumber\": \"+1234567890\",\n  \"welfarecheckInterval\": \"60\",\n  \"holidayCalender\": \"UK\",\n  \"mobileClockTime\": \"enabled\",\n  \"welfareChecks\": [\n    { \"day\": \"monday\", \"startHours\": \"09:00\", \"toHours\": \"17:00\" },\n    { \"day\": \"tuesday\", \"startHours\": \"09:00\", \"toHours\": \"17:00\" }\n  ]\n}"
             },
             "url": "{{baseUrl}}/api/site/addSite/:customerId",
-            "description": "**Path:** customerId = customer _id.\n**Request:** siteName, customer, siteReferenceNumber, referenceId, address, state, zipCode, country, mobileNumber, welfarecheckInterval, holidayCalender, mobileClockTime, welfareChecks[] (day: monday..sunday, startHours, toHours).\n\n**Response 201:** `{ message, data }`"
+            "description": "**Path:** customerId = customer _id.\n**Request:** siteName (required). Optional: siteReferenceNumber, referenceId, address, state, zipCode, country, mobileNumber, welfarecheckInterval, holidayCalender, mobileClockTime, welfareChecks[] (day: monday..sunday, startHours, toHours).\n\n**Response 201:** `{ message, data }`"
           }
         },
         {
@@ -760,7 +850,16 @@
             "method": "GET",
             "header": [],
             "url": "{{baseUrl}}/api/site/getSites",
-            "description": "**Response 200:** `{ message, data }`"
+            "description": "**Response 200:** `{ success, message, data }`"
+          }
+        },
+        {
+          "name": "Get Site by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/site/getSite/:id",
+            "description": "**Path:** id = site _id.\n\n**Response 200:** `{ success, message, data }`"
           }
         },
         {
@@ -790,9 +889,9 @@
           "request": {
             "method": "PATCH",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"status\": \"active\"\n}" },
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"Active\"\n}" },
             "url": "{{baseUrl}}/api/site/updateSiteStatus/:id",
-            "description": "**Path:** id.\n**Request:** status.\n\n**Response 200:** `{ message, data }`"
+            "description": "**Path:** id.\n**Request:** status.\n\n**Response 200:** `{ message, site }`"
           }
         },
         {
