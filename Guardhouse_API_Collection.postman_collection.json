@@ -824,6 +824,88 @@
               }
             }
           ]
+        },
+        {
+          "name": "Customer Documents",
+          "description": "Customer document management. Base path: /api/customer/document.",
+          "item": [
+            {
+              "name": "Create Customer Document",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"documentName\": \"Contract Agreement\",\n  \"documentType\": \"Contract\",\n  \"note\": \"Annual contract renewal\"\n}"
+                },
+                "url": "{{baseUrl}}/api/customer/document/createDocument/:customerId",
+                "description": "**Path:** customerId = customer _id.\n**Request:** documentName, documentType (required). Optional: note.\n\n**Response 201:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Create Customer Document (with files)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "documentName", "value": "Contract Agreement", "type": "text", "description": "Required" },
+                    { "key": "documentType", "value": "Contract", "type": "text", "description": "Required" },
+                    { "key": "note", "value": "Annual contract renewal", "type": "text" },
+                    { "key": "files", "type": "file", "src": "", "description": "Document files (multiple allowed)" }
+                  ]
+                },
+                "url": "{{baseUrl}}/api/customer/document/createDocument/:customerId",
+                "description": "**Path:** customerId = customer _id.\n**Form-data:** documentName, documentType (required). Optional: note, files[].\n\n**Response 201:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Get All Customer Documents",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/api/customer/document/getAllDocuments",
+                "description": "**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Get Documents by Customer",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/customer/document/getDocumentsByCustomer/:customerId",
+                "description": "**Path:** customerId = customer _id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Customer Document",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"documentName\": \"Updated Contract Agreement\",\n  \"documentType\": \"Contract\",\n  \"note\": \"Updated note\"\n}"
+                },
+                "url": "{{baseUrl}}/api/customer/document/updateDocument/:id",
+                "description": "**Path:** id = document _id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Delete Customer Document",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/customer/document/deleteDocument/:id",
+                "description": "**Path:** id = document _id.\n\n**Response 200:** `{ message }`"
+              }
+            }
+          ]
         }
       ]
     },

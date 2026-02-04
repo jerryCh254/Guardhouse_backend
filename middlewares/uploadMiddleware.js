@@ -6,8 +6,10 @@ const companyDocsDir = path.join(process.cwd(), 'uploads', 'company-documents');
 const dataImportDir = path.join(process.cwd(), 'uploads', 'data-import');
 const siteNoteDir = path.join(process.cwd(), 'uploads', 'note-site');
 const siteDocDir = path.join(process.cwd(), 'uploads', 'site-doc');
+const customerDocDir = path.join(process.cwd(), 'uploads', 'customer-doc');
 
-[companyDocsDir, dataImportDir,siteNoteDir,siteDocDir].forEach((dir) => {
+
+[companyDocsDir, dataImportDir,siteNoteDir,siteDocDir,customerDocDir].forEach((dir) => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 });
 
@@ -40,7 +42,13 @@ const storageSiteDoc = multer.diskStorage({
     cb(null, `${Date.now()}_${(file.originalname || 'file').slice(0, 50)}${ext}`);
   },
 });
-
+const storageCustomerDoc = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, customerDocDir),
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname) || '';
+    cb(null, `${Date.now()}_${(file.originalname || 'file').slice(0, 50)}${ext}`);
+  },
+});
 
 const uploadCompanyDocument = multer({
   storage: storageCompanyDoc,
@@ -56,7 +64,11 @@ const uploadSiteDocument = multer({
   limits: { fileSize: 10 * 1024 * 1024 },
 }).single('attchFile');
 const uploadSiteDoc = multer({
-  storage: siteNoteDoc,
+  storage: storageSiteDoc,
   limits: { fileSize: 10 * 1024 * 1024 },
 }).single('attchFile');
-module.exports = { uploadCompanyDocument, uploadDataImport ,uploadSiteDocument,uploadSiteDoc};
+const uploadCustomerDoc = multer({
+  storage: storageCustomerDoc,
+  limits: { fileSize: 10 * 1024 * 1024 },
+}).array('files', 5);
+module.exports = { uploadCompanyDocument, uploadDataImport ,uploadSiteDocument,uploadSiteDoc,uploadCustomerDoc};

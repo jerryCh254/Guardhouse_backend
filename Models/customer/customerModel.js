@@ -56,6 +56,10 @@ const customerSchema = new mongoose.Schema({
     sites: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Sites"
+    }],
+    documents: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "customerDocument"
     }]
     
 })

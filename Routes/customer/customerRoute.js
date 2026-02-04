@@ -4,9 +4,11 @@ const CustomerController = require('../../controllers/customer/customerControlle
 const auth = require('../../middlewares/authmiddleware');
 const customerPortal = require('./customerPortalRoute');
 const customerSite = require('./customerSiteRoute');
+const customerDocument = require('./customerDocumentRoute');
 
 router.use('/customerPortal',customerPortal);
 router.use('/site', customerSite);
+router.use('/document', customerDocument);
 
 router.post('/createCustomer', auth, CustomerController.createCustomer);
 router.get('/getAllCustomers', auth, CustomerController.getAllCustomers);
