@@ -1041,6 +1041,138 @@
               }
             }
           ]
+        },
+        {
+          "name": "Enhanced Customer Documents",
+          "description": "Advanced customer document management with permissions, acknowledgements, and renewals. Base path: /api/customer/documents.",
+          "item": [
+            {
+              "name": "Create Document (with permissions)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "documentName", "value": "Safety Policy 2024", "type": "text", "description": "Required" },
+                    { "key": "documentType", "value": "Policy", "type": "text", "description": "Required" },
+                    { "key": "note", "value": "Annual safety policy document", "type": "text" },
+                    { "key": "allowStaffToView", "value": "true", "type": "text" },
+                    { "key": "requiresAcknowledgement", "value": "true", "type": "text" },
+                    { "key": "requiresSignature", "value": "false", "type": "text" },
+                    { "key": "requiresRenewal", "value": "true", "type": "text" },
+                    { "key": "renewalPeriod", "value": "1 year", "type": "text" },
+                    { "key": "acknowledgementDeadline", "value": "2024-12-31", "type": "text" },
+                    { "key": "files", "type": "file", "src": "", "description": "Document files (multiple allowed)" }
+                  ]
+                },
+                "url": "{{baseUrl}}/api/customer/documents/createDocument/:customerId",
+                "description": "**Path:** customerId = customer _id.\n**Form-data:** documentName, documentType (required). Optional: note, allowStaffToView, requiresAcknowledgement, requiresSignature, requiresRenewal, renewalPeriod, acknowledgementDeadline, files[].\n\n**Response 201:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Get All Documents (with search & filter)",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/customer/documents/getAllDocuments?search=safety&status=Active",
+                "description": "**Query:** search (optional), status (Active|Inactive|All, default: Active).\n\n**Response 200:** `{ message, data, count }`"
+              }
+            },
+            {
+              "name": "Get Documents by Customer (with search & filter)",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/customer/documents/getDocumentsByCustomer/:customerId?search=policy&status=Active",
+                "description": "**Path:** customerId = customer _id.\n**Query:** search (optional), status (Active|Inactive|All, default: Active).\n\n**Response 200:** `{ message, data, count }`"
+              }
+            },
+            {
+              "name": "Get Document by ID",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/customer/documents/getDocumentById/:id",
+                "description": "**Path:** id = document _id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Document (with permissions)",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"documentName\": \"Updated Safety Policy 2024\",\n  \"documentType\": \"Policy\",\n  \"note\": \"Updated annual safety policy\",\n  \"allowStaffToView\": true,\n  \"requiresAcknowledgement\": true,\n  \"requiresSignature\": false,\n  \"requiresRenewal\": true,\n  \"renewalPeriod\": \"2 years\",\n  \"status\": \"Active\"\n}"
+                },
+                "url": "{{baseUrl}}/api/customer/documents/updateDocument/:id",
+                "description": "**Path:** id = document _id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Document Status",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"Inactive\"\n}"
+                },
+                "url": "{{baseUrl}}/api/customer/documents/updateDocumentStatus/:id",
+                "description": "**Path:** id = document _id.\n**Request:** status = Active | Inactive.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Renew Document",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"renewalPeriod\": \"2 years\"\n}"
+                },
+                "url": "{{baseUrl}}/api/customer/documents/renewDocument/:id",
+                "description": "**Path:** id = document _id.\n**Request:** renewalPeriod (optional).\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Get Documents Requiring Renewal",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/customer/documents/getDocumentsRequiringRenewal?days=30",
+                "description": "**Query:** days (default: 30) - documents expiring within X days.\n\n**Response 200:** `{ message, data, count }`"
+              }
+            },
+            {
+              "name": "Get Customer Documents Requiring Renewal",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/customer/documents/getDocumentsRequiringRenewal/:customerId?days=60",
+                "description": "**Path:** customerId = customer _id.\n**Query:** days (default: 30) - documents expiring within X days.\n\n**Response 200:** `{ message, data, count }`"
+              }
+            },
+            {
+              "name": "Delete Document",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/customer/documents/deleteDocument/:id",
+                "description": "**Path:** id = document _id.\n\n**Response 200:** `{ message }`"
+              }
+            }
+          ]
         }
       ]
     },

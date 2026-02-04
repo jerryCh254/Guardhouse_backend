@@ -59,7 +59,7 @@ const customerSchema = new mongoose.Schema({
     }],
     documents: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "customerDocument"
+        ref: "enhancedCustomerDocument"
     }],
     eventDetails: {
         type: mongoose.Schema.Types.ObjectId,
