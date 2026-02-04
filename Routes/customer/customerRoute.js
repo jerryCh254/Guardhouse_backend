@@ -5,10 +5,12 @@ const auth = require('../../middlewares/authmiddleware');
 const customerPortal = require('./customerPortalRoute');
 const customerSite = require('./customerSiteRoute');
 const customerDocument = require('./customerDocumentRoute');
+const eventDetails = require('./eventDetailsRoute');
 
 router.use('/customerPortal',customerPortal);
 router.use('/site', customerSite);
 router.use('/document', customerDocument);
+router.use('/event-details', eventDetails);
 
 router.post('/createCustomer', auth, CustomerController.createCustomer);
 router.get('/getAllCustomers', auth, CustomerController.getAllCustomers);

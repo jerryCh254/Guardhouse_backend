@@ -7,9 +7,10 @@ const dataImportDir = path.join(process.cwd(), 'uploads', 'data-import');
 const siteNoteDir = path.join(process.cwd(), 'uploads', 'note-site');
 const siteDocDir = path.join(process.cwd(), 'uploads', 'site-doc');
 const customerDocDir = path.join(process.cwd(), 'uploads', 'customer-doc');
+const eventDetailsDir = path.join(process.cwd(), 'uploads', 'event-details');
 
 
-[companyDocsDir, dataImportDir,siteNoteDir,siteDocDir,customerDocDir].forEach((dir) => {
+[companyDocsDir, dataImportDir,siteNoteDir,siteDocDir,customerDocDir,eventDetailsDir].forEach((dir) => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 });
 
@@ -49,6 +50,13 @@ const storageCustomerDoc = multer.diskStorage({
     cb(null, `${Date.now()}_${(file.originalname || 'file').slice(0, 50)}${ext}`);
   },
 });
+const storageEventDetails = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, eventDetailsDir),
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname) || '';
+    cb(null, `${Date.now()}_${(file.originalname || 'file').slice(0, 50)}${ext}`);
+  },
+});
 
 const uploadCompanyDocument = multer({
   storage: storageCompanyDoc,
@@ -71,4 +79,11 @@ const uploadCustomerDoc = multer({
   storage: storageCustomerDoc,
   limits: { fileSize: 10 * 1024 * 1024 },
 }).array('files', 5);
-module.exports = { uploadCompanyDocument, uploadDataImport ,uploadSiteDocument,uploadSiteDoc,uploadCustomerDoc};
+const uploadEventDetails = multer({
+  storage: storageEventDetails,
+  limits: { fileSize: 10 * 1024 * 1024 },
+}).fields([
+  { name: 'leftHeaderLogo', maxCount: 1 },
+  { name: 'rightHeaderLogo', maxCount: 1 }
+]);
+module.exports = { uploadCompanyDocument, uploadDataImport ,uploadSiteDocument,uploadSiteDoc,uploadCustomerDoc,uploadEventDetails};

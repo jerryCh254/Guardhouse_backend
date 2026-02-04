@@ -906,6 +906,141 @@
               }
             }
           ]
+        },
+        {
+          "name": "Event Details",
+          "description": "Event details management with logos and master licenses. Base path: /api/customer/event-details.",
+          "item": [
+            {
+              "name": "Create Event Details",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "abn", "value": "12345678901", "type": "text", "description": "Required" },
+                    { "key": "businessContactNumber", "value": "+1234567890", "type": "text", "description": "Required" },
+                    { "key": "businessAddress", "value": "123 Business St, Sydney NSW 2000", "type": "text", "description": "Required" },
+                    { "key": "masterLicenses", "value": "[{\"state\":\"NSW\",\"licenseNumber\":\"NSW123456\"}]", "type": "text", "description": "Optional: JSON array of licenses" },
+                    { "key": "leftHeaderLogo", "type": "file", "src": "", "description": "Optional: Left header logo" },
+                    { "key": "rightHeaderLogo", "type": "file", "src": "", "description": "Optional: Right header logo" }
+                  ]
+                },
+                "url": "{{baseUrl}}/api/customer/event-details/createEventDetails/:customerId",
+                "description": "**Path:** customerId = customer _id.\n**Form-data:** abn, businessContactNumber, businessAddress (required). Optional: masterLicenses (JSON array), leftHeaderLogo, rightHeaderLogo.\n\n**Response 201:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Create Event Details (JSON)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"abn\": \"12345678901\",\n  \"businessContactNumber\": \"+1234567890\",\n  \"businessAddress\": \"123 Business St, Sydney NSW 2000\",\n  \"masterLicenses\": [\n    {\n      \"state\": \"NSW\",\n      \"licenseNumber\": \"NSW123456\"\n    },\n    {\n      \"state\": \"VIC\",\n      \"licenseNumber\": \"VIC789012\"\n    }\n  ]\n}"
+                },
+                "url": "{{baseUrl}}/api/customer/event-details/createEventDetails/:customerId",
+                "description": "**Path:** customerId = customer _id.\n**Request:** abn, businessContactNumber, businessAddress (required). Optional: masterLicenses[].\n\n**Response 201:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Get Event Details by Customer",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/customer/event-details/getEventDetailsByCustomer/:customerId",
+                "description": "**Path:** customerId = customer _id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Event Details",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"abn\": \"98765432109\",\n  \"businessContactNumber\": \"+0987654321\",\n  \"businessAddress\": \"456 Updated Ave, Melbourne VIC 3000\",\n  \"masterLicenses\": [\n    {\n      \"state\": \"NSW\",\n      \"licenseNumber\": \"NSW654321\"\n    },\n    {\n      \"state\": \"QLD\",\n      \"licenseNumber\": \"QLD111222\"\n    }\n  ]\n}"
+                },
+                "url": "{{baseUrl}}/api/customer/event-details/updateEventDetails/:id",
+                "description": "**Path:** id = event details _id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Event Details (with logos)",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "abn", "value": "98765432109", "type": "text" },
+                    { "key": "businessContactNumber", "value": "+0987654321", "type": "text" },
+                    { "key": "businessAddress", "value": "456 Updated Ave, Melbourne VIC 3000", "type": "text" },
+                    { "key": "leftHeaderLogo", "type": "file", "src": "", "description": "Optional: Replace left logo" },
+                    { "key": "rightHeaderLogo", "type": "file", "src": "", "description": "Optional: Replace right logo" }
+                  ]
+                },
+                "url": "{{baseUrl}}/api/customer/event-details/updateEventDetails/:id",
+                "description": "**Path:** id = event details _id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Add Master License",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"state\": \"WA\",\n  \"licenseNumber\": \"WA333444\"\n}"
+                },
+                "url": "{{baseUrl}}/api/customer/event-details/addMasterLicense/:id",
+                "description": "**Path:** id = event details _id.\n**Request:** state (NSW|VIC|QLD|WA|SA|TAS|ACT|NT), licenseNumber (required).\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Master License",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"state\": \"SA\",\n  \"licenseNumber\": \"SA555666\"\n}"
+                },
+                "url": "{{baseUrl}}/api/customer/event-details/updateMasterLicense/:id/:licenseIndex",
+                "description": "**Path:** id = event details _id, licenseIndex = array index (0-based).\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Delete Master License",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/customer/event-details/deleteMasterLicense/:id/:licenseIndex",
+                "description": "**Path:** id = event details _id, licenseIndex = array index (0-based).\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Delete Event Details",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/customer/event-details/deleteEventDetails/:id",
+                "description": "**Path:** id = event details _id.\n\n**Response 200:** `{ message }`"
+              }
+            }
+          ]
         }
       ]
     },
