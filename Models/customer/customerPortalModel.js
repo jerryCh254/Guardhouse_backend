@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const customerPortalSchema = new mongoose.Schema({
+    customerName:{
+        type:String,
+        required: true
+    },
     firstName:{
         type:String
     },

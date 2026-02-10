@@ -70,11 +70,22 @@ class CustomerWebsiteController {
     try {
       const { customerName } = req.params;
       
+      console.log('Searching for customerName:', customerName); // Debug log
+      
       const customerPortal = await CustomerPortal.findOne({ customerName })
         .populate('staticSites', 'siteName id siteReferenceNumber address status');
         
+      console.log('Found customerPortal:', customerPortal); // Debug log
+        
       if (!customerPortal) {
-        return res.status(404).json({ message: 'Customer portal not found' });
+        return res.status(404).json({ 
+          message: 'Customer portal not found',
+          debug: {
+            searchedCustomerName: customerName,
+            availableCustomers: await CustomerPortal.find({}, 'customerName firstName lastName email'),
+            note: 'Existing records may not have customerName field. Need to migrate data.'
+          }
+        });
       }
       
       return res.status(200).json({
@@ -107,11 +118,22 @@ class CustomerWebsiteController {
     try {
       const { customerName } = req.params;
       
+      console.log('Searching for customerName:', customerName); // Debug log
+      
       const customerPortal = await CustomerPortal.findOne({ customerName })
         .populate('patrolSites', 'siteName id siteReferenceNumber address status');
         
+      console.log('Found customerPortal:', customerPortal); // Debug log
+        
       if (!customerPortal) {
-        return res.status(404).json({ message: 'Customer portal not found' });
+        return res.status(404).json({ 
+          message: 'Customer portal not found',
+          debug: {
+            searchedCustomerName: customerName,
+            availableCustomers: await CustomerPortal.find({}, 'customerName firstName lastName email'),
+            note: 'Existing records may not have customerName field. Need to migrate data.'
+          }
+        });
       }
       
       return res.status(200).json({

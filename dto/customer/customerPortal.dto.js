@@ -2,6 +2,7 @@ const Joi = require('joi');
 
 
 const customerPortalSchema = Joi.object({
+    customerName: Joi.string().required(),
     firstName: Joi.string().required(),
     lastName: Joi.string().required(),
     email: Joi.string().email().required(),

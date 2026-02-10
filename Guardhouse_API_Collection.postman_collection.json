@@ -748,10 +748,10 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"staticSites\": [\"SITE_ID_1\", \"SITE_ID_2\"],\n  \"patrolSites\": [\"PATROL_SITE_ID_1\", \"PATROL_SITE_ID_2\"],\n  \"defaultReports\": [\"Daily Report\", \"Weekly Summary\"],\n  \"specificIncidentReports\": [\"Security Incident\", \"Safety Issue\"],\n  \"frequency\": \"Daily\"\n}"
+                  "raw": "{\n  \"customerName\": \"ACME Corporation\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"staticSites\": [\"SITE_ID_1\", \"SITE_ID_2\"],\n  \"patrolSites\": [\"PATROL_SITE_ID_1\", \"PATROL_SITE_ID_2\"],\n  \"defaultReports\": [\"Daily Report\", \"Weekly Summary\"],\n  \"specificIncidentReports\": [\"Security Incident\", \"Safety Issue\"],\n  \"frequency\": \"Daily\"\n}"
                 },
                 "url": "{{baseUrl}}/api/customer/customerPortal/createCustomerPortal/:id",
-                "description": "**Path:** id = customer _id.\n**Request:** firstName, lastName, email (required). Optional: staticSites[], patrolSites[], defaultReports[], specificIncidentReports[], frequency.\n\n**Response 201:** `{ message, data, status }`"
+                "description": "**Path:** id = customer _id.\n**Request:** customerName, firstName, lastName, email (required). Optional: staticSites[], patrolSites[], defaultReports[], specificIncidentReports[], frequency.\n\n**Response 201:** `{ message, data, status }`"
               }
             },
             {
@@ -1244,17 +1244,407 @@
           }
         },
         {
-          "name": "Add Contact (to Site)",
+          "name": "Get Contacts",
           "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/site/contact/getContacts",
+            "description": "**Response 200:** `{ message, data }`"
+          }
+        },
+        {
+          "name": "Update Contact",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Doe\",\n  \"emailAddress\": \"jane@example.com\",\n  \"mobileNumber\": \"+1234567890\",\n  \"contactType\": \"primary\",\n  \"notes\": \"Site contact\"\n}"
+              "raw": "{\n  \"firstName\": \"Jane Updated\",\n  \"lastName\": \"Doe\",\n  \"emailAddress\": \"jane.updated@example.com\",\n  \"mobileNumber\": \"+1234567890\",\n  \"contactType\": \"secondary\",\n  \"notes\": \"Updated site contact\"\n}"
             },
-            "url": "{{baseUrl}}/api/site/contact/addContact/:siteId",
-            "description": "**Path:** siteId = site _id.\n**Request:** firstName, lastName, emailAddress, mobileNumber, contactType, notes.\n\n**Response 201:** `{ message, data }`"
+            "url": "{{baseUrl}}/api/site/contact/updateContact/:id",
+            "description": "**Path:** id = contact _id.\n**Response 200:** `{ message, data }`"
           }
+        },
+        {
+          "name": "Delete Contact",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/site/contact/deleteContact/:id",
+            "description": "**Path:** id = contact _id.\n**Response 200:** `{ message }`"
+          }
+        },
+        {
+          "name": "Preferred Staff",
+          "description": "Manage preferred and blocked staff for sites. Base path: /api/site/preferred-staff.",
+          "item": [
+            {
+              "name": "Add/Check Preferred Staff",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"isPreferred\": true,\n  \"notes\": \"Reliable staff member\"\n}"
+                },
+                "url": "{{baseUrl}}/api/site/preferred-staff/employee/:employeeId/preferred",
+                "description": "**Path:** employeeId = employee _id.\n**Request:** isPreferred (boolean), notes (optional).\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Get Blocked Employees",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/api/site/preferred-staff/blocked",
+                "description": "**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Get Preferred Employees",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/api/site/preferred-staff/preferred",
+                "description": "**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Preferred Staff",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"isPreferred\": false,\n  \"notes\": \"Updated preference\"\n}"
+                },
+                "url": "{{baseUrl}}/api/site/preferred-staff/employee/:employeeId/update",
+                "description": "**Path:** employeeId = employee _id.\n**Response 200:** `{ message, data }`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Site Notes",
+          "description": "Manage site notes with file attachments. Base path: /api/site/note.",
+          "item": [
+            {
+              "name": "Add Note (with file)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "note", "value": "Site inspection note", "type": "text", "description": "Required" },
+                    { "key": "file", "type": "file", "src": "", "description": "Optional: Document/image file" }
+                  ]
+                },
+                "url": "{{baseUrl}}/api/site/note/add/:siteId",
+                "description": "**Path:** siteId = site _id.\n**Form-data:** note (required), file (optional).\n**Response 201:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Get Notes",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/api/site/note/getNotes",
+                "description": "**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Note",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"note\": \"Updated site inspection note\"\n}"
+                },
+                "url": "{{baseUrl}}/api/site/note/updateNotes/:id",
+                "description": "**Path:** id = note _id.\n**Response 200:** `{ message, data }`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Site Positions",
+          "description": "Manage position definitions at specific sites. Base path: /api/site/sitePosition.",
+          "item": [
+            {
+              "name": "Add Site Position",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Front Gate Guard\",\n  \"description\": \"Main entrance security position\",\n  \"duties\": [\"Access control\", \"Visitor screening\"],\n  \"requiredSkills\": [\"First Aid\", \"Security License\"]\n}"
+                },
+                "url": "{{baseUrl}}/api/site/sitePosition/addSitePosition/:id",
+                "description": "**Path:** id = site _id.\n**Request:** name (required). Optional: description, duties[], requiredSkills[].\n**Response 201:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Get Site Positions",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/api/site/sitePosition/getSitePositions",
+                "description": "**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Get Site Position by ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/api/site/sitePosition/getSitePosition/:id",
+                "description": "**Path:** id = site position _id.\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Site Position",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Senior Front Gate Guard\",\n  \"description\": \"Lead security position\",\n  \"duties\": [\"Access control\", \"Visitor screening\", \"Team coordination\"]\n}"
+                },
+                "url": "{{baseUrl}}/api/site/sitePosition/updateSitePosition/:id",
+                "description": "**Path:** id = site position _id.\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Delete Site Position",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": "{{baseUrl}}/api/site/sitePosition/deleteSitePosition/:id",
+                "description": "**Path:** id = site position _id.\n**Response 200:** `{ message }`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Incident Report Templates",
+          "description": "Manage incident report templates and enable/disable per site. Base path: /api/site/incidentReportTemplate.",
+          "item": [
+            {
+              "name": "Get All Templates",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/api/site/incidentReportTemplate/getAll",
+                "description": "**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Create Template",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"templateName\": \"Security Incident Report\",\n  \"description\": \"Standard security incident template\",\n  \"sections\": [\n    { \"name\": \"Incident Details\", \"required\": true },\n    { \"name\": \"Witness Statements\", \"required\": false },\n    { \"name\": \"Action Taken\", \"required\": true }\n  ],\n  \"isActive\": true\n}"
+                },
+                "url": "{{baseUrl}}/api/site/incidentReportTemplate/create",
+                "description": "**Request:** templateName (required). Optional: description, sections[], isActive.\n**Response 201:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Get Site Templates",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/api/site/incidentReportTemplate/site/:siteId",
+                "description": "**Path:** siteId = site _id.\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Enable Template for Site",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": "{{baseUrl}}/api/site/incidentReportTemplate/enable/:templateId/:siteId",
+                "description": "**Path:** templateId = template _id, siteId = site _id.\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Disable Template for Site",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": "{{baseUrl}}/api/site/incidentReportTemplate/disable/:templateId/:siteId",
+                "description": "**Path:** templateId = template _id, siteId = site _id.\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Template",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"templateName\": \"Updated Security Incident Report\",\n  \"description\": \"Updated template description\",\n  \"isActive\": true\n}"
+                },
+                "url": "{{baseUrl}}/api/site/incidentReportTemplate/update/:templateId",
+                "description": "**Path:** templateId = template _id.\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Delete Template",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": "{{baseUrl}}/api/site/incidentReportTemplate/delete/:templateId",
+                "description": "**Path:** templateId = template _id.\n**Response 200:** `{ message }`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Checkpoints",
+          "description": "Manage QR code checkpoints for sites. Base path: /api/site/checkPoint.",
+          "item": [
+            {
+              "name": "Create Checkpoint (QR Code)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"checkpointName\": \"Main Entrance\",\n  \"description\": \"Primary entrance checkpoint\",\n  \"location\": \"Front gate\",\n  \"qrCodeData\": \"CHK001-MAIN\",\n  \"isActive\": true\n}"
+                },
+                "url": "{{baseUrl}}/api/site/checkPoint/addQrCode",
+                "description": "**Request:** checkpointName (required). Optional: description, location, qrCodeData, isActive.\n**Response 201:** `{ message, data }`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Site Documents",
+          "description": "Manage site-specific documents with file uploads. Base path: /api/site/siteDocument.",
+          "item": [
+            {
+              "name": "Add Site Document (with file)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "documentName", "value": "Site Safety Plan", "type": "text", "description": "Required" },
+                    { "key": "documentType", "value": "Safety", "type": "text", "description": "Required" },
+                    { "key": "description", "value": "Site specific safety document", "type": "text" },
+                    { "key": "file", "type": "file", "src": "", "description": "Document file" }
+                  ]
+                },
+                "url": "{{baseUrl}}/api/site/siteDocument/addSiteDocument/:siteId",
+                "description": "**Path:** siteId = site _id.\n**Form-data:** documentName, documentType (required). Optional: description, file.\n**Response 201:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Get Site Documents",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/api/site/siteDocument/getSiteDocuments",
+                "description": "**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Site Document",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "documentName", "value": "Updated Site Safety Plan", "type": "text" },
+                    { "key": "documentType", "value": "Safety", "type": "text" },
+                    { "key": "description", "value": "Updated safety document", "type": "text" },
+                    { "key": "file", "type": "file", "src": "", "description": "Optional: Replace file" }
+                  ]
+                },
+                "url": "{{baseUrl}}/api/site/siteDocument/updateSiteDocument/:id",
+                "description": "**Path:** id = document _id.\n**Response 200:** `{ message, data }`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Role Templates",
+          "description": "Manage role templates specific to sites. Base path: /api/site/siteRoleTemplate.",
+          "item": [
+            {
+              "name": "Get Site Role Templates",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/api/site/siteRoleTemplate/getSiteRoleTemplates",
+                "description": "**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Create Site Role Template",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"roleName\": \"Site Security Supervisor\",\n  \"description\": \"Supervisor role for this site\",\n  \"responsibilities\": [\"Patrol coordination\", \"Staff management\", \"Incident response\"],\n  \"requiredQualifications\": [\"Security License\", \"First Aid\", \"2+ years experience\"]\n}"
+                },
+                "url": "{{baseUrl}}/api/site/siteRoleTemplate/createSiteRoleTemplate",
+                "description": "**Request:** roleName (required). Optional: description, responsibilities[], requiredQualifications[].\n**Response 201:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Site Role Template",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"roleName\": \"Senior Site Security Supervisor\",\n  \"description\": \"Senior supervisor role\",\n  \"responsibilities\": [\"Patrol coordination\", \"Staff management\", \"Incident response\", \"Training\"]\n}"
+                },
+                "url": "{{baseUrl}}/api/site/siteRoleTemplate/updateSiteRoleTemplate/:id",
+                "description": "**Path:** id = role template _id.\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Delete Site Role Template",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": "{{baseUrl}}/api/site/siteRoleTemplate/deleteSiteRoleTemplate/:id",
+                "description": "**Path:** id = role template _id.\n**Response 200:** `{ message }`"
+              }
+            }
+          ]
         }
       ]
     },
