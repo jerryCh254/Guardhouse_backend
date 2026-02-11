@@ -3,7 +3,7 @@ const { generateQR } = require('../../utils/qrGenaerator');
 
 class CheckPointController {
 static async createCheckpoint (req, res){
-  const { checkPointModel, siteId, type, location, geofence, distanceThreshold, nfcId } = req.body;
+  const { checkPointModel, siteId, type, location, geofence, distanceThreshold } = req.body;
 
   const code = "CHK-" + Date.now(); 
 
@@ -25,16 +25,6 @@ static async createCheckpoint (req, res){
   if (type === "qrCode") {
     const qrImagePath = await generateQR(code, location);
     checkpointData.qrImage = qrImagePath;
-  }
-
-  if (type === "NFC") {
-    if (!nfcId) {
-      return res.status(400).json({
-        success: false,
-        message: "NFC ID is required for NFC checkpoints"
-      });
-    }
-    checkpointData.nfcImage = nfcId;
   }
 
   if (geofence) {
@@ -60,7 +50,6 @@ static async createCheckpoint (req, res){
   });
 }
 
-// Get checkpoints by site
 static async getCheckpointsBySite(req, res) {
   try {
     const { siteId } = req.params;
@@ -81,7 +70,6 @@ static async getCheckpointsBySite(req, res) {
   }
 }
 
-// Get all checkpoints
 static async getAllCheckpoints(req, res) {
   try {
     const checkpoints = await checkPoint.find({ isActive: true });
@@ -97,7 +85,6 @@ static async getAllCheckpoints(req, res) {
   }
 }
 
-// Verify checkpoint by code
 static async verifyCheckpoint(req, res) {
   try {
     const { code } = req.params;
@@ -144,11 +131,10 @@ static async verifyCheckpoint(req, res) {
   }
 }
 
-// Verify QR code data and extract location
 static async verifyQRCode(req, res) {
   try {
     const { qrData, userLocation } = req.body;
-
+    
     let parsedQRData;
     try {
       parsedQRData = JSON.parse(qrData);
@@ -204,7 +190,6 @@ static async verifyQRCode(req, res) {
   }
 }
 
-// Set geofence for a checkpoint
 static async setGeofence(req, res) {
   try {
     const { checkpointId } = req.params;
@@ -295,6 +280,7 @@ static async checkGeofence(req, res) {
     });
   }
 }
+
 static async getGeofenceCheckpoints(req, res) {
   try {
     const checkpoints = await checkPoint.find({ 
@@ -401,6 +387,7 @@ static async findNearbyCheckpoints(req, res) {
     });
   }
 }
+
 static calculateDistance(lat1, lon1, lat2, lon2) {
   const R = 6371e3; 
   const φ1 = lat1 * Math.PI/180;

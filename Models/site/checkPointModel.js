@@ -6,19 +6,16 @@ const checkPointSchema = new mongoose.Schema({
    },
    siteId:{
     type:mongoose.Schema.Types.ObjectId,
-    ref:"site"
+    ref:"Sites"
    },
    code:{
     type:String,
    },
    type:{
     type:String,
-    enum:["qrCode","NFC"],
+    enum:["qrCode"],
    },
    qrImage:{
-    type:String,
-   },
-   nfcImage:{
     type:String,
    },
  location: {
@@ -52,7 +49,7 @@ const checkPointSchema = new mongoose.Schema({
             }
         },
         radius: {
-            type: Number,  // in meters
+            type: Number,
             default: 50
         },
         enabled: {
@@ -64,15 +61,19 @@ const checkPointSchema = new mongoose.Schema({
         }
     },
         distanceThreshold: {
-        type: Number,  // in meters
-        default: 100
+        type: Number,
+            default: 100
     },
     isActive: {
         type: Boolean,
         default: true
     },
     createdAt: {
-        type:String,
+        type: String,
     },
 })
+
+checkPointSchema.index({ 'location.coordinates': '2dsphere' });
+checkPointSchema.index({ 'geofence.center': '2dsphere' });
+
 module.exports = mongoose.model("checkPoint",checkPointSchema);
