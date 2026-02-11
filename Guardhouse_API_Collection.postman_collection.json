@@ -1440,6 +1440,136 @@
           ]
         },
         {
+          "name": "Checkpoints",
+          "description": "Manage QR/NFC checkpoints with geofence and location tracking. Base path: /api/site/checkPoint.",
+          "item": [
+            {
+              "name": "Create Checkpoint",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"checkPointModel\": \"Main Gate\",\n  \"siteId\": \"SITE_OBJECT_ID\",\n  \"type\": \"qrCode\",\n  \"location\": {\n    \"address\": \"123 Main Street, Delhi, India\",\n    \"coordinates\": {\n      \"lat\": 28.6139,\n      \"lng\": 77.2090\n    },\n    \"placeId\": \"ChIJLbZ-NFv9DDkRsk0zX9GkQMQ\"\n  },\n  \"geofence\": {\n    \"center\": {\n      \"lat\": 28.6139,\n      \"lng\": 77.2090\n    },\n    \"radius\": 50,\n    \"enabled\": true,\n    \"siteName\": \"Main Office Building\"\n  },\n  \"distanceThreshold\": 100\n}"
+                },
+                "url": "{{baseUrl}}/api/site/checkPoint/site/:siteId/create",
+                "description": "**Path:** siteId = site _id.\n**Request:** checkPointModel, siteId, type (required). Optional: location, geofence, distanceThreshold, nfcId.\n**Response 201:** `{ success, message, checkpoint, qrImagePath }`"
+              }
+            },
+            {
+              "name": "Get Site Checkpoints",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "url": "{{baseUrl}}/api/site/checkPoint/site/:siteId",
+                "description": "**Path:** siteId = site _id.\n**Response 200:** `{ success, checkpoints }`"
+              }
+            },
+            {
+              "name": "Get All Checkpoints",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "url": "{{baseUrl}}/api/site/checkPoint/all",
+                "description": "**Response 200:** `{ success, checkpoints }`"
+              }
+            },
+            {
+              "name": "Verify Checkpoint by Code",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"userLocation\": {\n    \"lat\": 28.6140,\n    \"lng\": 77.2091\n  }\n}"
+                },
+                "url": "{{baseUrl}}/api/site/checkPoint/verify/:code",
+                "description": "**Path:** code = checkpoint code (e.g., CHK-1641234567890).\n**Request:** userLocation (optional).\n**Response 200:** `{ success, message, checkpoint, locationVerified, distance }`"
+              }
+            },
+            {
+              "name": "Verify QR Code",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"qrData\": \"{\\\"code\\\":\\\"CHK-1641234567890\\\",\\\"timestamp\\\":\\\"2024-01-15T10:30:00.000Z\\\",\\\"location\\\":{\\\"lat\\\":28.6139,\\\"lng\\\":77.2090,\\\"address\\\":\\\"123 Main Street\\\"}}\",\n  \"userLocation\": {\n    \"lat\": 28.6140,\n    \"lng\": 77.2091\n  }\n}"
+                },
+                "url": "{{baseUrl}}/api/site/checkPoint/verify-qr",
+                "description": "**Request:** qrData (scanned QR string), userLocation (optional).\n**Response 200:** `{ success, checkpoint, qrData, locationVerified, distance }`"
+              }
+            },
+            {
+              "name": "Set Geofence",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"center\": {\n    \"lat\": 28.6139,\n    \"lng\": 77.2090\n  },\n  \"radius\": 50,\n  \"enabled\": true,\n  \"siteName\": \"Main Security Point\"\n}"
+                },
+                "url": "{{baseUrl}}/api/site/checkPoint/:checkpointId/geofence",
+                "description": "**Path:** checkpointId = checkpoint _id.\n**Request:** center (lat, lng), radius, enabled, siteName.\n**Response 200:** `{ success, message, checkpoint }`"
+              }
+            },
+            {
+              "name": "Check Geofence",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "url": "{{baseUrl}}/api/site/checkPoint/:checkpointId/geofence/check?userLat=28.6140&userLng=77.2091",
+                "description": "**Path:** checkpointId = checkpoint _id.\n**Query:** userLat, userLng (required).\n**Response 200:** `{ success, withinGeofence, distance, geofenceRadius, message }`"
+              }
+            },
+            {
+              "name": "Find Nearby Checkpoints",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "url": "{{baseUrl}}/api/site/checkPoint/nearby?lat=28.6139&lng=77.2090&radius=1000",
+                "description": "**Query:** lat, lng (required), radius (optional, default 1000m).\n**Response 200:** `{ success, checkpoints }`"
+              }
+            },
+            {
+              "name": "Create NFC Checkpoint",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"checkPointModel\": \"Emergency Exit\",\n  \"siteId\": \"SITE_OBJECT_ID\",\n  \"type\": \"NFC\",\n  \"location\": {\n    \"address\": \"Emergency Exit, Floor 2\",\n    \"coordinates\": {\n      \"lat\": 28.6140,\n      \"lng\": 77.2091\n    }\n  },\n  \"nfcId\": \"A1:B2:C3:D4:E5:F6\",\n  \"distanceThreshold\": 50\n}"
+                },
+                "url": "{{baseUrl}}/api/site/checkPoint/site/:siteId/create",
+                "description": "**Path:** siteId = site _id.\n**Request:** checkPointModel, siteId, type, nfcId (required for NFC).\n**Response 201:** `{ success, message, checkpoint }`"
+              }
+            }
+          ]
+        },
+        {
           "name": "Incident Report Templates",
           "description": "Manage incident report templates and enable/disable per site. Base path: /api/site/incidentReportTemplate.",
           "item": [
