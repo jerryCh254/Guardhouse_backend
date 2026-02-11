@@ -5,7 +5,8 @@ const hrNoteRoutes = require('./hrNoteRoutes');
 const complianceRequestRoutes = require('./complianceRequestRoutes');
 const managerSiteRoutes = require('./managerSiteRoutes');
 const submittedComplianceRoutes = require('./submittedComplianceRoutes');
-
+const employeeSiteRoutes = require('./employeeSiteRoutes');
+router.use('/site',employeeSiteRoutes);
 router.use('/employees', employeeRoutes);
 router.use('/employees/:id/notes', hrNoteRoutes);
 router.use('/employees/:id/compliance-requests', complianceRequestRoutes);

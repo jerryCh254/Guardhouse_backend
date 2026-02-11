@@ -47,14 +47,14 @@ static async createContact(req, res) {
       const contact = await Contact.find().populate("site");
   
       res.status(200).json({
-        success: true,
+       
         message: "Contact fetched successfully",
         data: contact
       });
   
     } catch (error) {
       res.status(500).json({
-        success: false,
+       
         message: error.message
       });
     }

@@ -9,13 +9,13 @@ class IncidentReportTemplateController {
                 .sort({ createdAt: -1 });
 
             res.status(200).json({
-                success: true,
+               
                 message: "Incident report templates fetched successfully",
                 data: templates
             });
         } catch (error) {
             res.status(500).json({
-                success: false,
+               
                 message: error.message
             });
         }
@@ -28,7 +28,7 @@ class IncidentReportTemplateController {
             const existingTemplate = await IncidentReportTemplate.findOne({ name });
             if (existingTemplate) {
                 return res.status(400).json({
-                    success: false,
+                   
                     message: "Template with this name already exists"
                 });
             }
@@ -40,13 +40,13 @@ class IncidentReportTemplateController {
             });
 
             res.status(201).json({
-                success: true,
+               
                 message: "Incident report template created successfully",
                 data: template
             });
         } catch (error) {
             res.status(500).json({
-                success: false,
+               
                 message: error.message
             });
         }
@@ -59,7 +59,7 @@ class IncidentReportTemplateController {
             const template = await IncidentReportTemplate.findById(templateId);
             if (!template) {
                 return res.status(404).json({
-                    success: false,
+                   
                     message: "Template not found"
                 });
             }
@@ -67,14 +67,14 @@ class IncidentReportTemplateController {
             const site = await Site.findById(siteId);
             if (!site) {
                 return res.status(404).json({
-                    success: false,
+                   
                     message: "Site not found"
                 });
             }
 
             if (template.sites.includes(siteId)) {
                 return res.status(400).json({
-                    success: false,
+                   
                     message: "Template is already enabled for this site"
                 });
             }
@@ -89,13 +89,13 @@ class IncidentReportTemplateController {
             await site.save();
 
             res.status(200).json({
-                success: true,
+               
                 message: "Template enabled for site successfully",
                 data: template
             });
         } catch (error) {
             res.status(500).json({
-                success: false,
+               
                 message: error.message
             });
         }
@@ -108,7 +108,7 @@ class IncidentReportTemplateController {
             const template = await IncidentReportTemplate.findById(templateId);
             if (!template) {
                 return res.status(404).json({
-                    success: false,
+                   
                     message: "Template not found"
                 });
             }
@@ -121,13 +121,13 @@ class IncidentReportTemplateController {
             });
 
             res.status(200).json({
-                success: true,
+               
                 message: "Template disabled for site successfully",
                 data: template
             });
         } catch (error) {
             res.status(500).json({
-                success: false,
+               
                 message: error.message
             });
         }
@@ -140,7 +140,7 @@ class IncidentReportTemplateController {
             const site = await Site.findById(siteId).populate('incidentReportTemplates');
             if (!site) {
                 return res.status(404).json({
-                    success: false,
+                   
                     message: "Site not found"
                 });
             }
@@ -161,13 +161,13 @@ class IncidentReportTemplateController {
             );
 
             res.status(200).json({
-                success: true,
+               
                 message: "Site incident report templates fetched successfully",
                 data: uniqueTemplates
             });
         } catch (error) {
             res.status(500).json({
-                success: false,
+               
                 message: error.message
             });
         }
@@ -186,19 +186,19 @@ class IncidentReportTemplateController {
 
             if (!template) {
                 return res.status(404).json({
-                    success: false,
+                   
                     message: "Template not found"
                 });
             }
 
             res.status(200).json({
-                success: true,
+               
                 message: "Template updated successfully",
                 data: template
             });
         } catch (error) {
             res.status(500).json({
-                success: false,
+               
                 message: error.message
             });
         }
@@ -211,7 +211,7 @@ class IncidentReportTemplateController {
             const template = await IncidentReportTemplate.findByIdAndDelete(templateId);
             if (!template) {
                 return res.status(404).json({
-                    success: false,
+                   
                     message: "Template not found"
                 });
             }
@@ -222,12 +222,12 @@ class IncidentReportTemplateController {
             );
 
             res.status(200).json({
-                success: true,
+               
                 message: "Template deleted successfully"
             });
         } catch (error) {
             res.status(500).json({
-                success: false,
+               
                 message: error.message
             });
         }

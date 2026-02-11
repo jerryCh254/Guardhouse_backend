@@ -92,6 +92,14 @@ roleTemplates: [{
 siteDocuments: [{
   type: mongoose.Schema.Types.ObjectId,
   ref: "SiteDocument"
+}],
+preferredEmployees: [{
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "Employee"
+}],
+blacklistedEmployees: [{
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "Employee"
 }]
 })
 

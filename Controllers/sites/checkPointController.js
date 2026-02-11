@@ -43,7 +43,7 @@ static async createCheckpoint (req, res){
   const checkpoint = await checkPoint.create(checkpointData);
 
   res.json({
-    success: true,
+   
     message: "Checkpoint created successfully",
     checkpoint,
     qrImagePath: type === "qrCode" ? checkpoint.qrImage : null
@@ -59,12 +59,12 @@ static async getCheckpointsBySite(req, res) {
     }).populate('siteId', 'siteName');
     
     res.json({
-      success: true,
+     
       checkpoints
     });
   } catch (error) {
     res.status(500).json({
-      success: false,
+     
       message: error.message
     });
   }
@@ -74,12 +74,12 @@ static async getAllCheckpoints(req, res) {
   try {
     const checkpoints = await checkPoint.find({ isActive: true });
     res.json({
-      success: true,
+     
       checkpoints
     });
   } catch (error) {
     res.status(500).json({
-      success: false,
+     
       message: error.message
     });
   }
@@ -94,7 +94,7 @@ static async verifyCheckpoint(req, res) {
     
     if (!checkpoint) {
       return res.status(404).json({
-        success: false,
+       
         message: "Checkpoint not found"
       });
     }
@@ -114,7 +114,7 @@ static async verifyCheckpoint(req, res) {
     }
 
     res.json({
-      success: true,
+     
       message: locationVerified ? 
         "Checkpoint verified successfully" : 
         "Checkpoint verified but location is outside geofence",
@@ -125,7 +125,7 @@ static async verifyCheckpoint(req, res) {
     });
   } catch (error) {
     res.status(500).json({
-      success: false,
+     
       message: error.message
     });
   }
@@ -140,7 +140,7 @@ static async verifyQRCode(req, res) {
       parsedQRData = JSON.parse(qrData);
     } catch (error) {
       return res.status(400).json({
-        success: false,
+       
         message: "Invalid QR code format"
       });
     }
@@ -152,7 +152,7 @@ static async verifyQRCode(req, res) {
     
     if (!checkpoint) {
       return res.status(404).json({
-        success: false,
+       
         message: "Checkpoint not found"
       });
     }
@@ -174,7 +174,7 @@ static async verifyQRCode(req, res) {
     }
 
     res.json({
-      success: true,
+     
       message: "QR code verified successfully",
       checkpoint,
       qrData: parsedQRData,
@@ -184,7 +184,7 @@ static async verifyQRCode(req, res) {
     });
   } catch (error) {
     res.status(500).json({
-      success: false,
+     
       message: error.message
     });
   }
@@ -215,19 +215,19 @@ static async setGeofence(req, res) {
 
     if (!checkpoint) {
       return res.status(404).json({
-        success: false,
+       
         message: "Checkpoint not found"
       });
     }
 
     res.json({
-      success: true,
+     
       message: "Geofence set successfully",
       checkpoint
     });
   } catch (error) {
     res.status(500).json({
-      success: false,
+     
       message: error.message
     });
   }
@@ -242,14 +242,14 @@ static async checkGeofence(req, res) {
     
     if (!checkpoint) {
       return res.status(404).json({
-        success: false,
+       
         message: "Checkpoint not found"
       });
     }
 
     if (!checkpoint.geofence.enabled) {
       return res.json({
-        success: true,
+       
         message: "Geofence not enabled",
         withinGeofence: true
       });
@@ -265,7 +265,7 @@ static async checkGeofence(req, res) {
     const withinGeofence = distance <= checkpoint.geofence.radius;
 
     res.json({
-      success: true,
+     
       withinGeofence,
       distance,
       geofenceRadius: checkpoint.geofence.radius,
@@ -275,7 +275,7 @@ static async checkGeofence(req, res) {
     });
   } catch (error) {
     res.status(500).json({
-      success: false,
+     
       message: error.message
     });
   }
@@ -289,12 +289,12 @@ static async getGeofenceCheckpoints(req, res) {
     });
 
     res.json({
-      success: true,
+     
       checkpoints
     });
   } catch (error) {
     res.status(500).json({
-      success: false,
+     
       message: error.message
     });
   }
@@ -341,19 +341,19 @@ static async updateCheckpointWithGeofence(req, res) {
 
     if (!checkpoint) {
       return res.status(404).json({
-        success: false,
+       
         message: "Checkpoint not found"
       });
     }
 
     res.json({
-      success: true,
+     
       message: "Checkpoint updated with geofence",
       checkpoint
     });
   } catch (error) {
     res.status(500).json({
-      success: false,
+     
       message: error.message
     });
   }
@@ -377,12 +377,12 @@ static async findNearbyCheckpoints(req, res) {
     });
 
     res.json({
-      success: true,
+     
       checkpoints
     });
   } catch (error) {
     res.status(500).json({
-      success: false,
+     
       message: error.message
     });
   }

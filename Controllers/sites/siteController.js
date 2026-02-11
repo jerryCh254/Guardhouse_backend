@@ -78,14 +78,14 @@ static async getSites(req, res) {
       .populate("siteDocuments");
 
     res.status(200).json({
-      success: true,
+     
       message: "Sites fetched successfully",
       data: sites
     });
 
   } catch (error) {
     res.status(500).json({
-      success: false,
+     
       message: error.message
     });
   }
@@ -111,20 +111,20 @@ static async getSiteById(req, res) {
 
     if (!site) {
       return res.status(404).json({
-        success: false,
+       
         message: "Site not found"
       });
     }
 
     res.status(200).json({
-      success: true,
+     
       message: "Site fetched successfully",
       data: site
     });
 
   } catch (error) {
     res.status(500).json({
-      success: false,
+     
       message: error.message
     });
   }
