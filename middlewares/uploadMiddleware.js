@@ -150,15 +150,112 @@ const uploadCompliance = multer({
   limits: { fileSize: 10 * 1024 * 1024 },
 }).single('file');
 
+// Wrapper functions to handle multer errors and ensure next() is called
+const uploadCompanyDocumentMiddleware = (req, res, next) => {
+  uploadCompanyDocument(req, res, (err) => {
+    if (err) {
+      if (err instanceof multer.MulterError) {
+        if (err.code === 'LIMIT_FILE_SIZE') {
+          return res.status(400).json({ message: 'File too large' });
+        }
+        return res.status(400).json({ message: 'File upload error: ' + err.message });
+      }
+      return res.status(500).json({ message: 'Server error during file upload' });
+    }
+    next();
+  });
+};
+
+const uploadDataImportMiddleware = (req, res, next) => {
+  uploadDataImport(req, res, (err) => {
+    if (err) {
+      if (err instanceof multer.MulterError) {
+        if (err.code === 'LIMIT_FILE_SIZE') {
+          return res.status(400).json({ message: 'File too large' });
+        }
+        return res.status(400).json({ message: 'File upload error: ' + err.message });
+      }
+      return res.status(500).json({ message: 'Server error during file upload' });
+    }
+    next();
+  });
+};
+
+const uploadSiteDocumentMiddleware = (req, res, next) => {
+  uploadSiteDocument(req, res, (err) => {
+    if (err) {
+      if (err instanceof multer.MulterError) {
+        if (err.code === 'LIMIT_FILE_SIZE') {
+          return res.status(400).json({ message: 'File too large' });
+        }
+        return res.status(400).json({ message: 'File upload error: ' + err.message });
+      }
+      return res.status(500).json({ message: 'Server error during file upload' });
+    }
+    next();
+  });
+};
+
+const uploadSiteDocMiddleware = (req, res, next) => {
+  uploadSiteDoc(req, res, (err) => {
+    if (err) {
+      if (err instanceof multer.MulterError) {
+        if (err.code === 'LIMIT_FILE_SIZE') {
+          return res.status(400).json({ message: 'File too large' });
+        }
+        return res.status(400).json({ message: 'File upload error: ' + err.message });
+      }
+      return res.status(500).json({ message: 'Server error during file upload' });
+    }
+    next();
+  });
+};
+
+const uploadSecurityLicenseMiddleware = (req, res, next) => {
+  uploadSecurityLicense(req, res, (err) => {
+    if (err) {
+      if (err instanceof multer.MulterError) {
+        if (err.code === 'LIMIT_FILE_SIZE') {
+          return res.status(400).json({ message: 'File too large' });
+        }
+        return res.status(400).json({ message: 'File upload error: ' + err.message });
+      }
+      return res.status(500).json({ message: 'Server error during file upload' });
+    }
+    next();
+  });
+};
+
+const uploadComplianceMiddleware = (req, res, next) => {
+  uploadCompliance(req, res, (err) => {
+    if (err) {
+      if (err instanceof multer.MulterError) {
+        if (err.code === 'LIMIT_FILE_SIZE') {
+          return res.status(400).json({ message: 'File too large' });
+        }
+        return res.status(400).json({ message: 'File upload error: ' + err.message });
+      }
+      return res.status(500).json({ message: 'Server error during file upload' });
+    }
+    next();
+  });
+};
+
 module.exports = { 
-  uploadCompanyDocument, 
-  uploadDataImport, 
-  uploadSiteDocument, 
-  uploadSiteDoc, 
+  uploadCompanyDocument,
+  uploadCompanyDocumentMiddleware, 
+  uploadDataImport,
+  uploadDataImportMiddleware, 
+  uploadSiteDocument,
+  uploadSiteDocumentMiddleware, 
+  uploadSiteDoc,
+  uploadSiteDocMiddleware, 
   uploadCustomerDoc,
   uploadCustomerDocMiddleware, 
   uploadEventDetails,
   uploadEventDetailsMiddleware, 
   uploadSecurityLicense,
-  uploadCompliance
+  uploadSecurityLicenseMiddleware,
+  uploadCompliance,
+  uploadComplianceMiddleware
 };

@@ -1075,8 +1075,8 @@
               "request": {
                 "method": "GET",
                 "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
-                "url": "{{baseUrl}}/api/customer/documents/getAllDocuments?search=safety&status=Active",
-                "description": "**Query:** search (optional), status (Active|Inactive|All, default: Active).\n\n**Response 200:** `{ message, data, count }`"
+                "url": "{{baseUrl}}/api/customer/documents/getAllDocuments?search=safety",
+                "description": "**Query:** search (optional).\n\n**Response 200:** `{ message, data, count }`"
               }
             },
             {
@@ -1084,8 +1084,8 @@
               "request": {
                 "method": "GET",
                 "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
-                "url": "{{baseUrl}}/api/customer/documents/getDocumentsByCustomer/:customerId?search=policy&status=Active",
-                "description": "**Path:** customerId = customer _id.\n**Query:** search (optional), status (Active|Inactive|All, default: Active).\n\n**Response 200:** `{ message, data, count }`"
+                "url": "{{baseUrl}}/api/customer/documents/getDocumentsByCustomer/:customerId?search=policy",
+                "description": "**Path:** customerId = customer _id.\n**Query:** search (optional).\n\n**Response 200:** `{ message, data, count }`"
               }
             },
             {
@@ -1107,26 +1107,10 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"documentName\": \"Updated Safety Policy 2024\",\n  \"documentType\": \"Policy\",\n  \"note\": \"Updated annual safety policy\",\n  \"allowStaffToView\": true,\n  \"requiresAcknowledgement\": true,\n  \"requiresSignature\": false,\n  \"requiresRenewal\": true,\n  \"renewalPeriod\": \"2 years\",\n  \"status\": \"Active\"\n}"
+                  "raw": "{\n  \"documentName\": \"Updated Safety Policy 2024\",\n  \"documentType\": \"Policy\",\n  \"note\": \"Updated annual safety policy\",\n  \"allowStaffToView\": true,\n  \"requiresAcknowledgement\": true,\n  \"requiresSignature\": false,\n  \"requiresRenewal\": true,\n  \"renewalPeriod\": \"2 years\"\n}"
                 },
                 "url": "{{baseUrl}}/api/customer/documents/updateDocument/:id",
                 "description": "**Path:** id = document _id.\n\n**Response 200:** `{ message, data }`"
-              }
-            },
-            {
-              "name": "Update Document Status",
-              "request": {
-                "method": "PATCH",
-                "header": [
-                  { "key": "Content-Type", "value": "application/json" },
-                  { "key": "Authorization", "value": "Bearer {{token}}" }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"status\": \"Inactive\"\n}"
-                },
-                "url": "{{baseUrl}}/api/customer/documents/updateDocumentStatus/:id",
-                "description": "**Path:** id = document _id.\n**Request:** status = Active | Inactive.\n\n**Response 200:** `{ message, data }`"
               }
             },
             {
@@ -1795,7 +1779,7 @@
                   { "key": "Authorization", "value": "Bearer {{token}}" },
                   { "key": "Content-Type", "value": "application/json" }
                 ],
-                "body": { "mode": "raw", "raw": "{\n  \"name\": \"MARYLAND\",\n  \"geoJson\": null\n}" },
+                "body": { "mode": "raw", "raw": "{\n  \"name\": \"Test Region\",\n  \"geoJson\": {\n    \"type\": \"FeatureCollection\",\n    \"features\": []\n  }\n}" },
                 "url": "{{baseUrl}}/api/mobile-patrol/regions",
                 "description": "**Request:** name (required). Optional: geoJson.\n\n**Response 201:** `{ message, data }`"
               }
@@ -1855,7 +1839,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"customerId\": \"CUSTOMER_OBJECT_ID\",\n  \"regionId\": \"REGION_OBJECT_ID\",\n  \"name\": \"Patrol Site Name\",\n  \"siteDetails\": {\n    \"siteName\": \"Site Name\",\n    \"address\": \"123 Rd\",\n    \"city\": \"Baltimore\",\n    \"state\": \"MD\",\n    \"zipCode\": \"21201\",\n    \"country\": \"US\"\n  },\n  \"portalSchedule\": [\n    { \"day\": \"MON\", \"timeFrom\": \"09:00\", \"timeTo\": \"17:00\", \"visits\": 2 }\n  ],\n  \"alarmContacts\": {\n    \"alarmCompany\": [{ \"name\": \"Alarm Co\", \"phone\": \"+1\", \"email\": \"a@b.com\" }],\n    \"monitoringCompany\": [],\n    \"calloutContact\": []\n  },\n  \"siteCodesAndInstructions\": \"Instructions\",\n  \"status\": \"Active\"\n}"
+                  "raw": "{\n  \"customerId\": \"507f1f77bcf86cd799439011\",\n  \"regionId\": \"507f1f77bcf86cd799439012\",\n  \"name\": \"Patrol Site Name\",\n  \"siteDetails\": {\n    \"siteName\": \"Site Name\",\n    \"address\": \"123 Rd\",\n    \"city\": \"Baltimore\",\n    \"state\": \"MD\",\n    \"zipCode\": \"21201\",\n    \"country\": \"US\"\n  },\n  \"portalSchedule\": [\n    { \"day\": \"MON\", \"timeFrom\": \"09:00\", \"timeTo\": \"17:00\", \"visits\": 2 }\n  ],\n  \"alarmContacts\": {\n    \"alarmCompany\": [{ \"name\": \"Alarm Co\", \"phone\": \"+1\", \"email\": \"a@b.com\" }],\n    \"monitoringCompany\": [],\n    \"calloutContact\": []\n  },\n  \"siteCodesAndInstructions\": \"Instructions\",\n  \"status\": \"Active\"\n}"
                 },
                 "url": "{{baseUrl}}/api/mobile-patrol/patrol-sites",
                 "description": "**Request:** customerId, regionId, name (required). Optional: siteDetails, portalSchedule, alarmContacts, siteDocuments, siteCodesAndInstructions, locationCheckpoints, incidentReportConfig, status.\n\n**Response 201:** `{ message, data }`"
@@ -2162,7 +2146,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"employeeId\": \"EMPLOYEE_OBJECT_ID\",\n  \"complianceName\": \"Door Supervision\",\n  \"complianceType\": \"Security License\",\n  \"licenseRef\": \"1013673188606782\",\n  \"expiryDate\": \"2025-12-09\",\n  \"attachmentPath\": \"\"\n}"
+                  "raw": "{\n  \"employeeId\": \"698c8f5e0b63a2fd8fe2fd9c\",\n  \"complianceName\": \"Door Supervision\",\n  \"complianceType\": \"Security License\",\n  \"licenseRef\": \"1013673188606782\",\n  \"expiryDate\": \"2025-12-09\"\n}"
                 },
                 "url": "{{baseUrl}}/api/staff/submitted-compliance",
                 "description": "**Request:** employeeId, complianceName (required). Optional: complianceType (Security License|Renewal), licenseRef, expiryDate, attachmentPath.\n\n**Response 201:** `{ message, data }`"

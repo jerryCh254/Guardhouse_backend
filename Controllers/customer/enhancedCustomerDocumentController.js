@@ -29,7 +29,7 @@ class enhancedCustomerDocumentController {
             if (req.files && req.files.length > 0) {
                 attachFile = req.files.map(file => ({
                     fileName: file.originalname,
-                    fileUrl: `/uploads/customer-documents/${file.filename}`,
+                    fileUrl: `/uploads/customer-doc/${file.filename}`,
                     uploadedAt: new Date()
                 }));
             }
@@ -63,18 +63,13 @@ class enhancedCustomerDocumentController {
         }
     }
     
-    // Get All Documents (with search and status filter)
+    // Get All Documents (with search)
     static async getAllDocuments(req, res) {
         try {
-            const { search, status = 'Active' } = req.query;
+            const { search } = req.query;
             
             // Build query
             let query = {};
-            
-            // Add status filter
-            if (status && status !== 'All') {
-                query.status = status;
-            }
             
             // Add search filter
             if (search) {
@@ -105,15 +100,10 @@ class enhancedCustomerDocumentController {
     static async getDocumentsByCustomer(req, res) {
         try {
             const { customerId } = req.params;
-            const { search, status = 'Active' } = req.query;
+            const { search } = req.query;
             
             // Build query
             let query = { customer: customerId };
-            
-            // Add status filter
-            if (status && status !== 'All') {
-                query.status = status;
-            }
             
             // Add search filter
             if (search) {
@@ -172,7 +162,7 @@ class enhancedCustomerDocumentController {
             if (req.files && req.files.length > 0) {
                 const newFiles = req.files.map(file => ({
                     fileName: file.originalname,
-                    fileUrl: `/uploads/customer-documents/${file.filename}`,
+                    fileUrl: `/uploads/customer-doc/${file.filename}`,
                     uploadedAt: new Date()
                 }));
                 
@@ -196,35 +186,6 @@ class enhancedCustomerDocumentController {
             
             res.json({
                 message: "Document updated successfully",
-                data: updatedDocument
-            });
-        } catch (err) {
-            res.status(500).json({ message: err.message });
-        }
-    }
-    
-    // Update Document Status (Active/Inactive)
-    static async updateDocumentStatus(req, res) {
-        try {
-            const { id } = req.params;
-            const { status } = req.body;
-            
-            if (!['Active', 'Inactive'].includes(status)) {
-                return res.status(400).json({ message: "Invalid status. Must be Active or Inactive" });
-            }
-            
-            const updatedDocument = await EnhancedCustomerDocument.findByIdAndUpdate(
-                id,
-                { status },
-                { new: true }
-            ).populate("customer", "customerName customerReferenceNumber email city country");
-            
-            if (!updatedDocument) {
-                return res.status(404).json({ message: "Document not found" });
-            }
-            
-            res.json({
-                message: "Document status updated successfully",
                 data: updatedDocument
             });
         } catch (err) {
@@ -314,8 +275,7 @@ class enhancedCustomerDocumentController {
             
             let query = {
                 requiresRenewal: true,
-                renewalDate: { $lte: cutoffDate },
-                status: 'Active'
+                renewalDate: { $lte: cutoffDate }
             };
             
             if (customerId) {

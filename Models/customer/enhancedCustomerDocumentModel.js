@@ -64,11 +64,6 @@ const customerDocumentSchema = new mongoose.Schema({
     acknowledgementDeadline: {
         type: Date
     },
-    status: {
-        type: String,
-        enum: ['Active', 'Inactive'],
-        default: 'Active'
-    },
     createdAt: {
         type: Date,
         default: Date.now
@@ -77,30 +72,8 @@ const customerDocumentSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     }
-});
-
-// Update the updatedAt field before saving
-customerDocumentSchema.pre('save', function(next) {
-    this.updatedAt = new Date();
-    
-    // Set renewal date if renewal is required
-    if (this.requiresRenewal && this.renewalPeriod && !this.renewalDate) {
-        const periodMap = {
-            '1 month': 1,
-            '3 months': 3,
-            '6 months': 6,
-            '1 year': 12,
-            '2 years': 24,
-            '3 years': 36,
-            '5 years': 60
-        };
-        
-        const months = periodMap[this.renewalPeriod] || 12;
-        this.renewalDate = new Date();
-        this.renewalDate.setMonth(this.renewalDate.getMonth() + months);
-    }
-    
-    next();
+}, {
+    timestamps: true // Automatically adds createdAt and updatedAt
 });
 
 module.exports = mongoose.model("enhancedCustomerDocument", customerDocumentSchema);
