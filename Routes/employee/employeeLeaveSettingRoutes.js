@@ -4,6 +4,7 @@ const EmployeeLeaveSettingController = require('../../controllers/employee/emplo
 
 router.post('/createLeaveSetting',EmployeeLeaveSettingController.createLeaveSetting);
 router.get('/getAllLeaveSetting',EmployeeLeaveSettingController.getAllLeaveSettings);
+router.get('/getLeaveSettingByEmployee/:employeeId',EmployeeLeaveSettingController.getLeaveSettingByEmployee);
 router.put('/updateLeaveSetting/:id',EmployeeLeaveSettingController.updateLeaveSetting);
 router.delete('/deleteLeaveSetting/:id',EmployeeLeaveSettingController.deleteLeaveSetting);
 

@@ -4,7 +4,7 @@ class EmployeeLeaveBalanceController {
 
     // Static method: Get current balance for employee
     static async getCurrentBalance(employeeId) {
-        return await EmployeeLeave.findOne({ employeeId, isActive: true });
+        return await EmployeeLeave.findOne({ employeeId, isActive: true }).populate('employeeId');
     }
 
     // Static method: Add history entry
@@ -20,7 +20,7 @@ class EmployeeLeaveBalanceController {
     }
 
     // Static method: Switch leave type
-    static async switchLeaveType(employeeId, newLeaveType, notes) {
+    static async switchLeaveTypeHelper(employeeId, newLeaveType, notes) {
         const current = await EmployeeLeave.findOne({ employeeId, isActive: true });
         if (!current) throw new Error('Employee leave record not found');
         
@@ -58,7 +58,7 @@ class EmployeeLeaveBalanceController {
         try {
             const { employeeId } = req.params;
 
-            const leaveBalance = await EmployeeLeaveBalanceController.getCurrentBalance(employeeId).populate('employeeId');
+            const leaveBalance = await EmployeeLeaveBalanceController.getCurrentBalance(employeeId);
 
             if (!leaveBalance) {
                 return res.status(404).json({
@@ -92,7 +92,7 @@ class EmployeeLeaveBalanceController {
                 });
             }
 
-            const updatedLeave = await EmployeeLeaveBalanceController.switchLeaveType(
+            const updatedLeave = await EmployeeLeaveBalanceController.switchLeaveTypeHelper(
                 employeeId, 
                 newLeaveType, 
                 notes

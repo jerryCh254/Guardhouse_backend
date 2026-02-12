@@ -730,7 +730,7 @@
               { "key": "Content-Type", "value": "application/json" },
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
-            "body": { "mode": "raw", "raw": "{\n  \"status\": \"Active\"\n}" },
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"active\"\n}" },
             "url": "{{baseUrl}}/api/customer/updateCustomerStatus/:id",
             "description": "**Path:** id.\n**Request:** status = Active | Deactive.\n\n**Response 200:** `{ message, customer }`"
           }
@@ -2461,6 +2461,165 @@
                 "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
                 "url": "{{baseUrl}}/api/customer/master-license/delete/:eventDetailsId/:licenseId",
                 "description": "**Path:** eventDetailsId = event details _id, licenseId = master license _id.\n\n**Response 200:** `{ message, data }`"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Employee",
+      "description": "Employee management including leave settings and leave balance. All routes require Authorization: Bearer {{token}}.",
+      "item": [
+        {
+          "name": "Leave Settings",
+          "description": "Employee leave settings configuration. Base path: /api/employee/leaveSetting.",
+          "item": [
+            {
+              "name": "Create Leave Setting",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"leaveDaysPerYear\": 20,\n  \"leaveResetDays\": 365,\n  \"halfDay\": true,\n  \"fullDay\": true,\n  \"employeeId\": \"EMPLOYEE_ID_HERE\"\n}"
+                },
+                "url": "{{baseUrl}}/api/staff/employee/leaveSettings/createLeaveSetting",
+                "description": "**Request:** employeeId (required). Optional: leaveDaysPerYear, leaveResetDays, halfDay, fullDay.\n\n**Response 201:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Get All Leave Settings",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/staff/employee/leaveSettings/getAllLeaveSetting",
+                "description": "**Response 200:** `{ message, count, data }`"
+              }
+            },
+            {
+              "name": "Get Leave Setting by Employee",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/staff/employee/leaveSettings/getLeaveSettingByEmployee/:employeeId",
+                "description": "**Path:** employeeId.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Leave Setting",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"leaveDaysPerYear\": 25,\n  \"leaveResetDays\": 365,\n  \"halfDay\": true,\n  \"fullDay\": true\n}"
+                },
+                "url": "{{baseUrl}}/api/staff/employee/leaveSettings/updateLeaveSetting/:id",
+                "description": "**Path:** id = leave setting _id.\n**Request:** Any leave setting field (optional).\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Delete Leave Setting",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/staff/employee/leaveSettings/deleteLeaveSetting/:id",
+                "description": "**Path:** id = leave setting _id.\n\n**Response 200:** `{ message, data }`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Leave Balance",
+          "description": "Employee leave balance management. Base path: /api/employee/leaveBalance.",
+          "item": [
+            {
+              "name": "Get Employee Leave Balance",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/staff/employee/leave/balance/:employeeId",
+                "description": "**Path:** employeeId.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Switch Leave Type",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"newLeaveType\": \"Fixed\",\n  \"notes\": \"Switching to fixed leave type\"\n}"
+                },
+                "url": "{{baseUrl}}/api/staff/employee/leave/switch-type/:employeeId",
+                "description": "**Path:** employeeId.\n**Request:** newLeaveType (Fixed | Accrued | Rolled Up, required), notes (optional).\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Add Balance Adjustment",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"adjustment\": 5,\n  \"unit\": \"Days\",\n  \"notes\": \"Additional leave days granted\",\n  \"leaveRefreshDate\": \"2025-12-31\"\n}"
+                },
+                "url": "{{baseUrl}}/api/staff/employee/leave/adjustment/:employeeId",
+                "description": "**Path:** employeeId.\n**Request:** adjustment (number, required), unit (Days | Hours, required), notes (optional), leaveRefreshDate (optional).\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Get Leave Balance History",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/staff/employee/leave/history/:employeeId?page=1&limit=10",
+                "description": "**Path:** employeeId.\n**Query:** page (default: 1), limit (default: 10).\n\n**Response 200:** `{ message, data, pagination }`"
+              }
+            },
+            {
+              "name": "Update History Status",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"Approved\",\n  \"notes\": \"Approved by manager\"\n}"
+                },
+                "url": "{{baseUrl}}/api/staff/employee/leave/history/:employeeId/:historyId/status",
+                "description": "**Path:** employeeId, historyId.\n**Request:** status (Pending | Approved | Rejected | Update, required), notes (optional).\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Initialize Leave Balance",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"employeeId\": \"EMPLOYEE_ID_HERE\",\n  \"leaveType\": \"Fixed\",\n  \"initialBalance\": 20,\n  \"leaveRefreshDate\": \"2025-12-31\"\n}"
+                },
+                "url": "{{baseUrl}}/api/staff/employee/leave/initialize",
+                "description": "**Request:** employeeId, leaveType (Fixed | Accrued | Rolled Up, required). Optional: initialBalance, leaveRefreshDate.\n\n**Response 201:** `{ message, data }`"
               }
             }
           ]

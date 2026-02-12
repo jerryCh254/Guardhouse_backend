@@ -22,7 +22,7 @@ router.use('/submitted-compliance', submittedComplianceRoutes);
 router.use('/notes',employeeNotesRoutes);
 router.use('/compliance', complianceRoutes);
 router.use('/security-license', employeeSecurityLicenseRoutes);
-router.use('/site',employeeLeaveSettingRoutes);
+router.use('/employee/leaveSettings',employeeLeaveSettingRoutes);
 router.use('/employee/leave',employeeLeaveBalanceRoutes);
 
 module.exports = router;
