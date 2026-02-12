@@ -909,7 +909,7 @@
         },
         {
           "name": "Event Details",
-          "description": "Event details management with logos and master licenses. Base path: /api/customer/event-details.",
+          "description": "Event details management with logos. Base path: /api/customer/event-details.",
           "item": [
             {
               "name": "Create Event Details",
@@ -922,13 +922,12 @@
                     { "key": "abn", "value": "12345678901", "type": "text", "description": "Required" },
                     { "key": "businessContactNumber", "value": "+1234567890", "type": "text", "description": "Required" },
                     { "key": "businessAddress", "value": "123 Business St, Sydney NSW 2000", "type": "text", "description": "Required" },
-                    { "key": "masterLicenses", "value": "[{\"state\":\"NSW\",\"licenseNumber\":\"NSW123456\"}]", "type": "text", "description": "Optional: JSON array of licenses" },
                     { "key": "leftHeaderLogo", "type": "file", "src": "", "description": "Optional: Left header logo" },
                     { "key": "rightHeaderLogo", "type": "file", "src": "", "description": "Optional: Right header logo" }
                   ]
                 },
                 "url": "{{baseUrl}}/api/customer/event-details/createEventDetails/:customerId",
-                "description": "**Path:** customerId = customer _id.\n**Form-data:** abn, businessContactNumber, businessAddress (required). Optional: masterLicenses (JSON array), leftHeaderLogo, rightHeaderLogo.\n\n**Response 201:** `{ message, data }`"
+                "description": "**Path:** customerId = customer _id.\n**Form-data:** abn, businessContactNumber, businessAddress (required). Optional: leftHeaderLogo, rightHeaderLogo.\n\n**Response 201:** `{ message, data }`"
               }
             },
             {
@@ -940,10 +939,10 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"abn\": \"12345678901\",\n  \"businessContactNumber\": \"+1234567890\",\n  \"businessAddress\": \"123 Business St, Sydney NSW 2000\",\n  \"masterLicenses\": [\n    {\n      \"state\": \"NSW\",\n      \"licenseNumber\": \"NSW123456\"\n    },\n    {\n      \"state\": \"VIC\",\n      \"licenseNumber\": \"VIC789012\"\n    }\n  ]\n}"
+                  "raw": "{\n  \"abn\": \"12345678901\",\n  \"businessContactNumber\": \"+1234567890\",\n  \"businessAddress\": \"123 Business St, Sydney NSW 2000\"\n}"
                 },
                 "url": "{{baseUrl}}/api/customer/event-details/createEventDetails/:customerId",
-                "description": "**Path:** customerId = customer _id.\n**Request:** abn, businessContactNumber, businessAddress (required). Optional: masterLicenses[].\n\n**Response 201:** `{ message, data }`"
+                "description": "**Path:** customerId = customer _id.\n**Request:** abn, businessContactNumber, businessAddress (required).\n\n**Response 201:** `{ message, data }`"
               }
             },
             {
@@ -965,7 +964,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"abn\": \"98765432109\",\n  \"businessContactNumber\": \"+0987654321\",\n  \"businessAddress\": \"456 Updated Ave, Melbourne VIC 3000\",\n  \"masterLicenses\": [\n    {\n      \"state\": \"NSW\",\n      \"licenseNumber\": \"NSW654321\"\n    },\n    {\n      \"state\": \"QLD\",\n      \"licenseNumber\": \"QLD111222\"\n    }\n  ]\n}"
+                  "raw": "{\n  \"abn\": \"98765432109\",\n  \"businessContactNumber\": \"+0987654321\",\n  \"businessAddress\": \"456 Updated Ave, Melbourne VIC 3000\"\n}"
                 },
                 "url": "{{baseUrl}}/api/customer/event-details/updateEventDetails/:id",
                 "description": "**Path:** id = event details _id.\n\n**Response 200:** `{ message, data }`"
@@ -1956,7 +1955,7 @@
     },
     {
       "name": "Staff",
-      "description": "Employees, HR Notes, Compliance Requests, Manager Site Assignment, Submitted Compliance. Base: /api/staff. Auth: Bearer {{token}}.",
+      "description": "Employees, HR Notes, Compliance Requests, Manager Site Assignment, Submitted Compliance, Compliance Management, Security License, Employee Notes. Base: /api/staff. Auth: Bearer {{token}}.",
       "item": [
         {
           "name": "Employees",
@@ -2193,6 +2192,290 @@
                 "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
                 "url": "{{baseUrl}}/api/staff/submitted-compliance/:id/cancel",
                 "description": "**Path:** id.\n\n**Response 200:** `{ message, data }`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Compliance",
+          "description": "Compliance management with file upload support. Base: /api/staff/compliance. Auth: Bearer {{token}}.",
+          "item": [
+            {
+              "name": "Get All Compliance",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/staff/compliance",
+                "description": "**Query:** employeeId, status, complianceType, critical (optional).\n\n**Response 200:** `{ message, count, data }`"
+              }
+            },
+            {
+              "name": "Get Compliance by ID",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/staff/compliance/:id",
+                "description": "**Path:** id = compliance _id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Create Compliance (multipart)",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "file", "type": "file", "src": "", "description": "Compliance document" },
+                    { "key": "employeeId", "value": "EMPLOYEE_OBJECT_ID", "type": "text", "description": "Required" },
+                    { "key": "complianceName", "value": "Security License", "type": "text", "description": "Required" },
+                    { "key": "complianceType", "value": "Security License", "type": "text", "description": "Security License | Renewal | Certificate" },
+                    { "key": "licenseRef", "value": "1013673188606782", "type": "text" },
+                    { "key": "expiryDate", "value": "2025-12-09", "type": "text" },
+                    { "key": "reminder", "value": "30 days before expiry", "type": "text" },
+                    { "key": "critical", "value": "true", "type": "text" }
+                  ]
+                },
+                "url": "{{baseUrl}}/api/staff/compliance",
+                "description": "**Form-data:** employeeId, complianceName (required). Optional: file, complianceType, licenseRef, expiryDate, reminder, critical.\n\n**Response 201:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Compliance (multipart)",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "file", "type": "file", "src": "", "description": "Updated compliance document" },
+                    { "key": "complianceName", "value": "Updated Security License", "type": "text" },
+                    { "key": "expiryDate", "value": "2026-12-09", "type": "text" },
+                    { "key": "critical", "value": "false", "type": "text" }
+                  ]
+                },
+                "url": "{{baseUrl}}/api/staff/compliance/:id",
+                "description": "**Path:** id.\n**Form-data:** Optional: file, complianceName, complianceType, licenseRef, expiryDate, reminder, critical, status, approved.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Delete Compliance",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/staff/compliance/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message }`"
+              }
+            },
+            {
+              "name": "Approve Compliance",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/staff/compliance/:id/approve",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Reject Compliance",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/staff/compliance/:id/reject",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Cancel Compliance",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/staff/compliance/:id/cancel",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message, data }`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Security License",
+          "description": "Employee Security License management with file upload. Base: /api/staff/security-license. Auth: Bearer {{token}}.",
+          "item": [
+            {
+              "name": "Get All Security Licenses",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/staff/security-license",
+                "description": "**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Get Security Licenses by Employee",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/staff/security-license/employee/:employeeId",
+                "description": "**Path:** employeeId = employee _id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Get Security License by ID",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/staff/security-license/:id",
+                "description": "**Path:** id = security license _id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Create Security License (multipart)",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "file", "type": "file", "src": "", "description": "License document" },
+                    { "key": "licenseType", "value": "Security License", "type": "text", "description": "Required" },
+                    { "key": "licenseNumber", "value": "1013673188606782", "type": "text", "description": "Required" },
+                    { "key": "expireDate", "value": "2025-12-09", "type": "text", "description": "Required" },
+                    { "key": "reminder", "value": "30 days before expiry", "type": "text" },
+                    { "key": "critical", "value": "true", "type": "text" }
+                  ]
+                },
+                "url": "{{baseUrl}}/api/staff/security-license/employee/:employeeId",
+                "description": "**Path:** employeeId = employee _id.\n**Form-data:** licenseType, licenseNumber, expireDate (required). Optional: file, reminder, critical.\n\n**Response 201:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Security License (multipart)",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "file", "type": "file", "src": "", "description": "Updated license document" },
+                    { "key": "licenseType", "value": "Updated Security License", "type": "text" },
+                    { "key": "licenseNumber", "value": "2013673188606782", "type": "text" },
+                    { "key": "expireDate", "value": "2026-12-09", "type": "text" },
+                    { "key": "critical", "value": "false", "type": "text" }
+                  ]
+                },
+                "url": "{{baseUrl}}/api/staff/security-license/:id",
+                "description": "**Path:** id.\n**Form-data:** Optional: file, licenseType, licenseNumber, expireDate, reminder, critical.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Delete Security License",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/staff/security-license/:id",
+                "description": "**Path:** id.\n\n**Response 200:** `{ message }`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Employee Notes",
+          "description": "Employee notes management. Base: /api/staff/notes. Auth: Bearer {{token}}.",
+          "item": [
+            {
+              "name": "Get All Notes",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/staff/notes/getNotes",
+                "description": "**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Add Note",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"shortNote\": \"Performance review\",\n  \"note\": \"Employee performed well this quarter. Excellent communication skills.\"\n}"
+                },
+                "url": "{{baseUrl}}/api/staff/notes/add/:siteId",
+                "description": "**Path:** siteId = site _id.\n**Request:** shortNote, note (required).\n\n**Response 201:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Note",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"shortNote\": \"Updated performance review\",\n  \"note\": \"Updated notes about employee performance.\"\n}"
+                },
+                "url": "{{baseUrl}}/api/staff/notes/updateNotes/:id",
+                "description": "**Path:** id = note _id.\n**Request:** shortNote, note (optional).\n\n**Response 200:** `{ message, data }`"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Master License",
+          "description": "Master License management for event details. Base: /api/customer/master-license. Auth: Bearer {{token}}.",
+          "item": [
+            {
+              "name": "Add Master License",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"state\": \"NSW\",\n  \"licenseNumber\": \"NSW123456\"\n}"
+                },
+                "url": "{{baseUrl}}/api/customer/master-license/add/:eventDetailsId",
+                "description": "**Path:** eventDetailsId = event details _id.\n**Request:** state, licenseNumber (required).\n\n**Response 201:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Get Master Licenses",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/customer/master-license/list/:eventDetailsId",
+                "description": "**Path:** eventDetailsId = event details _id.\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Update Master License",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"state\": \"VIC\",\n  \"licenseNumber\": \"VIC789012\"\n}"
+                },
+                "url": "{{baseUrl}}/api/customer/master-license/update/:eventDetailsId/:licenseId",
+                "description": "**Path:** eventDetailsId = event details _id, licenseId = master license _id.\n**Request:** state, licenseNumber (required).\n\n**Response 200:** `{ message, data }`"
+              }
+            },
+            {
+              "name": "Delete Master License",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": "{{baseUrl}}/api/customer/master-license/delete/:eventDetailsId/:licenseId",
+                "description": "**Path:** eventDetailsId = event details _id, licenseId = master license _id.\n\n**Response 200:** `{ message, data }`"
               }
             }
           ]

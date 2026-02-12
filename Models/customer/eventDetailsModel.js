@@ -41,32 +41,9 @@ const eventDetailsSchema = new mongoose.Schema({
     businessAddress: {
         type: String,
         required: true
-    },
-    masterLicenses: [{
-        state: {
-            type: String,
-            required: true,
-            enum: ['NSW', 'VIC', 'QLD', 'WA', 'SA', 'TAS', 'ACT', 'NT']
-        },
-        licenseNumber: {
-            type: String,
-            required: true
-        }
-    }],
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now
     }
-});
-
-// Update the updatedAt field before saving
-eventDetailsSchema.pre('save', function(next) {
-    this.updatedAt = new Date();
-    next();
+}, {
+    timestamps: true // Automatically adds createdAt and updatedAt
 });
 
 module.exports = mongoose.model("EventDetails", eventDetailsSchema);

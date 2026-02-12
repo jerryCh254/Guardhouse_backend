@@ -7,12 +7,14 @@ const customerSite = require('./customerSiteRoute');
 const customerDocument = require('./customerDocumentRoute');
 const enhancedCustomerDocument = require('./enhancedCustomerDocumentRoute');
 const eventDetails = require('./eventDetailsRoute');
+const masterLicense = require('./masterLicenseRoute');
 
 router.use('/customerPortal',customerPortal);
 router.use('/site', customerSite);
 router.use('/document', customerDocument);
 router.use('/documents', enhancedCustomerDocument);
 router.use('/event-details', eventDetails);
+router.use('/master-license', masterLicense);
 
 router.post('/createCustomer', auth, CustomerController.createCustomer);
 router.get('/getAllCustomers', auth, CustomerController.getAllCustomers);

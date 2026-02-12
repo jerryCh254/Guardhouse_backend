@@ -1,24 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const EventDetailsController = require('../../controllers/customer/eventDetailsController');
-const auth = require('../../middlewares/authmiddleware');
-const { uploadEventDetails } = require('../../middlewares/uploadMiddleware');
+const { uploadEventDetailsMiddleware } = require('../../middlewares/uploadMiddleware');
 
 // Create Event Details (with optional file upload)
-router.post('/createEventDetails/:customerId', uploadEventDetails, EventDetailsController.createEventDetails);
+router.post('/createEventDetails/:customerId', uploadEventDetailsMiddleware, EventDetailsController.createEventDetails);
 
 // Get Event Details by Customer
-router.get('/getEventDetailsByCustomer/:customerId', auth, EventDetailsController.getEventDetailsByCustomer);
+router.get('/getEventDetailsByCustomer/:customerId', EventDetailsController.getEventDetailsByCustomer);
 
 // Update Event Details (with optional file upload)
-router.put('/updateEventDetails/:id', auth, uploadEventDetails, EventDetailsController.updateEventDetails);
-
-// Master License Management
-router.post('/addMasterLicense/:id', auth, EventDetailsController.addMasterLicense);
-router.put('/updateMasterLicense/:id/:licenseIndex', auth, EventDetailsController.updateMasterLicense);
-router.delete('/deleteMasterLicense/:id/:licenseIndex', auth, EventDetailsController.deleteMasterLicense);
+router.put('/updateEventDetails/:id', uploadEventDetailsMiddleware, EventDetailsController.updateEventDetails);
 
 // Delete Event Details
-router.delete('/deleteEventDetails/:id', auth, EventDetailsController.deleteEventDetails);
+router.delete('/deleteEventDetails/:id', EventDetailsController.deleteEventDetails);
 
 module.exports = router;

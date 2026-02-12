@@ -8,9 +8,10 @@ const siteNoteDir = path.join(process.cwd(), 'uploads', 'note-site');
 const siteDocDir = path.join(process.cwd(), 'uploads', 'site-doc');
 const customerDocDir = path.join(process.cwd(), 'uploads', 'customer-doc');
 const eventDetailsDir = path.join(process.cwd(), 'uploads', 'event-details');
+const securityLicenseDir = path.join(process.cwd(), 'uploads', 'security-license');
 
 
-[companyDocsDir, dataImportDir,siteNoteDir,siteDocDir,customerDocDir,eventDetailsDir].forEach((dir) => {
+[companyDocsDir, dataImportDir,siteNoteDir,siteDocDir,customerDocDir,eventDetailsDir,securityLicenseDir].forEach((dir) => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 });
 
@@ -58,6 +59,22 @@ const storageEventDetails = multer.diskStorage({
   },
 });
 
+const storageSecurityLicense = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, securityLicenseDir),
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname) || '';
+    cb(null, `${Date.now()}_${(file.originalname || 'file').slice(0, 50)}${ext}`);
+  },
+});
+
+const storageCompliance = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, securityLicenseDir),
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname) || '';
+    cb(null, `compliance_${Date.now()}_${(file.originalname || 'file').slice(0, 50)}${ext}`);
+  },
+});
+
 const uploadCompanyDocument = multer({
   storage: storageCompanyDoc,
   limits: { fileSize: 10 * 1024 * 1024 },
@@ -86,4 +103,43 @@ const uploadEventDetails = multer({
   { name: 'leftHeaderLogo', maxCount: 1 },
   { name: 'rightHeaderLogo', maxCount: 1 }
 ]);
-module.exports = { uploadCompanyDocument, uploadDataImport ,uploadSiteDocument,uploadSiteDoc,uploadCustomerDoc,uploadEventDetails};
+
+// Wrapper function to handle multer errors and ensure next() is called
+const uploadEventDetailsMiddleware = (req, res, next) => {
+  uploadEventDetails(req, res, (err) => {
+    if (err) {
+      // Handle multer errors
+      if (err instanceof multer.MulterError) {
+        if (err.code === 'LIMIT_FILE_SIZE') {
+          return res.status(400).json({ message: 'File too large' });
+        }
+        return res.status(400).json({ message: 'File upload error: ' + err.message });
+      }
+      return res.status(500).json({ message: 'Server error during file upload' });
+    }
+    // If no error, continue to next middleware
+    next();
+  });
+};
+
+const uploadSecurityLicense = multer({
+  storage: storageSecurityLicense,
+  limits: { fileSize: 10 * 1024 * 1024 },
+}).single('file');
+
+const uploadCompliance = multer({
+  storage: storageCompliance,
+  limits: { fileSize: 10 * 1024 * 1024 },
+}).single('file');
+
+module.exports = { 
+  uploadCompanyDocument, 
+  uploadDataImport, 
+  uploadSiteDocument, 
+  uploadSiteDoc, 
+  uploadCustomerDoc, 
+  uploadEventDetails,
+  uploadEventDetailsMiddleware, 
+  uploadSecurityLicense,
+  uploadCompliance
+};
