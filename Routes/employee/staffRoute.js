@@ -9,6 +9,7 @@ const employeeSiteRoutes = require('./employeeSiteRoutes');
 const employeeNotesRoutes= require('./employeeNotesRoutes');
 const complianceRoutes = require('./complianceRoutes');
 const employeeSecurityLicenseRoutes = require('./employeeSecurityLicenseRoutes');
+const employeeLeaveSettingRoutes = require('./employeeLeaveSettingRoutes');
 
 router.use('/site',employeeSiteRoutes);
 router.use('/employees', employeeRoutes);
@@ -19,5 +20,6 @@ router.use('/submitted-compliance', submittedComplianceRoutes);
 router.use('/notes',employeeNotesRoutes);
 router.use('/compliance', complianceRoutes);
 router.use('/security-license', employeeSecurityLicenseRoutes);
+router.use('/site',employeeLeaveSettingRoutes);
 
 module.exports = router;
