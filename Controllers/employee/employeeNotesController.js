@@ -1,23 +1,24 @@
-const employeeNotes = require('../../models/employee/employeeNotesModel');
+const EmployeeNote = require('../../models/employee/employeeNotesModel');
+const Employee = require('../../models/employee/employeeModel');
 
 class EmployeeNoteController {
     //add note
     static async addNote(req,res){
         try{
             const{employeeId} = req.params;
-            const{note}= req.body;
+            const{note, attachFile}= req.body;
             
-    const newNote = await employeeNotes.create({
+    const newNote = await EmployeeNote.create({
         note,
         attachFile,
         employee:employeeId
     })
     
-    await Employee.findByIdAndUpdate(siteId, {
+    await Employee.findByIdAndUpdate(employeeId, {
         $push: { notes: newNote._id }
     })
     return res.status(201).json({
-        message:"Note is created successfully",
+        message:"Employee Note is created successfully",
         data:newNote,
     })
         }
@@ -28,10 +29,10 @@ class EmployeeNoteController {
   //get notes 
   static async getNotes(req, res){
     try {
-      const notes = await employeeNotes.find().populate("Employee");
+      const notes = await EmployeeNote.find().populate("employeeId");
   
       res.status(200).json({
-        message: "Notes fetched successfully",
+        message: "Employee Notes fetched successfully",
         data: notes
       });
   
@@ -44,14 +45,17 @@ class EmployeeNoteController {
   //update notes
   static async updateNotes(req, res) {
       try {
-        const updateNotes = await employeeNotes.findByIdAndUpdate(
+        const updateNotes = await EmployeeNote.findByIdAndUpdate(
           req.params.id,
           req.body,
           { new: true }
         )
-        res.json(updateNotes);
-      } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.json({
+          message: "Note updated successfully",
+          data: updateNotes
+        });
+      } catch (error) {
+        res.status(500).json({ message: error.message });
       }
     }
 }
