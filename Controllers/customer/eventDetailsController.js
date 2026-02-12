@@ -6,7 +6,7 @@ class eventDetailsController {
     static async createEventDetails(req, res) {
         try {
             const { customerId } = req.params;
-            const { abn, businessContactNumber, businessAddress } = req.body;
+            const { abn, businessContactNumber, businessAddress, masterLicenses } = req.body;
             
             const customer = await Customer.findById(customerId);
             if (!customer) {
@@ -36,14 +36,29 @@ class eventDetailsController {
                     };
                 }
             }
-                        
+            
+            let parsedMasterLicenses = [];
+            if (masterLicenses) {
+                try {
+                    if (typeof masterLicenses === 'string') {
+                        parsedMasterLicenses = JSON.parse(masterLicenses);
+                    } else if (Array.isArray(masterLicenses)) {
+                        parsedMasterLicenses = masterLicenses;
+                    }
+                } catch (error) {
+                    console.log('Master licenses parsing error:', error);
+                    parsedMasterLicenses = [];
+                }
+            }
+            
             const newEventDetails = await EventDetails.create({
                 customer: customerId,
                 leftHeaderLogo,
                 rightHeaderLogo,
                 abn,
                 businessContactNumber,
-                businessAddress
+                businessAddress,
+                masterLicenses: parsedMasterLicenses
             });
                         await Customer.findByIdAndUpdate(customerId, {
                 eventDetails: newEventDetails._id

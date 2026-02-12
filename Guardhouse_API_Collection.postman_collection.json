@@ -922,6 +922,7 @@
                     { "key": "abn", "value": "12345678901", "type": "text", "description": "Required" },
                     { "key": "businessContactNumber", "value": "+1234567890", "type": "text", "description": "Required" },
                     { "key": "businessAddress", "value": "123 Business St, Sydney NSW 2000", "type": "text", "description": "Required" },
+                    { "key": "masterLicenses", "value": "[{\"state\":\"NSW\",\"licenseNumber\":\"NSW123456\"}]", "type": "text", "description": "Optional: JSON array of licenses" },
                     { "key": "leftHeaderLogo", "type": "file", "src": "", "description": "Optional: Left header logo" },
                     { "key": "rightHeaderLogo", "type": "file", "src": "", "description": "Optional: Right header logo" }
                   ]
@@ -939,7 +940,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"abn\": \"12345678901\",\n  \"businessContactNumber\": \"+1234567890\",\n  \"businessAddress\": \"123 Business St, Sydney NSW 2000\"\n}"
+                  "raw": "{\n  \"abn\": \"12345678901\",\n  \"businessContactNumber\": \"+1234567890\",\n  \"businessAddress\": \"123 Business St, Sydney NSW 2000\",\n  \"masterLicenses\": [\n    {\n      \"state\": \"NSW\",\n      \"licenseNumber\": \"NSW123456\"\n    },\n    {\n      \"state\": \"VIC\",\n      \"licenseNumber\": \"VIC789012\"\n    }\n  ]\n}"
                 },
                 "url": "{{baseUrl}}/api/customer/event-details/createEventDetails/:customerId",
                 "description": "**Path:** customerId = customer _id.\n**Request:** abn, businessContactNumber, businessAddress (required).\n\n**Response 201:** `{ message, data }`"
@@ -964,7 +965,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"abn\": \"98765432109\",\n  \"businessContactNumber\": \"+0987654321\",\n  \"businessAddress\": \"456 Updated Ave, Melbourne VIC 3000\"\n}"
+                  "raw": "{\n  \"abn\": \"98765432109\",\n  \"businessContactNumber\": \"+0987654321\",\n  \"businessAddress\": \"456 Updated Ave, Melbourne VIC 3000\",\n  \"masterLicenses\": [\n    {\n      \"state\": \"NSW\",\n      \"licenseNumber\": \"NSW654321\"\n    },\n    {\n      \"state\": \"QLD\",\n      \"licenseNumber\": \"QLD111222\"\n    }\n  ]\n}"
                 },
                 "url": "{{baseUrl}}/api/customer/event-details/updateEventDetails/:id",
                 "description": "**Path:** id = event details _id.\n\n**Response 200:** `{ message, data }`"

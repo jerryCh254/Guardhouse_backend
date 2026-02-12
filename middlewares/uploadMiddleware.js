@@ -96,6 +96,24 @@ const uploadCustomerDoc = multer({
   storage: storageCustomerDoc,
   limits: { fileSize: 10 * 1024 * 1024 },
 }).array('files', 5);
+
+// Wrapper function to handle multer errors and ensure next() is called
+const uploadCustomerDocMiddleware = (req, res, next) => {
+  uploadCustomerDoc(req, res, (err) => {
+    if (err) {
+      // Handle multer errors
+      if (err instanceof multer.MulterError) {
+        if (err.code === 'LIMIT_FILE_SIZE') {
+          return res.status(400).json({ message: 'File too large' });
+        }
+        return res.status(400).json({ message: 'File upload error: ' + err.message });
+      }
+      return res.status(500).json({ message: 'Server error during file upload' });
+    }
+    // If no error, continue to next middleware
+    next();
+  });
+};
 const uploadEventDetails = multer({
   storage: storageEventDetails,
   limits: { fileSize: 10 * 1024 * 1024 },
@@ -137,7 +155,8 @@ module.exports = {
   uploadDataImport, 
   uploadSiteDocument, 
   uploadSiteDoc, 
-  uploadCustomerDoc, 
+  uploadCustomerDoc,
+  uploadCustomerDocMiddleware, 
   uploadEventDetails,
   uploadEventDetailsMiddleware, 
   uploadSecurityLicense,

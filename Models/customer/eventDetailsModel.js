@@ -41,7 +41,18 @@ const eventDetailsSchema = new mongoose.Schema({
     businessAddress: {
         type: String,
         required: true
-    }
+    },
+    masterLicenses: [{
+        state: {
+            type: String,
+            required: true,
+            enum: ['NSW', 'VIC', 'QLD', 'WA', 'SA', 'TAS', 'ACT', 'NT']
+        },
+        licenseNumber: {
+            type: String,
+            required: true
+        }
+    }]
 }, {
     timestamps: true // Automatically adds createdAt and updatedAt
 });

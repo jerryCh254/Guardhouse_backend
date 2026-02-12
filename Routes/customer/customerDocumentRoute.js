@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 const CustomerDocumentController = require('../../controllers/customer/customerDocumentController');
 const auth = require('../../middlewares/authmiddleware');
-const { uploadCustomerDoc } = require('../../middlewares/uploadMiddleware')
+const { uploadCustomerDocMiddleware } = require('../../middlewares/uploadMiddleware')
 
 
-router.post('/createDocument/:customerId', uploadCustomerDoc, CustomerDocumentController.createDocument);
+router.post('/createDocument/:customerId', uploadCustomerDocMiddleware, CustomerDocumentController.createDocument);
 router.get('/getAllDocuments', CustomerDocumentController.getCustomerDocument);
 router.get('/getDocumentsByCustomer/:customerId', auth, CustomerDocumentController.getDocumentsByCustomer);
 router.put('/updateDocument/:id', auth, CustomerDocumentController.updateCustomerDocument);
